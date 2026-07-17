@@ -43,6 +43,9 @@ The system compiles both signals into:
 - `ARCHITECTURE.png` - Agent architecture diagram
 - `POSTER.pdf` - supplementary one-page poster
 - `POSTER.png` - poster preview
+- `VIDEO_COVER_V2.png` - cinematic 16:9 video cover
+- `PROMO_BANNER_V2.png` - 16:9 campaign banner
+- `SOCIAL_CARD_V2.png` - square social campaign card
 - `DEMO_SCRIPT.md` - 3-5 minute English demo narration and shot list
 - `DEMO_NARRATION.md` - final AI-generated English voiceover text
 - `RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt` - final captions
@@ -87,3 +90,7 @@ Raw measurements are in:
 - Demo script: complete
 - Demo video URL: complete
 - Official hackathon PR: open and publicly verified
+
+The final narration uses AIDP `gemini-3.1-flash-tts-preview`, voice `Kore`.
+Visual campaign backgrounds were generated with AIDP GPT Image 2; all visible
+project typography and measured values were composed locally.

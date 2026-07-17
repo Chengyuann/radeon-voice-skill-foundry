@@ -13,3 +13,4 @@ outputs/
 tmp/
 output/playwright/
 submission/*.mp4
+output/imagegen/

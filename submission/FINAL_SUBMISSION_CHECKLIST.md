@@ -84,9 +84,17 @@ Official PR:
 - Radeon audio-backed proof hash:
   `6ff30ccc2d052e226051fa6819760abe3b2c2ef6243b63169ab9d5e0caebfc40`
 - Demo video SHA-256:
-  `79ccceb89ba7ac50f9fe1f7f5e302c6682759b64bcf1e8cae9c5dd5891436eb7`
+  `b108f806036197849c66182c6b8e0e8c3b5ef09bc279abec46ba1328d1cf515f`
 - Demo captions SHA-256:
-  `e83753648ac9317d8cbba4fdd07a0d6466ed7d48372a4e68c2a7ddb7f1e370b6`
+  `7a7a30ad853eab2fa3ea8d1938e54842e7a2e0837bf27d6202893c8d28803bc7`
+- Video cover SHA-256:
+  `7929ee19046c6c816452ea6a68493a52a1a95b7da4dc0f75e384523a1e03d940`
+- Promo banner SHA-256:
+  `54374903cac3bf6791bdfd16c918e1afb06f6c75a7de9e8d6b3dae59875cf615`
+- Social card SHA-256:
+  `d058bdb46ef3b808b238e5811a21e0881865b704dc8b1db71b68dfc7d9398484`
+- Demo TTS:
+  `gemini-3.1-flash-tts-preview`, voice `Kore`
 - Optimization JSON SHA-256:
   `ce2848f92c7f93b30fe558c99128cb6eba1988319931f7ab0bdcc803d291298d`
 - W7900-class GPU: `gfx1100`, 47.98 GiB VRAM

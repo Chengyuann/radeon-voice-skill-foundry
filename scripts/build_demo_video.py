@@ -7,7 +7,7 @@ import re
 import subprocess
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "tmp" / "video" / "assets"
@@ -109,6 +109,10 @@ def fit_image(image: Image.Image, box: tuple[int, int]) -> Image.Image:
     result = image.copy().convert("RGB")
     result.thumbnail(box, Image.Resampling.LANCZOS)
     return result
+
+
+def cover(image: Image.Image, size: tuple[int, int]) -> Image.Image:
+    return ImageOps.fit(image.convert("RGB"), size, Image.Resampling.LANCZOS)
 
 
 def redact_profile(image: Image.Image) -> Image.Image:
@@ -216,28 +220,8 @@ def build_board(scene: dict, index: int) -> Path:
     header(draw, scene)
 
     if scene["kind"] == "title":
-        poster = Image.open(ROOT / "submission" / "POSTER.png")
-        paste_center(canvas, poster, (1140, 74, 1780, 1002), fill="#ECEFF0")
-        draw_text_block(
-            draw,
-            "Private voice + action trace becomes a governed, testable Agent Skill before the first risky run.",
-            (80, 300),
-            font(48, bold=True),
-            WHITE,
-            900,
-            14,
-        )
-        bullets = [
-            "Qwen3-ASR + Qwen3-4B on Radeon",
-            "Voice Evidence Gate",
-            "Least-privilege policy and adversarial fixtures",
-            "Hash-bound proof and procedural memory",
-        ]
-        y = 600
-        for bullet in bullets:
-            draw.ellipse((82, y + 10, 96, y + 24), fill=GREEN)
-            draw.text((118, y), bullet, font=font(28), fill="#DCE1E3")
-            y += 62
+        cover_art = Image.open(ROOT / "submission" / "VIDEO_COVER_V2.png")
+        canvas.paste(cover(cover_art, (WIDTH, HEIGHT)), (0, 0))
     elif scene["kind"] == "runtime":
         profile = redact_profile(Image.open(ASSETS / "radeon-profile.png"))
         terminal = Image.open(ASSETS / "radeon-terminal.png")
@@ -266,26 +250,9 @@ def build_board(scene: dict, index: int) -> Path:
             6,
         )
     else:
-        architecture = Image.open(ROOT / "submission" / "ARCHITECTURE.png")
-        draw.rounded_rectangle((48, 166, 1440, 996), radius=18, fill=SURFACE)
-        paste_center(canvas, architecture, (66, 184, 1422, 978), fill=SURFACE)
-        stat_panel(
-            draw,
-            (1480, 190, 1878, 780),
-            [("100/100", "VOICE EVIDENCE"), ("7/7", "RADEON FIXTURES"), ("DENY", "MAIL.SEND")],
-        )
-        draw.rounded_rectangle((1480, 812, 1878, 996), radius=18, fill="#E6F1EB", outline=GREEN, width=2)
-        draw.text((1506, 836), "PUBLIC ARTIFACTS", font=font(18, bold=True, mono=True), fill=GREEN)
-        draw_text_block(
-            draw,
-            "Source code\nSpecification\nArchitecture\nPoster\nRaw benchmark JSON\nProof hashes\nDemo video",
-            (1506, 876),
-            font(20, bold=True),
-            INK,
-            330,
-            7,
-        )
-        draw.text((1510, 1024), "AI-generated narration", font=font(15, mono=True), fill=MUTED)
+        promo = Image.open(ROOT / "submission" / "PROMO_BANNER_V2.png")
+        canvas.paste(cover(promo, (WIDTH, HEIGHT)), (0, 0))
+        draw.text((1540, 1030), "AI-generated narration", font=font(15, mono=True), fill=MUTED)
 
     path = WORK / "boards" / f"scene-{index + 1:02d}.png"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -374,8 +341,12 @@ def build() -> None:
     for index, scene in enumerate(SCENES):
         text = sections[scene["heading"]]
         board = build_board(scene, index)
-        audio = WORK / f"scene-{index + 1:02d}.aiff"
-        run(["say", "-v", "Samantha", "-r", "165", "-o", str(audio), text])
+        api_audio = ROOT / "tmp" / "tts-v2" / f"scene-{index + 1:02d}.mp3"
+        if api_audio.exists():
+            audio = api_audio
+        else:
+            audio = WORK / f"scene-{index + 1:02d}.aiff"
+            run(["say", "-v", "Samantha", "-r", "165", "-o", str(audio), text])
         duration = probe_duration(audio)
         video = WORK / f"scene-{index + 1:02d}.mp4"
         frames = max(1, round(duration * FPS))

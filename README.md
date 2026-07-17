@@ -2,7 +2,7 @@
 
 **Speak the SOP. Prove the Skill.**
 
-Final 3-minute 40-second demo:
+Final 3-minute 59-second demo:
 `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
 
 Official AMD hackathon submission:
@@ -131,10 +131,13 @@ real-time). Qwen3-4B compiled 13 constraints in 24.13 seconds with 368 ms TTFT,
 20.07 tokens/s, and 8.001 GiB peak VRAM. The server preserved
 `mail.send = deny` even when the client verification payload was modified.
 
-Release artifacts include the narrated demo, SRT captions, and the final
-Radeon proof ZIP. The narration is AI-generated and the local product footage
-is explicitly labeled as a deterministic replay; runtime screenshots and
-metrics come from the actual Radeon Cloud validation.
+Release artifacts include the narrated demo, SRT captions, visual campaign
+assets, and the final Radeon proof ZIP. Narration uses AIDP
+`gemini-3.1-flash-tts-preview` with the `Kore` voice. GPT Image 2 generated the
+cinematic background artwork; project names, labels, and metrics are rendered
+locally for exact typography. Product footage is explicitly labeled as a
+deterministic replay, while runtime screenshots and metrics come from the
+actual Radeon Cloud validation.
 
 The next isolated serving experiment is Transformers versus vLLM. It should run
 in a separate template or container so the validated Transformers environment
