@@ -53,6 +53,14 @@ const patterns: Pattern[] = [
     confidence: 0.97
   },
   {
+    kind: "redact",
+    regex:
+      /(?:不能|不得|不要|禁止)(?:在[^。！？\n]{0,30})?(?:包含|写入|暴露)([^。！？\n]*(?:数据|信息|姓名|名称)[^。！？\n]*)/g,
+    statement: (match) => `Redact ${clean(match[1])}`,
+    appliesTo: ["write_report", "draft_email"],
+    confidence: 0.98
+  },
+  {
     kind: "only_if",
     regex: /\bonly (?:include|process|keep)\s+([^\n.]+)/gi,
     statement: (match) => `Only include ${clean(match[1])}`,
@@ -69,11 +77,29 @@ const patterns: Pattern[] = [
     confidence: 0.93
   },
   {
+    kind: "requires_confirmation",
+    regex:
+      /如果([^。！？\n，,]+)(?:缺失|不存在|没有)[^。！？\n，,]*[，,]?\s*(?:必须|需要)(?:标记为|设为|进入)([^。！？\n]*(?:确认|复核)[^。！？\n]*)/g,
+    statement: (match) =>
+      `When ${clean(match[1])} is missing, require ${clean(match[2])}`,
+    appliesTo: ["select_commitment", "draft_email"],
+    confidence: 0.98
+  },
+  {
     kind: "only_if",
     regex: /\bonly when\s+([^\n.]+)/gi,
     statement: (match) => `Execute only when ${clean(match[1])}`,
     appliesTo: ["create_calendar_hold"],
     confidence: 0.94
+  },
+  {
+    kind: "only_if",
+    regex:
+      /只有([^。！？\n，,]+)(?:时|的时候)[，,]?\s*(?:才)?([^。！？\n]*(?:创建|生成|执行)[^。！？\n]*)/g,
+    statement: (match) =>
+      `Execute ${clean(match[2])} only when ${clean(match[1])}`,
+    appliesTo: ["create_calendar_hold"],
+    confidence: 0.98
   },
   {
     kind: "must",

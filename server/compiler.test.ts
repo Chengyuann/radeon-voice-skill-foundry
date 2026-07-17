@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { reviewFollowupDemo } from "../shared/demo.js";
+import type { Constraint } from "../shared/types.js";
 import {
   compileSop,
   extractConstraintsDeterministically,
+  generateFixtures,
   inferPermissions,
   mergeModelConstraintsWithGuardrails,
   refineCompilation
@@ -102,6 +104,59 @@ describe("SOP compiler", () => {
     ).toBe(true);
   });
 
+  it("preserves Chinese redaction, confirmation, and date conditions", () => {
+    const transcript =
+      "项目评审之后，只处理P零和P一问题。外部报告里不能包含薪资数据。" +
+      "邮件只能生成草稿，不要自动发送。如果负责人缺失，必须标记为需要确认。" +
+      "只有存在截止日期时，才创建日历站位。";
+    const guardrails = extractConstraintsDeterministically(
+      transcript,
+      reviewFollowupDemo.actions
+    );
+    const merged = mergeModelConstraintsWithGuardrails(
+      [
+        {
+          id: "model-cn-summary",
+          kind: "must" as const,
+          statement: "Draft owner follow-up emails.",
+          sourceText: "邮件只能生成草稿。",
+          confidence: 0.9,
+          appliesTo: ["draft_email"]
+        }
+      ],
+      guardrails
+    );
+
+    expect(
+      merged.some(
+        (constraint) =>
+          constraint.kind === "redact" &&
+          /薪资数据/.test(constraint.statement)
+      )
+    ).toBe(true);
+    expect(
+      merged.some(
+        (constraint) =>
+          constraint.kind === "requires_confirmation" &&
+          /负责人/.test(constraint.statement)
+      )
+    ).toBe(true);
+    expect(
+      merged.some(
+        (constraint) =>
+          constraint.kind === "only_if" &&
+          /截止日期/.test(constraint.statement)
+      )
+    ).toBe(true);
+
+    const compilationFixtures = generateFixturesForTest(merged);
+    expect(
+      compilationFixtures.some(
+        (fixture) => fixture.name === "Conditional scope is enforced"
+      )
+    ).toBe(true);
+  });
+
   it("hydrates compact model rules with runtime-owned metadata", () => {
     const constraints = hydrateModelConstraints([
       {
@@ -144,3 +199,16 @@ describe("SOP compiler", () => {
     ).toBe(true);
   });
 });
+
+function generateFixturesForTest(constraints: Constraint[]) {
+  const permissions = inferPermissions(reviewFollowupDemo.actions, constraints);
+  return generateFixtures(constraints, permissions, {
+    schemaVersion: "0.1.0",
+    status: "pass",
+    qualityScore: 100,
+    format: "PCM 16-bit WAV",
+    audioSha256: "a".repeat(64),
+    issues: [],
+    analyzedAt: "2026-07-18T00:00:00.000Z"
+  });
+}
