@@ -289,7 +289,7 @@ def build_poster() -> tuple[Path, Path]:
     draw.text((155, 2092), "Radeon Pro W7900-class | gfx1100 | ROCm 7.2.1", font=font(29, bold=True), fill=WHITE)
     draw.text((155, 2152), "Qwen3-ASR-0.6B  ->  Qwen3-4B-Instruct  ->  deterministic verifier", font=font(24, mono=True), fill="#D8DCDE")
     draw.text((155, 2220), "mail.send = DENY", font=font(39, bold=True), fill="#F4B6B2")
-    draw.text((620, 2220), "Local audio proof: 7/7", font=font(39, bold=True), fill="#B9E1CC")
+    draw.text((620, 2220), "Radeon audio proof: 7/7", font=font(39, bold=True), fill="#B9E1CC")
 
     draw.text((110, 2395), "Track 2 | Team N/A | github.com/Chengyuann/radeon-voice-skill-foundry", font=font(24, bold=True), fill=INK)
     draw.text((110, 2440), "Actions capture what happened. Voice captures why, when, and what must never happen.", font=font(23), fill=MUTED)

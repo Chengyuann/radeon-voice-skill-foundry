@@ -32,17 +32,17 @@ Deadline: 2026-08-06 23:59 UTC+8.
 - [x] Agent architecture diagram
 - [x] Supplementary poster
 - [x] 3-5 minute English demo script
-- [ ] Record final demo video
-- [ ] Upload demo video and verify public access
-- [ ] Add video URL to `submission/README.md`
+- [x] Record final demo video
+- [x] Upload demo video and verify public access
+- [x] Add video URL to `submission/README.md`
 - [ ] Add video URL to official submission PR body
 
 ## Quality Gates
 
-- [x] Local `npm test`: 20/20 passed
+- [x] Local `npm test`: 21/21 passed
 - [x] Local `npm run build`: passed
 - [x] Radeon baseline `npm test`: 10/10 passed
-- [ ] Re-run the 20-test suite on Radeon after Voice Evidence Gate sync
+- [x] Re-run the 21-test suite on Radeon after Voice Evidence Gate sync
 - [x] Radeon `npm run build`: passed
 - [x] Agent service health: passed
 - [x] ASR service health: passed
@@ -52,7 +52,7 @@ Deadline: 2026-08-06 23:59 UTC+8.
 - [x] `mail.send = deny`
 - [x] Original Radeon workflow fixtures: 6/6 passed
 - [x] Local audio-backed verification: 7/7 fixtures passed
-- [ ] Re-run audio-backed verification on Radeon: 7/7 fixtures
+- [x] Re-run audio-backed verification on Radeon: 7/7 fixtures
 - [x] Benchmark JSON validates
 - [x] Proof ZIP integrity validates
 - [x] Secret scan passed
@@ -70,11 +70,20 @@ Deadline: 2026-08-06 23:59 UTC+8.
 
 ## Evidence Values
 
-- Git commit: `9768d5338742bf3e5b055c4a0db67bb41693a8bf`
+- Final Radeon validation commit:
+  `c759a417c68d06f639e3df797f50b4ebd7b81091`
 - Original Radeon proof ZIP SHA-256:
   `0f9a37f69aea24677561b3c43c2e5fbfa275aa0fadf0509816a7a8f1229879bd`
 - Local audio-backed proof ZIP SHA-256:
   `8c68e2b2c1dc6fec4f73601488113241259d751a82e0e5e2ab65f1f001911f30`
+- Radeon audio-backed proof ZIP SHA-256:
+  `6ea53dfe28f8221b3db9b06e6eed537767bf28b4c6536d25d45f3ffec20500e9`
+- Radeon audio-backed proof hash:
+  `6ff30ccc2d052e226051fa6819760abe3b2c2ef6243b63169ab9d5e0caebfc40`
+- Demo video SHA-256:
+  `79ccceb89ba7ac50f9fe1f7f5e302c6682759b64bcf1e8cae9c5dd5891436eb7`
+- Demo captions SHA-256:
+  `e83753648ac9317d8cbba4fdd07a0d6466ed7d48372a4e68c2a7ddb7f1e370b6`
 - Optimization JSON SHA-256:
   `ce2848f92c7f93b30fe558c99128cb6eba1988319931f7ab0bdcc803d291298d`
 - W7900-class GPU: `gfx1100`, 47.98 GiB VRAM
@@ -82,6 +91,8 @@ Deadline: 2026-08-06 23:59 UTC+8.
 - Agent median TTFT: 108.87 ms
 - Agent median throughput: 22.02 tokens/s
 - ASR warm median RTF: 0.0556
+- Final SOP ASR RTF: 0.0699, 14.3x real-time
+- Final Agent compile: 24.13 s, 368.16 ms TTFT, 20.07 tokens/s
 - Output token reduction: 29.42%
 - Generation latency reduction: 30.03%
 - Exact reuse HTTP median: 2.18 ms

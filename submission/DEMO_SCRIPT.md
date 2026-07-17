@@ -93,9 +93,9 @@ Target duration: 4 minutes 15 seconds.
 > Verification first proves the voice evidence, then attempts the unsafe paths
 > before promotion. Automatic sending,
 > sensitive-field leakage, invalid conditions, and unapproved network writes
-> are blocked. The local audio-backed proof run passes all seven fixtures,
-> denies mail sending, and issues governance receipts plus a hash-bound proof
-> bundle. The same run is repeated on Radeon before final submission.
+> are blocked. The final Radeon audio-backed proof run passes all seven
+> fixtures, denies mail sending, and issues governance receipts plus a
+> hash-bound proof bundle.
 
 ### 2:40-3:10 - Multi-Turn Refinement and Memory
 
@@ -153,7 +153,7 @@ Use these exact short cards:
 - `Qwen3-ASR-0.6B + Qwen3-4B-Instruct`
 - `mail.send = DENY`
 - `Voice Evidence Gate: PASS`
-- `Local audio proof: 7/7 fixtures passed`
+- `Radeon audio proof: 7/7 fixtures passed`
 - `29.42% fewer output tokens`
 - `30.03% lower generation latency`
 - `2.18 ms exact Verified Skill reuse`

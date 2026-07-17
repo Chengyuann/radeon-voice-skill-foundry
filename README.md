@@ -2,6 +2,9 @@
 
 **Speak the SOP. Prove the Skill.**
 
+Final 3-minute 40-second demo:
+`https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
+
 Radeon Voice Skill Foundry is a Track 2 project for the AMD AI DevMaster
 Hackathon. It turns a private spoken SOP and a structured workflow demonstration
 into a GAIA-compatible Agent Skill with:
@@ -98,6 +101,7 @@ Measured hardware evidence is in:
 
 - `benchmarks/w7900-2026-07-17.json`
 - `benchmarks/optimization-w7900-2026-07-17.json`
+- `benchmarks/radeon-audio-proof-v8-2026-07-18.json`
 - `docs/RADEON_W7900_BENCHMARK.md`
 - `docs/RADEON_OPTIMIZATION_BENCHMARK.md`
 
@@ -116,6 +120,18 @@ Gate at `100/100`: 20.39 seconds, 16 kHz mono, -18.36 dBFS RMS, zero clipping,
 and 17.17% near-silence. The proof bundle stores server-held derived metrics,
 the source SHA-256, the original ASR transcript hash, and whether the transcript
 was edited and reviewed. It does not include raw audio.
+
+The final Radeon audio-backed rerun used source commit `c759a41` and passed
+`21/21` tests, the production build, and `7/7` verification fixtures. The
+20.39-second SOP WAV transcribed in 1.426 seconds (`0.0699` RTF, `14.3x`
+real-time). Qwen3-4B compiled 13 constraints in 24.13 seconds with 368 ms TTFT,
+20.07 tokens/s, and 8.001 GiB peak VRAM. The server preserved
+`mail.send = deny` even when the client verification payload was modified.
+
+Release artifacts include the narrated demo, SRT captions, and the final
+Radeon proof ZIP. The narration is AI-generated and the local product footage
+is explicitly labeled as a deterministic replay; runtime screenshots and
+metrics come from the actual Radeon Cloud validation.
 
 The next isolated serving experiment is Transformers versus vLLM. It should run
 in a separate template or container so the validated Transformers environment

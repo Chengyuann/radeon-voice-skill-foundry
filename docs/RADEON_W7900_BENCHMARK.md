@@ -125,6 +125,39 @@ Detailed method and limitations:
 Raw data:
 `benchmarks/optimization-w7900-2026-07-17.json`.
 
+## Final Voice Evidence Gate rerun
+
+Measured on 2026-07-18 using source commit
+`c759a417c68d06f639e3df797f50b4ebd7b81091`:
+
+- `npm ci`: passed
+- unit tests: `21/21` passed
+- production build: passed
+- Qwen3-ASR 20.39-second SOP inference: `1.4259 s`
+- ASR RTF: `0.0699` (`14.3x` real-time)
+- ASR peak allocated VRAM: `1.661 GiB`
+- Voice Evidence Gate: `100/100`
+- Qwen3-4B compile duration: `24.1331 s`
+- Agent TTFT: `368.16 ms`
+- Agent throughput: `20.07 tokens/s`
+- Agent peak allocated VRAM: `8.001 GiB`
+- generated constraints: `13`
+- verification: `7/7` fixtures passed
+- final `mail.send`: `deny`
+- governance BLOCK receipts: `3`
+- proof hash:
+  `6ff30ccc2d052e226051fa6819760abe3b2c2ef6243b63169ab9d5e0caebfc40`
+- proof ZIP SHA-256:
+  `6ea53dfe28f8221b3db9b06e6eed537767bf28b4c6536d25d45f3ffec20500e9`
+
+The verification request intentionally changed the client-side `mail.send`
+permission to `allow` and replaced its action trace. The server ignored those
+untrusted fields, resolved the authoritative compile run, and still returned
+`mail.send = deny` with `7/7` fixtures.
+
+Raw summary:
+`benchmarks/radeon-audio-proof-v8-2026-07-18.json`.
+
 ## Application verification
 
 The project was copied to Radeon Cloud and verified with a public npm lock:

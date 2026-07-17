@@ -12,3 +12,4 @@ outputs/
 .playwright-cli/
 tmp/
 output/playwright/
+submission/*.mp4

@@ -1,0 +1,127 @@
+1
+00:00:00,100 --> 00:00:09,889
+A local Agent can observe what a user clicks, but it cannot reliably infer why a step is required, which exception applies, or what must never happen.
+
+2
+00:00:09,889 --> 00:00:16,778
+Radeon Voice Skill Foundry turns a private spoken procedure and its aligned action trace into a governed Agent Skill.
+
+3
+00:00:16,778 --> 00:00:19,316
+The output is not just a transcript.
+
+4
+00:00:19,316 --> 00:00:26,205
+It is a portable skill with typed rules, minimum permissions, adversarial tests, governance receipts, and a hash-bound proof package.
+
+5
+00:00:26,405 --> 00:00:37,597
+This final validation ran on an AMD Radeon Pro W7900-class allocation with gfx1100, about forty-eight gigabytes of VRAM, and ROCm 7.2.1.
+
+6
+00:00:37,597 --> 00:00:46,125
+Qwen3-ASR 0.6B handled speech recognition, while Qwen3 4B Instruct compiled the spoken procedure into structured constraints.
+
+7
+00:00:46,125 --> 00:00:49,323
+The public source commit was c759a41.
+
+8
+00:00:49,323 --> 00:00:57,318
+On that exact commit, all twenty-one tests and the production build passed inside Radeon Cloud.
+
+9
+00:00:57,518 --> 00:01:15,742
+The expert explains the hidden rules for a private project-review workflow: keep only P0 and P1 findings, exclude salary data, draft email but never send it automatically, request confirmation when an owner is missing, and create a calendar hold only when a due date exists.
+
+10
+00:01:15,742 --> 00:01:23,437
+Before those words can become executable policy, the Voice Evidence Gate measures level, clipping, silence, format, and source integrity.
+
+11
+00:01:23,437 --> 00:01:29,917
+The server also binds the original ASR transcript hash, so later edits require explicit human review.
+
+12
+00:01:30,117 --> 00:01:38,216
+The Agent retrieves relevant local policy and procedure evidence, then combines it with the voice transcript and action trace.
+
+13
+00:01:38,216 --> 00:01:46,742
+Qwen3 4B produced thirteen constraints in 24.13 seconds, with 368 milliseconds time to first token and 20.07 tokens per second.
+
+14
+00:01:46,742 --> 00:02:00,809
+Deterministic guardrails preserve critical Chinese semantics even if the model omits them: salary data becomes a redaction rule, a missing owner becomes a confirmation rule, and the due-date clause remains an only-if condition.
+
+15
+00:02:01,009 --> 00:02:06,250
+Verification proves the voice evidence first, then executes the unsafe paths before promotion.
+
+16
+00:02:06,250 --> 00:02:09,475
+The final Radeon run passed all seven fixtures.
+
+17
+00:02:09,475 --> 00:02:17,538
+It removed salary data, skipped out-of-scope findings, opened review for missing context, blocked automatic sending, and denied unapproved network writes.
+
+18
+00:02:17,538 --> 00:02:19,554
+Three BLOCK receipts were issued.
+
+19
+00:02:19,554 --> 00:02:29,632
+The client payload was deliberately modified to claim that mail sending was allowed, but the server ignored the untrusted fields and resolved the authoritative run.
+
+20
+00:02:29,632 --> 00:02:32,857
+The final decision remained mail dot send: deny.
+
+21
+00:02:33,057 --> 00:02:43,999
+After verification, the package contains a GAIA-compatible skill definition, least-privilege policy, fixtures, receipts, retrieved evidence, source-bound voice evidence, and the proof bundle.
+
+22
+00:02:43,999 --> 00:02:45,989
+Raw audio is excluded.
+
+23
+00:02:45,989 --> 00:02:53,449
+A verified skill can be versioned in local procedural memory and reused without model generation.
+
+24
+00:02:53,449 --> 00:03:03,894
+On the same Radeon allocation, compact structured output reduced median output tokens by 29.42 percent and generation latency by 30.03 percent.
+
+25
+00:03:03,894 --> 00:03:08,868
+Exact verified-skill reuse measured 2.18 milliseconds median HTTP round trip.
+
+26
+00:03:09,068 --> 00:03:13,727
+Radeon Voice Skill Foundry extends local voice interaction into capability creation.
+
+27
+00:03:13,727 --> 00:03:15,422
+Actions capture what happened.
+
+28
+00:03:15,422 --> 00:03:19,658
+Voice captures why, when, exceptions, and what must never happen.
+
+29
+00:03:19,658 --> 00:03:31,094
+The final Radeon audio proof scored one hundred out of one hundred for source quality, passed seven out of seven fixtures, and preserved mail sending as denied.
+
+30
+00:03:31,094 --> 00:03:37,448
+The source, specification, architecture, poster, raw benchmark summaries, and proof hashes are public and reproducible.
+
+31
+00:03:37,448 --> 00:03:38,719
+Speak the SOP.
+
+32
+00:03:38,719 --> 00:03:39,990
+Prove the Skill.

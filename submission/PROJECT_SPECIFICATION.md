@@ -1,5 +1,8 @@
 # Radeon Voice Skill Foundry
 
+Demo video:
+`https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
+
 ## Speak the SOP. Prove the Skill.
 
 **AMD AI DevMaster Hackathon - Track 2**
@@ -169,7 +172,8 @@ High-risk policy is enforced ahead of model output. In the reference scenario:
 
 The original Radeon proof path preserved `mail.send = deny` and passed 6/6
 workflow fixtures. Audio-backed promotion adds the Voice Evidence Gate as a
-seventh critical fixture.
+seventh critical fixture. The final Radeon rerun passed all 7/7 fixtures while
+using a server-authoritative compile run.
 
 ### 5.6 Voice Evidence and Promotion Control
 
@@ -243,6 +247,29 @@ Qwen3-ASR warm benchmark:
 The reproducible synthetic Chinese SOP fixture completed the end-to-end voice
 pipeline at 3.71x real-time and preserved the no-send safety rule. The fixture
 is explicitly synthetic and is not represented as a human recording.
+
+Final audio-backed rerun on the same Radeon allocation:
+
+| Metric | Result |
+|---|---:|
+| Source commit | `c759a41` |
+| Unit tests | 21/21 passed |
+| SOP audio duration | 20.39 s |
+| ASR inference | 1.4259 s |
+| ASR RTF | 0.0699 |
+| ASR speed | 14.3x real-time |
+| Voice Evidence Gate | 100/100 |
+| Agent compile duration | 24.1331 s |
+| Agent TTFT | 368.16 ms |
+| Agent throughput | 20.07 tokens/s |
+| Agent peak VRAM | 8.001 GiB |
+| Verification | 7/7 passed |
+| Final permission | `mail.send = deny` |
+
+The client verification payload was deliberately modified to claim
+`mail.send = allow`. The server resolved the authoritative compile run and
+returned `mail.send = deny`, demonstrating that browser-supplied proof fields
+are not trusted.
 
 ## 8. Targeted Radeon Optimization
 

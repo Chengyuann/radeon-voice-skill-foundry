@@ -14,6 +14,10 @@ to perform risky actions.
 - Project repository:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry`
 - License: MIT
+- Demo video:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
+- Demo captions:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt`
 
 ## Why It Matters
 
@@ -38,6 +42,8 @@ The system compiles both signals into:
 - `POSTER.pdf` - supplementary one-page poster
 - `POSTER.png` - poster preview
 - `DEMO_SCRIPT.md` - 3-5 minute English demo narration and shot list
+- `DEMO_NARRATION.md` - final AI-generated English voiceover text
+- `RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt` - final captions
 - `FINAL_SUBMISSION_CHECKLIST.md` - completion and evidence ledger
 
 ## Measured Radeon Evidence
@@ -57,12 +63,18 @@ The system compiles both signals into:
 - final permission decision: `mail.send = deny`
 - original Radeon workflow verification: 6/6 fixtures passed
 - local audio-backed proof: 7/7, including Voice Evidence Gate
-- Radeon audio-backed 7/7 rerun: pending final submission sync
+- final Radeon audio-backed proof: 7/7, including Voice Evidence Gate
+- final Radeon validation commit: `c759a41`
+- final proof hash:
+  `6ff30ccc2d052e226051fa6819760abe3b2c2ef6243b63169ab9d5e0caebfc40`
+- final proof ZIP SHA-256:
+  `6ea53dfe28f8221b3db9b06e6eed537767bf28b4c6536d25d45f3ffec20500e9`
 
 Raw measurements are in:
 
 - `benchmarks/w7900-2026-07-17.json`
 - `benchmarks/optimization-w7900-2026-07-17.json`
+- `benchmarks/radeon-audio-proof-v8-2026-07-18.json`
 
 ## Current External Deliverable Status
 
@@ -71,5 +83,5 @@ Raw measurements are in:
 - Architecture diagram: complete
 - Poster: complete
 - Demo script: complete
-- Demo video URL: pending recording/upload
-- Official hackathon PR: pending final video URL
+- Demo video URL: complete
+- Official hackathon PR: pending
