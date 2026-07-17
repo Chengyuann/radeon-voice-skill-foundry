@@ -1,19 +1,20 @@
 import type { VoiceEvidence } from "../shared/types.js";
+import { dataFile, readStoredJson, updateStoredJson } from "./file-store.js";
 import { id, textHash } from "./hash.js";
 
-type VoiceEvidenceRecord = {
+export type VoiceEvidenceRecord = {
   id: string;
   evidence: VoiceEvidence;
   createdAt: string;
 };
 
-const records = new Map<string, VoiceEvidenceRecord>();
 const maxRecords = 100;
+const recordsPath = () => dataFile("voice-evidence-records.json");
 
-export function registerVoiceEvidence(
+export async function registerVoiceEvidence(
   evidence: VoiceEvidence,
   asrTranscript: string
-): VoiceEvidenceRecord {
+): Promise<VoiceEvidenceRecord> {
   const record: VoiceEvidenceRecord = {
     id: id("voice"),
     evidence: {
@@ -22,13 +23,18 @@ export function registerVoiceEvidence(
     },
     createdAt: new Date().toISOString()
   };
-  records.set(record.id, record);
-  trimRecords();
-  return structuredClone(record);
+  return updateStoredJson(recordsPath(), [], (records: VoiceEvidenceRecord[]) => {
+    records.push(record);
+    records.splice(0, Math.max(0, records.length - maxRecords));
+    return structuredClone(record);
+  });
 }
 
-export function resolveVoiceEvidence(idValue: string): VoiceEvidenceRecord {
-  const record = records.get(idValue);
+export async function resolveVoiceEvidence(
+  idValue: string
+): Promise<VoiceEvidenceRecord> {
+  const records = await readStoredJson<VoiceEvidenceRecord[]>(recordsPath(), []);
+  const record = records.find((item) => item.id === idValue);
   if (!record) {
     throw new Error(
       "Voice evidence is unavailable or expired; transcribe the audio again"
@@ -47,10 +53,6 @@ export function transcriptMatchesVoiceEvidence(
   );
 }
 
-function trimRecords(): void {
-  while (records.size > maxRecords) {
-    const oldest = records.keys().next().value as string | undefined;
-    if (!oldest) return;
-    records.delete(oldest);
-  }
+export async function voiceEvidenceRecordCount(): Promise<number> {
+  return (await readStoredJson<VoiceEvidenceRecord[]>(recordsPath(), [])).length;
 }

@@ -58,6 +58,11 @@ export type RuntimeInfo = {
   asrRtf?: number;
   asrXRealtime?: number;
   asrPeakVramGiB?: number;
+  persisted?: {
+    compileRuns: number;
+    verificationRuns: number;
+    voiceEvidenceRecords: number;
+  };
 };
 
 export type ModelMetrics = {
@@ -96,8 +101,19 @@ export type CompileRequest = {
 
 export type VoiceEvidenceStatus = "pass" | "review" | "quarantine";
 
+export type AudioDiagnostic = {
+  code:
+    | "low_snr"
+    | "dc_offset"
+    | "dropout"
+    | "channel_imbalance"
+    | "low_dynamic_range";
+  severity: "review" | "quarantine";
+  message: string;
+};
+
 export type VoiceEvidence = {
-  schemaVersion: "0.1.0";
+  schemaVersion: "0.1.0" | "0.2.0";
   status: VoiceEvidenceStatus;
   qualityScore: number;
   format: string;
@@ -108,9 +124,17 @@ export type VoiceEvidence = {
   peakDbfs?: number;
   clippingRatio?: number;
   silenceRatio?: number;
+  noiseFloorDbfs?: number;
+  speechLevelDbfs?: number;
+  estimatedSnrDb?: number;
+  dcOffset?: number;
+  crestFactorDb?: number;
+  dropoutRatio?: number;
+  channelImbalanceDb?: number;
   audioSha256: string;
   asrTranscriptSha256?: string;
   issues: string[];
+  diagnostics?: AudioDiagnostic[];
   analyzedAt: string;
 };
 
@@ -180,16 +204,36 @@ export type VerifyResult = {
   verificationDurationMs: number;
 };
 
+export type ProofCompatibilityManifest = {
+  schemaVersion: "0.2.0";
+  verifierVersion: string;
+  runtimeHash: string;
+  toolContractHash: string;
+  policyHash: string;
+  skillHash: string;
+  voiceEvidenceSchemaVersion?: VoiceEvidence["schemaVersion"];
+};
+
+export type ProofCompatibility = {
+  status: "compatible" | "revalidation_required";
+  reasons: string[];
+  checkedAt: string;
+  expected?: ProofCompatibilityManifest;
+  actual: ProofCompatibilityManifest;
+};
+
 export type StoredSkill = {
   id: string;
   name: string;
   version: number;
-  status: "verified";
+  status: "verified" | "revalidation_required";
   createdAt: string;
   updatedAt: string;
   reuseCount: number;
   compilation: CompileResult;
   verification: VerifyResult;
+  actions?: ActionEvent[];
+  compatibility?: ProofCompatibility;
 };
 
 export type SkillReuseResult = {
@@ -200,6 +244,13 @@ export type SkillReuseResult = {
   speedup: number;
   httpSpeedup?: number;
   avoidedModelOutputTokens?: number;
+  compatibility: ProofCompatibility;
+};
+
+export type SkillRevalidationResult = {
+  skill: StoredSkill;
+  verification: VerifyResult;
+  compatibility: ProofCompatibility;
 };
 
 export type RefineRequest = {

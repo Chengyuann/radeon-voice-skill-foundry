@@ -7,6 +7,7 @@ import type {
   VerifyResult
 } from "../shared/types.js";
 import { id, stableHash } from "./hash.js";
+import { createProofCompatibilityManifest } from "./proof-compatibility.js";
 
 type Workspace = {
   findings: Array<{
@@ -141,7 +142,7 @@ export async function verifyCompilation(
   const status = failed.length ? "quarantined" : "verified";
 
   const proofCore = {
-    schemaVersion: "0.1.0",
+    schemaVersion: "0.2.0",
     runId: compilation.runId,
     projectName: compilation.projectName,
     status,
@@ -157,7 +158,8 @@ export async function verifyCompilation(
     metrics,
     skillHash: stableHash(compilation.skillMarkdown),
     policyHash: stableHash(compilation.policyYaml),
-    toolSchemaHash: stableHash(actions.map(({ type, label }) => ({ type, label })))
+    toolSchemaHash: stableHash(actions.map(({ type, label }) => ({ type, label }))),
+    compatibility: createProofCompatibilityManifest(compilation, actions)
   };
 
   return {

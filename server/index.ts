@@ -18,17 +18,26 @@ import { compileSop, refineCompilation } from "./compiler.js";
 import { id } from "./hash.js";
 import { buildSubmissionPackage } from "./package.js";
 import { getRuntimeInfo } from "./runtime.js";
+import {
+  resolveCompileRun,
+  resolveVerificationRun,
+  runtimeRecordCounts,
+  storeCompileRun,
+  storeVerificationRun
+} from "./runtime-store.js";
 import { verifyCompilation } from "./verifier.js";
 import { transcribeAudioBuffer } from "./transcriber.js";
 import {
   resolveVoiceEvidence,
-  transcriptMatchesVoiceEvidence
+  transcriptMatchesVoiceEvidence,
+  voiceEvidenceRecordCount
 } from "./voice-evidence-store.js";
 import {
   addKnowledge,
   listKnowledge,
   listSkills,
   markSkillReused,
+  revalidateStoredSkill,
   saveVerifiedSkill,
   searchKnowledge
 } from "./storage.js";
@@ -36,21 +45,19 @@ import {
 const app = express();
 const port = Number(process.env.PORT || 8791);
 const host = process.env.HOST || "127.0.0.1";
-const compileRuns = new Map<
-  string,
-  { compilation: CompileResult; actions: CompileRequest["actions"] }
->();
-const results = new Map<
-  string,
-  { compilation: CompileResult; verification: VerifyResult }
->();
-const maxRuntimeRecords = 100;
 const maxAudioUploadBytes = 25 * 1024 * 1024;
 
 app.use(express.json({ limit: "2mb" }));
 
-app.get("/api/health", (_request, response) => {
-  response.json({ ok: true, runtime: getRuntimeInfo() });
+app.get("/api/health", async (_request, response) => {
+  response.json({
+    ok: true,
+    runtime: getRuntimeInfo(),
+    persisted: {
+      ...(await runtimeRecordCounts()),
+      voiceEvidenceRecords: await voiceEvidenceRecordCount()
+    }
+  });
 });
 
 app.get("/api/runtime", (_request, response) => {
@@ -87,7 +94,7 @@ app.post("/api/compile", async (request, response) => {
   try {
     const input = compileRequestSchema.parse(request.body);
     const voiceRecord = input.voiceEvidenceId
-      ? resolveVoiceEvidence(input.voiceEvidenceId)
+      ? await resolveVoiceEvidence(input.voiceEvidenceId)
       : undefined;
     const compilation = await compileSop({
       ...input,
@@ -96,10 +103,7 @@ app.post("/api/compile", async (request, response) => {
         ? !transcriptMatchesVoiceEvidence(voiceRecord.evidence, input.transcript)
         : false
     });
-    storeCompileRun(compilation.runId, {
-      compilation,
-      actions: structuredClone(input.actions)
-    });
+    await storeCompileRun(compilation, input.actions);
     response.json(compilation);
   } catch (error) {
     response.status(400).json({
@@ -111,20 +115,14 @@ app.post("/api/compile", async (request, response) => {
 app.post("/api/refine", async (request, response) => {
   try {
     const input = refineRequestSchema.parse(request.body);
-    const priorRun = compileRuns.get(input.compilation.runId);
-    if (!priorRun) {
-      throw new Error("Compilation run not found; compile the SOP again");
-    }
+    const priorRun = await resolveCompileRun(input.compilation.runId);
     const compilation = await refineCompilation({
       compilation: priorRun.compilation,
       message: input.message,
       actions: priorRun.actions,
       useModel: input.useModel
     });
-    storeCompileRun(compilation.runId, {
-      compilation,
-      actions: priorRun.actions
-    });
+    await storeCompileRun(compilation, priorRun.actions);
     response.json(compilation);
   } catch (error) {
     response.status(400).json({
@@ -157,16 +155,14 @@ app.post("/api/verify", async (request, response) => {
     if (!payload?.compilation?.runId || !Array.isArray(payload.actions)) {
       throw new Error("Invalid verification payload");
     }
-    const trustedRun = compileRuns.get(payload.compilation.runId);
-    if (!trustedRun) {
-      throw new Error("Compilation run not found; compile the SOP again");
-    }
+    const trustedRun = await resolveCompileRun(payload.compilation.runId);
     const verification = await verifyCompilation(
       trustedRun.compilation,
       trustedRun.actions
     );
-    storeResult(trustedRun.compilation.runId, {
+    await storeVerificationRun({
       compilation: trustedRun.compilation,
+      actions: trustedRun.actions,
       verification
     });
     response.json(verification);
@@ -178,22 +174,22 @@ app.post("/api/verify", async (request, response) => {
 });
 
 app.get("/api/package/:runId", async (request, response) => {
-  const result = results.get(request.params.runId);
-  if (!result) {
+  try {
+    const result = await resolveVerificationRun(request.params.runId);
+    const archive = await buildSubmissionPackage(
+      result.compilation,
+      result.verification
+    );
+    response
+      .setHeader("Content-Type", "application/zip")
+      .setHeader(
+        "Content-Disposition",
+        `attachment; filename="${result.compilation.projectName}-proof.zip"`
+      )
+      .send(archive);
+  } catch {
     response.status(404).json({ error: "Run not found; verify it first" });
-    return;
   }
-  const archive = await buildSubmissionPackage(
-    result.compilation,
-    result.verification
-  );
-  response
-    .setHeader("Content-Type", "application/zip")
-    .setHeader(
-      "Content-Disposition",
-      `attachment; filename="${result.compilation.projectName}-proof.zip"`
-    )
-    .send(archive);
 });
 
 app.get("/api/skills", async (_request, response) => {
@@ -202,15 +198,16 @@ app.get("/api/skills", async (_request, response) => {
 
 app.post("/api/skills/:runId", async (request, response) => {
   try {
-    const result = results.get(request.params.runId);
-    if (!result || result.verification.status !== "verified") {
+    const result = await resolveVerificationRun(request.params.runId);
+    if (result.verification.status !== "verified") {
       throw new Error("Verify this run before saving it as a skill");
     }
     const stored = await saveVerifiedSkill({
       name: result.compilation.projectName,
       status: "verified",
       compilation: result.compilation,
-      verification: result.verification
+      verification: result.verification,
+      actions: result.actions
     });
     response.status(201).json(stored);
   } catch (error) {
@@ -232,10 +229,7 @@ app.post("/api/skills/:skillId/reuse", async (request, response) => {
       ...reuse.skill,
       compilation
     };
-    storeCompileRun(compilation.runId, {
-      compilation,
-      actions: inferActionsForStoredSkill(compilation)
-    });
+    await storeCompileRun(compilation, inferActionsForStoredSkill(compilation));
     response.json({
       ...reuse,
       skill
@@ -243,6 +237,28 @@ app.post("/api/skills/:skillId/reuse", async (request, response) => {
   } catch (error) {
     response.status(404).json({
       error: error instanceof Error ? error.message : "Skill reuse failed"
+    });
+  }
+});
+
+app.post("/api/skills/:skillId/revalidate", async (request, response) => {
+  try {
+    const result = await revalidateStoredSkill(request.params.skillId);
+    await storeCompileRun(
+      result.skill.compilation,
+      result.skill.actions || inferActionsForStoredSkill(result.skill.compilation)
+    );
+    await storeVerificationRun({
+      compilation: result.skill.compilation,
+      actions:
+        result.skill.actions || inferActionsForStoredSkill(result.skill.compilation),
+      verification: result.verification
+    });
+    response.json(result);
+  } catch (error) {
+    response.status(400).json({
+      error:
+        error instanceof Error ? error.message : "Skill revalidation failed"
     });
   }
 });
@@ -304,30 +320,6 @@ function readAudioUpload(request: express.Request): Promise<UploadedAudio> {
     });
     request.pipe(busboy);
   });
-}
-
-function storeCompileRun(
-  runId: string,
-  value: { compilation: CompileResult; actions: CompileRequest["actions"] }
-): void {
-  compileRuns.set(runId, value);
-  trimMap(compileRuns);
-}
-
-function storeResult(
-  runId: string,
-  value: { compilation: CompileResult; verification: VerifyResult }
-): void {
-  results.set(runId, value);
-  trimMap(results);
-}
-
-function trimMap(map: Map<string, unknown>): void {
-  while (map.size > maxRuntimeRecords) {
-    const oldest = map.keys().next().value as string | undefined;
-    if (!oldest) return;
-    map.delete(oldest);
-  }
 }
 
 function inferActionsForStoredSkill(

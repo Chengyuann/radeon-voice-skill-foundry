@@ -64,6 +64,28 @@ export function ProofPanel({
         <div className="runtime-dot" data-active={runtime?.mode === "radeon"} />
       </div>
 
+      {verification ? (
+        <div className="proof-lifecycle">
+          <div>
+            <CheckCircle2 size={15} />
+            <strong>Compatibility manifest</strong>
+          </div>
+          <span>
+            verifier{" "}
+            {String(
+              (
+                verification.proofBundle.compatibility as
+                  | { verifierVersion?: string }
+                  | undefined
+              )?.verifierVersion || "legacy"
+            )}
+          </span>
+          <code>
+            persistent run · {verification.runId.slice(0, 12)}
+          </code>
+        </div>
+      ) : null}
+
       <div className="artifact-tabs">
         <div className="artifact-tab active">
           <FileCode2 size={15} />

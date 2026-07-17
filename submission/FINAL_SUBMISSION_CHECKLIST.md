@@ -95,6 +95,12 @@ Official PR:
   `d058bdb46ef3b808b238e5811a21e0881865b704dc8b1db71b68dfc7d9398484`
 - Demo TTS:
   `gemini-3.1-flash-tts-preview`, voice `Kore`
+- Continuous operation demo SHA-256:
+  `83cc5302d6c181f32608efa8c87770be2781c4c77ef286350b67acb9047fb9ca`
+- Continuous operation captions SHA-256:
+  `a21a0ee3678370263bea60fa8028dea90513306c466d5e0c278082773344d033`
+- Voice Evidence v0.2 lifecycle proof hash:
+  `0c175843082b4464094f578c00598e8ec1b416ccbf5f7855c0e4d65e9deb5edf`
 - Optimization JSON SHA-256:
   `ce2848f92c7f93b30fe558c99128cb6eba1988319931f7ab0bdcc803d291298d`
 - W7900-class GPU: `gfx1100`, 47.98 GiB VRAM

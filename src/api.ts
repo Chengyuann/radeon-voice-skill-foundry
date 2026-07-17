@@ -5,6 +5,7 @@ import type {
   KnowledgeMatch,
   RuntimeInfo,
   SkillReuseResult,
+  SkillRevalidationResult,
   StoredSkill,
   TranscribeResult,
   VerifyResult
@@ -40,7 +41,14 @@ async function requestJson<T>(
 }
 
 export function getRuntime(): Promise<RuntimeInfo> {
-  return requestJson(apiUrl("/api/runtime"));
+  return requestJson<{
+    ok: boolean;
+    runtime: RuntimeInfo;
+    persisted: NonNullable<RuntimeInfo["persisted"]>;
+  }>(apiUrl("/api/health")).then((result) => ({
+    ...result.runtime,
+    persisted: result.persisted
+  }));
 }
 
 export function compileSop(input: CompileRequest): Promise<CompileResult> {
@@ -131,6 +139,14 @@ export async function reuseSkill(skillId: string): Promise<SkillReuseResult> {
         (result.originalCompileDurationMs / httpRoundTripMs) * 10
       ) / 10
   };
+}
+
+export function revalidateSkill(
+  skillId: string
+): Promise<SkillRevalidationResult> {
+  return requestJson(apiUrl(`/api/skills/${skillId}/revalidate`), {
+    method: "POST"
+  });
 }
 
 export async function transcribeAudio(file: Blob): Promise<TranscribeResult> {

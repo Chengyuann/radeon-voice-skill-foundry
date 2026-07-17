@@ -60,6 +60,7 @@ Status: ${verification.status}
 - \`receipts.jsonl\`: append-only governance decisions
 - \`proof_bundle.json\`: hashes, runtime metadata, and verification evidence
 ${compilation.voiceEvidence ? "- `voice_evidence.json`: derived audio-quality evidence and source hash" : ""}
+- \`proof_bundle.json.compatibility\`: verifier, runtime, tool, policy, and skill compatibility manifest
 `
   );
 

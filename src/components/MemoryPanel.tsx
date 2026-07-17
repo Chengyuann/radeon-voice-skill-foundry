@@ -3,6 +3,7 @@ import {
   Database,
   Plus,
   RotateCw,
+  ShieldAlert,
   Search,
   ShieldCheck,
   Zap
@@ -24,6 +25,7 @@ type MemoryPanelProps = {
   isBusy: boolean;
   onAddKnowledge: (input: { title: string; content: string }) => Promise<void>;
   onReuseSkill: (skillId: string) => Promise<void>;
+  onRevalidateSkill: (skillId: string) => Promise<void>;
 };
 
 export function MemoryPanel({
@@ -33,7 +35,8 @@ export function MemoryPanel({
   lastReuse,
   isBusy,
   onAddKnowledge,
-  onReuseSkill
+  onReuseSkill,
+  onRevalidateSkill
 }: MemoryPanelProps) {
   const [showAdd, setShowAdd] = useState(false);
   const [title, setTitle] = useState("");
@@ -148,7 +151,12 @@ export function MemoryPanel({
                 <article key={skill.id}>
                   <div>
                     <strong>{skill.name}</strong>
-                    <span>v{skill.version}</span>
+                    <span>
+                      v{skill.version} ·{" "}
+                      {skill.status === "verified"
+                        ? "proof compatible"
+                        : "revalidation required"}
+                    </span>
                   </div>
                   <p>
                     {skill.compilation.constraints.length} rules · reused{" "}
@@ -173,13 +181,23 @@ export function MemoryPanel({
                       </span>
                     </div>
                   ) : null}
+                  {skill.compatibility?.reasons.length ? (
+                    <div className="compatibility-warning">
+                      <ShieldAlert size={13} />
+                      <span>{skill.compatibility.reasons[0]}</span>
+                    </div>
+                  ) : null}
                   <button
                     className="memory-reuse"
                     disabled={isBusy}
-                    onClick={() => onReuseSkill(skill.id)}
+                    onClick={() =>
+                      skill.status === "verified"
+                        ? onReuseSkill(skill.id)
+                        : onRevalidateSkill(skill.id)
+                    }
                   >
                     <RotateCw size={13} />
-                    Reuse
+                    {skill.status === "verified" ? "Reuse" : "Revalidate"}
                   </button>
                 </article>
               ))

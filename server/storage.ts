@@ -1,16 +1,20 @@
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
-import path from "node:path";
 import type {
+  ActionEvent,
+  CompileResult,
   KnowledgeDocument,
   KnowledgeMatch,
   SkillReuseResult,
+  SkillRevalidationResult,
   StoredSkill
 } from "../shared/types.js";
+import { dataFile, readStoredJson, updateStoredJson } from "./file-store.js";
 import { id } from "./hash.js";
+import { assessProofCompatibility } from "./proof-compatibility.js";
+import { getRuntimeInfo } from "./runtime.js";
+import { verifyCompilation } from "./verifier.js";
 
-const dataDir = path.resolve(process.env.RVSF_DATA_DIR || ".rvsf-data");
-const knowledgePath = path.join(dataDir, "knowledge.json");
-const skillsPath = path.join(dataDir, "skills.json");
+const knowledgePath = () => dataFile("knowledge.json");
+const skillsPath = () => dataFile("skills.json");
 
 const seedDocuments: KnowledgeDocument[] = [
   {
@@ -40,13 +44,12 @@ const seedDocuments: KnowledgeDocument[] = [
 ];
 
 export async function listKnowledge(): Promise<KnowledgeDocument[]> {
-  return readJson(knowledgePath, seedDocuments);
+  return readStoredJson(knowledgePath(), seedDocuments);
 }
 
 export async function addKnowledge(
   input: Pick<KnowledgeDocument, "title" | "content">
 ): Promise<KnowledgeDocument> {
-  const documents = await listKnowledge();
   const document: KnowledgeDocument = {
     id: id("doc"),
     title: input.title,
@@ -54,9 +57,14 @@ export async function addKnowledge(
     createdAt: new Date().toISOString(),
     source: "user"
   };
-  documents.push(document);
-  await writeJson(knowledgePath, documents);
-  return document;
+  return updateStoredJson(
+    knowledgePath(),
+    seedDocuments,
+    (storedDocuments: KnowledgeDocument[]) => {
+      storedDocuments.push(document);
+      return structuredClone(document);
+    }
+  );
 }
 
 export async function searchKnowledge(
@@ -90,78 +98,197 @@ export async function searchKnowledge(
 }
 
 export async function listSkills(): Promise<StoredSkill[]> {
-  return readJson(skillsPath, []);
+  return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
+    for (let index = 0; index < skills.length; index += 1) {
+      const actions = skills[index].actions || inferLegacyActions(skills[index]);
+      const compatibility = assessProofCompatibility({
+        compilation: skills[index].compilation,
+        actions,
+        verification: skills[index].verification,
+        runtime: getRuntimeInfo()
+      });
+      skills[index] = {
+        ...skills[index],
+        actions,
+        compatibility,
+        status:
+          compatibility.status === "compatible"
+            ? "verified"
+            : "revalidation_required"
+      };
+    }
+    return structuredClone(skills);
+  });
 }
 
 export async function saveVerifiedSkill(
-  skill: Omit<StoredSkill, "id" | "version" | "createdAt" | "updatedAt" | "reuseCount">
+  skill: Omit<
+    StoredSkill,
+    | "id"
+    | "version"
+    | "createdAt"
+    | "updatedAt"
+    | "reuseCount"
+    | "compatibility"
+  > & { actions: ActionEvent[] }
 ): Promise<StoredSkill> {
-  const skills = await listSkills();
-  const current = skills
-    .filter((item) => item.name === skill.name)
-    .sort((a, b) => b.version - a.version)[0];
-  const now = new Date().toISOString();
-  const stored: StoredSkill = {
-    ...skill,
-    id: id("skill"),
-    version: (current?.version || 0) + 1,
-    createdAt: now,
-    updatedAt: now,
-    reuseCount: 0
-  };
-  skills.push(stored);
-  await writeJson(skillsPath, skills);
-  return stored;
+  return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
+    const current = skills
+      .filter((item) => item.name === skill.name)
+      .sort((a, b) => b.version - a.version)[0];
+    const now = new Date().toISOString();
+    const actions = skill.actions;
+    const compatibility = assessProofCompatibility({
+      compilation: skill.compilation,
+      actions,
+      verification: skill.verification,
+      runtime: getRuntimeInfo()
+    });
+    const stored: StoredSkill = {
+      ...skill,
+      id: id("skill"),
+      version: (current?.version || 0) + 1,
+      createdAt: now,
+      updatedAt: now,
+      reuseCount: 0,
+      actions,
+      compatibility
+    };
+    stored.status =
+      compatibility.status === "compatible"
+        ? "verified"
+        : "revalidation_required";
+    skills.push(stored);
+    return structuredClone(stored);
+  });
 }
 
 export async function markSkillReused(
   idValue: string
 ): Promise<SkillReuseResult> {
   const startedAt = performance.now();
-  const skills = await listSkills();
-  const index = skills.findIndex((skill) => skill.id === idValue);
-  if (index < 0) throw new Error("Stored skill not found");
-  skills[index] = {
-    ...skills[index],
-    reuseCount: skills[index].reuseCount + 1,
-    updatedAt: new Date().toISOString()
-  };
-  await writeJson(skillsPath, skills);
-  const skill = skills[index];
-  const reuseLatencyMs = roundDuration(performance.now() - startedAt);
-  const originalCompileDurationMs = skill.compilation.compileDurationMs;
-  return {
-    skill,
-    reuseLatencyMs,
-    originalCompileDurationMs,
-    speedup: roundRatio(
-      originalCompileDurationMs / Math.max(reuseLatencyMs, 0.01)
-    ),
-    ...(skill.compilation.modelMetrics
-      ? {
-          avoidedModelOutputTokens:
-            skill.compilation.modelMetrics.outputTokens
-        }
-      : {})
-  };
+  return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
+    const index = skills.findIndex((skill) => skill.id === idValue);
+    if (index < 0) throw new Error("Stored skill not found");
+    const actions = skills[index].actions || inferLegacyActions(skills[index]);
+    const compatibility = assessProofCompatibility({
+      compilation: skills[index].compilation,
+      actions,
+      verification: skills[index].verification,
+      runtime: getRuntimeInfo()
+    });
+    if (compatibility.status !== "compatible") {
+      skills[index] = {
+        ...skills[index],
+        status: "revalidation_required",
+        compatibility,
+        updatedAt: new Date().toISOString()
+      };
+      throw new Error(
+        `Proof revalidation required: ${compatibility.reasons.join(" ")}`
+      );
+    }
+    skills[index] = {
+      ...skills[index],
+      status: "verified",
+      compatibility,
+      actions,
+      reuseCount: skills[index].reuseCount + 1,
+      updatedAt: new Date().toISOString()
+    };
+    const skill = structuredClone(skills[index]);
+    const reuseLatencyMs = roundDuration(performance.now() - startedAt);
+    const originalCompileDurationMs = skill.compilation.compileDurationMs;
+    return {
+      skill,
+      reuseLatencyMs,
+      originalCompileDurationMs,
+      speedup: roundRatio(
+        originalCompileDurationMs / Math.max(reuseLatencyMs, 0.01)
+      ),
+      ...(skill.compilation.modelMetrics
+        ? {
+            avoidedModelOutputTokens:
+              skill.compilation.modelMetrics.outputTokens
+          }
+        : {}),
+      compatibility
+    };
+  });
 }
 
-async function readJson<T>(file: string, fallback: T): Promise<T> {
-  await mkdir(dataDir, { recursive: true });
-  try {
-    return JSON.parse(await readFile(file, "utf8")) as T;
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-    await writeJson(file, fallback);
-    return structuredClone(fallback);
-  }
+export async function revalidateStoredSkill(
+  idValue: string
+): Promise<SkillRevalidationResult> {
+  return updateStoredJson(skillsPath(), [], async (skills: StoredSkill[]) => {
+    const index = skills.findIndex((skill) => skill.id === idValue);
+    if (index < 0) throw new Error("Stored skill not found");
+    const actions = skills[index].actions || inferLegacyActions(skills[index]);
+    const now = new Date().toISOString();
+    const compilation: CompileResult = {
+      ...skills[index].compilation,
+      runId: id("revalidate"),
+      createdAt: now,
+      runtime: getRuntimeInfo(),
+      parentRunId: skills[index].compilation.runId,
+      revision: (skills[index].compilation.revision || 1) + 1
+    };
+    const verification = await verifyCompilation(
+      compilation,
+      actions
+    );
+    const compatibility = assessProofCompatibility({
+      compilation,
+      actions,
+      verification,
+      runtime: getRuntimeInfo()
+    });
+    skills[index] = {
+      ...skills[index],
+      status:
+        verification.status === "verified" &&
+        compatibility.status === "compatible"
+          ? "verified"
+          : "revalidation_required",
+      verification,
+      compilation,
+      actions,
+      compatibility,
+      updatedAt: now
+    };
+    return {
+      skill: structuredClone(skills[index]),
+      verification: structuredClone(verification),
+      compatibility
+    };
+  });
 }
 
-async function writeJson(file: string, value: unknown): Promise<void> {
-  await mkdir(dataDir, { recursive: true });
-  const temporary = `${file}.${process.pid}.tmp`;
-  await writeFile(temporary, JSON.stringify(value, null, 2));
-  await rename(temporary, file);
+function inferLegacyActions(skill: StoredSkill): ActionEvent[] {
+  return skill.compilation.permissions
+    .map((permission, index): ActionEvent | undefined => {
+      const type = permissionToAction(permission.permission);
+      return type
+        ? {
+            id: id("action"),
+            type,
+            label: `Legacy stored action: ${type}`,
+            timestampMs: index * 1_000
+          }
+        : undefined;
+    })
+    .filter((action): action is ActionEvent => Boolean(action));
+}
+
+function permissionToAction(
+  permission: string
+): ActionEvent["type"] | undefined {
+  if (permission.startsWith("filesystem:read")) return "open_document";
+  if (permission === "mail:draft") return "draft_email";
+  if (permission === "mail:send") return "send_email";
+  if (permission === "calendar:draft") return "create_calendar_hold";
+  if (permission.startsWith("filesystem:write")) return "write_report";
+  return undefined;
 }
 
 function tokenize(value: string): string[] {

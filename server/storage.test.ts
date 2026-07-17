@@ -2,6 +2,8 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createProofCompatibilityManifest } from "./proof-compatibility.js";
+import { getRuntimeInfo } from "./runtime.js";
 
 describe("local RAG and skill memory", () => {
   let directory: string;
@@ -27,9 +29,12 @@ describe("local RAG and skill memory", () => {
   });
 
   it("persists and versions verified skills", async () => {
-    const { listSkills, markSkillReused, saveVerifiedSkill } = await import(
-      "./storage.js"
-    );
+    const {
+      listSkills,
+      markSkillReused,
+      revalidateStoredSkill,
+      saveVerifiedSkill
+    } = await import("./storage.js");
     const compilation = {
       runId: "run-1",
       createdAt: new Date().toISOString(),
@@ -41,35 +46,40 @@ describe("local RAG and skill memory", () => {
       skillMarkdown: "# Skill",
       policyYaml: "version: 1",
       compileDurationMs: 1,
-      runtime: {
-        mode: "deterministic" as const,
-        model: "test",
-        baseUrlConfigured: false,
-        asrModel: "test",
-        gpu: "test",
-        rocm: "test"
-      }
+      runtime: getRuntimeInfo()
     };
+    const actions = [
+      {
+        id: "action-1",
+        type: "open_document" as const,
+        label: "Open document",
+        timestampMs: 0
+      }
+    ];
     const verification = {
       runId: "run-1",
       status: "verified" as const,
       fixtures: [],
       receipts: [],
       metrics: [],
-      proofBundle: {},
+      proofBundle: {
+        compatibility: createProofCompatibilityManifest(compilation, actions)
+      },
       verificationDurationMs: 1
     };
     const first = await saveVerifiedSkill({
       name: "review-followup",
       status: "verified",
       compilation,
-      verification
+      verification,
+      actions
     });
     const second = await saveVerifiedSkill({
       name: "review-followup",
       status: "verified",
       compilation,
-      verification
+      verification,
+      actions
     });
     const reused = await markSkillReused(second.id);
 
@@ -79,6 +89,26 @@ describe("local RAG and skill memory", () => {
     expect(reused.reuseLatencyMs).toBeGreaterThan(0);
     expect(reused.originalCompileDurationMs).toBe(1);
     expect(reused.speedup).toBeGreaterThan(0);
+    expect(reused.compatibility.status).toBe("compatible");
     expect(await listSkills()).toHaveLength(2);
+
+    const storedFile = path.join(directory, "skills.json");
+    const storedSkills = JSON.parse(
+      await (await import("node:fs/promises")).readFile(storedFile, "utf8")
+    );
+    storedSkills[1].verification.proofBundle.compatibility.runtimeHash =
+      "stale-runtime";
+    await (await import("node:fs/promises")).writeFile(
+      storedFile,
+      JSON.stringify(storedSkills)
+    );
+
+    await expect(markSkillReused(second.id)).rejects.toThrow(
+      "Proof revalidation required"
+    );
+    const revalidated = await revalidateStoredSkill(second.id);
+    expect(revalidated.compatibility.status).toBe("compatible");
+    expect(revalidated.skill.status).toBe("verified");
+    expect((await markSkillReused(second.id)).skill.reuseCount).toBe(2);
   });
 });

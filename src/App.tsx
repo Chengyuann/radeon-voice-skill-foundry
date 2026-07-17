@@ -18,6 +18,7 @@ import {
   listKnowledge,
   listSkills,
   refineSop,
+  revalidateSkill,
   reuseSkill,
   saveSkill,
   transcribeAudio,
@@ -56,6 +57,10 @@ export function App() {
   const [skills, setSkills] = useState<StoredSkill[]>([]);
   const [savedSkillId, setSavedSkillId] = useState<string>();
   const [lastReuse, setLastReuse] = useState<SkillReuseResult>();
+
+  const refreshRuntime = async () => {
+    setRuntime(await getRuntime());
+  };
 
   useEffect(() => {
     getRuntime().then(setRuntime).catch((requestError: Error) => {
@@ -116,7 +121,11 @@ export function App() {
       setAudioResult(result);
       setTranscript(result.transcript);
       setUseModel(true);
-      setRuntime(result.runtime);
+      setRuntime((current) => ({
+        ...result.runtime,
+        ...(current?.persisted ? { persisted: current.persisted } : {})
+      }));
+      await refreshRuntime();
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -144,6 +153,7 @@ export function App() {
       });
       setCompilation(result);
       setSavedSkillId(undefined);
+      await refreshRuntime();
     } catch (requestError) {
       setError(
         requestError instanceof Error ? requestError.message : "Compilation failed"
@@ -167,14 +177,14 @@ export function App() {
     setVerification(undefined);
     setSavedSkillId(undefined);
     try {
-      setCompilation(
-        await refineSop({
+      const refined = await refineSop({
           compilation,
           message,
           actions,
           useModel
-        })
-      );
+        });
+      setCompilation(refined);
+      await refreshRuntime();
     } catch (requestError) {
       setError(
         requestError instanceof Error ? requestError.message : "Refinement failed"
@@ -193,6 +203,7 @@ export function App() {
       setSavedSkillId(stored.id);
       setLastReuse(undefined);
       setSkills(await listSkills());
+      await refreshRuntime();
     } catch (requestError) {
       setError(
         requestError instanceof Error ? requestError.message : "Skill save failed"
@@ -211,6 +222,7 @@ export function App() {
     try {
       await addKnowledge(input);
       setKnowledge(await listKnowledge());
+      await refreshRuntime();
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -243,9 +255,32 @@ export function App() {
       setVerification(undefined);
       setLastReuse(reuse);
       setSkills(await listSkills());
+      await refreshRuntime();
     } catch (requestError) {
       setError(
         requestError instanceof Error ? requestError.message : "Skill reuse failed"
+      );
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const handleRevalidateSkill = async (skillId: string) => {
+    setBusy("memory");
+    setError(undefined);
+    try {
+      const result = await revalidateSkill(skillId);
+      setSkills(await listSkills());
+      setCompilation(result.skill.compilation);
+      setVerification(result.verification);
+      setSavedSkillId(result.skill.id);
+      setLastReuse(undefined);
+      await refreshRuntime();
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "Skill revalidation failed"
       );
     } finally {
       setBusy(null);
@@ -259,6 +294,7 @@ export function App() {
     try {
       const result = await verifySop(compilation, actions);
       setVerification(result);
+      await refreshRuntime();
     } catch (requestError) {
       setError(
         requestError instanceof Error ? requestError.message : "Verification failed"
@@ -341,6 +377,7 @@ export function App() {
           isBusy={busy === "memory"}
           onAddKnowledge={handleAddKnowledge}
           onReuseSkill={handleReuseSkill}
+          onRevalidateSkill={handleRevalidateSkill}
         />
       </main>
     </div>

@@ -5,6 +5,9 @@
 Final 3-minute 59-second demo:
 `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
 
+Continuous 2-minute 54-second operation demo:
+`https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/CONTINUOUS_OPERATION_DEMO.mp4`
+
 Official AMD hackathon submission:
 `https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07/pull/7`
 
@@ -48,11 +51,21 @@ The web UI now supports:
 - multi-turn natural-language constraint refinement
 - compact model output with runtime-owned IDs and confidence metadata
 - proof-bound `pass` / `review` / `quarantine` handling for audio evidence
+- Voice Evidence v0.2 diagnostics for estimated SNR, noise floor, speech
+  level, crest factor, DC offset, short dropouts, and channel imbalance
+- atomically persisted voice evidence, trusted compile runs, and verification
+  results that survive service restart
+- proof compatibility manifests that invalidate reuse when the runtime, tools,
+  policy, skill, verifier, or evidence schema changes
+- one-click revalidation that creates a new child proof for the current runtime
 
-Local state is stored under `.rvsf-data/`:
+Local state is stored atomically under `.rvsf-data/`:
 
 - `knowledge.json`: policy and SOP documents
 - `skills.json`: verified skill versions, proof evidence, and reuse counters
+- `voice-evidence-records.json`: source-bound audio evidence
+- `trusted-compile-runs.json`: server-authoritative compile records
+- `trusted-verification-runs.json`: durable proof records
 
 ## Run
 

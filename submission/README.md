@@ -20,6 +20,8 @@ to perform risky actions.
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt`
 - Official submission PR:
   `https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07/pull/7`
+- Continuous operation demo:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/CONTINUOUS_OPERATION_DEMO.mp4`
 
 ## Why It Matters
 
@@ -49,6 +51,8 @@ The system compiles both signals into:
 - `DEMO_SCRIPT.md` - 3-5 minute English demo narration and shot list
 - `DEMO_NARRATION.md` - final AI-generated English voiceover text
 - `RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt` - final captions
+- `CONTINUOUS_OPERATION_DEMO.srt` - continuous workflow captions
+- `CONTINUOUS_DEMO_NARRATION.md` - continuous workflow narration source
 - `FINAL_SUBMISSION_CHECKLIST.md` - completion and evidence ledger
 
 ## Measured Radeon Evidence
@@ -94,3 +98,15 @@ Raw measurements are in:
 The final narration uses AIDP `gemini-3.1-flash-tts-preview`, voice `Kore`.
 Visual campaign backgrounds were generated with AIDP GPT Image 2; all visible
 project typography and measured values were composed locally.
+
+## Post-Submission Engineering Upgrade
+
+- Voice Evidence v0.2 adds estimated SNR, noise floor, speech level, crest
+  factor, DC offset, short dropout, and channel imbalance diagnostics.
+- Server-authoritative evidence, compile runs, and verification results persist
+  across service restart.
+- Every proof carries a compatibility manifest for verifier, runtime, tools,
+  policy, skill, and voice-evidence schema.
+- Changed runtime identity marks a skill `revalidation_required`; one-click
+  revalidation creates a new child run before reuse is restored.
+- Local enhanced regression suite: 29/29 passed.

@@ -31,6 +31,11 @@ export function TopBar({ runtime, status }: TopBarProps) {
           <Cpu size={13} />
           {runtime?.mode === "radeon" ? "Radeon runtime" : "Local fallback"}
         </Badge>
+        {runtime?.persisted ? (
+          <Badge tone="blue">
+            {runtime.persisted.compileRuns} durable runs
+          </Badge>
+        ) : null}
         <Badge
           tone={
             status === "verified"

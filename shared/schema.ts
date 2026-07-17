@@ -17,7 +17,7 @@ export const actionEventSchema = z.object({
 });
 
 export const voiceEvidenceSchema = z.object({
-  schemaVersion: z.literal("0.1.0"),
+  schemaVersion: z.enum(["0.1.0", "0.2.0"]),
   status: z.enum(["pass", "review", "quarantine"]),
   qualityScore: z.number().min(0).max(100),
   format: z.string(),
@@ -28,9 +28,32 @@ export const voiceEvidenceSchema = z.object({
   peakDbfs: z.number().optional(),
   clippingRatio: z.number().min(0).max(1).optional(),
   silenceRatio: z.number().min(0).max(1).optional(),
+  noiseFloorDbfs: z.number().optional(),
+  speechLevelDbfs: z.number().optional(),
+  estimatedSnrDb: z.number().nonnegative().optional(),
+  dcOffset: z.number().min(-1).max(1).optional(),
+  crestFactorDb: z.number().nonnegative().optional(),
+  dropoutRatio: z.number().min(0).max(1).optional(),
+  channelImbalanceDb: z.number().nonnegative().optional(),
   audioSha256: z.string().regex(/^[a-f0-9]{64}$/),
   asrTranscriptSha256: z.string().regex(/^[a-f0-9]{64}$/).optional(),
   issues: z.array(z.string()).max(20),
+  diagnostics: z
+    .array(
+      z.object({
+        code: z.enum([
+          "low_snr",
+          "dc_offset",
+          "dropout",
+          "channel_imbalance",
+          "low_dynamic_range"
+        ]),
+        severity: z.enum(["review", "quarantine"]),
+        message: z.string()
+      })
+    )
+    .max(20)
+    .optional(),
   analyzedAt: z.string()
 });
 

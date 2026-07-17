@@ -532,6 +532,38 @@ h3 {
   border-left: 1px solid rgba(91, 100, 104, 0.15);
 }
 
+.diagnostic-list {
+  margin-top: 8px;
+  display: grid;
+  gap: 4px;
+}
+
+.diagnostic-list span {
+  padding-left: 12px;
+  color: #7f5a23;
+  font-size: 9px;
+  line-height: 1.4;
+  position: relative;
+}
+
+.diagnostic-list span::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 1px;
+  width: 5px;
+  height: 5px;
+  background: #a06b20;
+}
+
+.diagnostic-clear span {
+  color: #2f6a4f;
+}
+
+.diagnostic-clear span::before {
+  background: #2f6a4f;
+}
+
 .voice-evidence-grid > span {
   min-width: 0;
   padding: 7px;
@@ -648,6 +680,35 @@ h3 {
 .metric-section,
 .receipt-section {
   padding: 15px 16px 0;
+}
+
+.proof-lifecycle {
+  margin: 0 14px 12px;
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  border: 1px solid rgba(47, 106, 79, 0.25);
+  background: #eef6f1;
+}
+
+.proof-lifecycle > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #2f6a4f;
+  font-size: 10px;
+}
+
+.proof-lifecycle > span {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.proof-lifecycle > code {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 8px;
 }
 
 .subheading-row {
@@ -1316,6 +1377,16 @@ h3 {
   font-size: 8px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.compatibility-warning {
+  margin-top: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  color: #942c28;
+  font-size: 9px;
+  line-height: 1.4;
 }
 
 .memory-reuse {

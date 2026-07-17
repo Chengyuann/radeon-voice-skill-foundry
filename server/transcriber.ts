@@ -54,7 +54,10 @@ export async function transcribeAudioBuffer(
         );
       }
       const result = payload as RawTranscribeResult;
-      const record = registerVoiceEvidence(voiceEvidence, result.transcript);
+      const record = await registerVoiceEvidence(
+        voiceEvidence,
+        result.transcript
+      );
       return {
         ...result,
         audioSeconds: voiceEvidence.durationSeconds ?? result.audioSeconds,
@@ -68,7 +71,10 @@ export async function transcribeAudioBuffer(
     const started = performance.now();
     const output = await runCommand(command, [inputPath]);
     const parsed = JSON.parse(output) as RawTranscribeResult;
-    const record = registerVoiceEvidence(voiceEvidence, parsed.transcript);
+    const record = await registerVoiceEvidence(
+      voiceEvidence,
+      parsed.transcript
+    );
     return {
       ...parsed,
       audioSeconds: voiceEvidence.durationSeconds ?? parsed.audioSeconds,

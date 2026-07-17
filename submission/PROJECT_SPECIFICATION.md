@@ -433,6 +433,28 @@ npm run benchmark:optimization -- benchmarks/optimization-latest.json
 - Full far-field ASR accuracy should be evaluated separately against a benchmark
   such as the Treble/Hugging Face FFASR leaderboard.
 
+## 13.1 Post-Submission Engineering Upgrade
+
+Three lifecycle enhancements were implemented after the final Radeon evidence
+run without changing the measured Radeon claims:
+
+1. **Durable trusted runs.** Voice evidence, server-authoritative compile runs,
+   and verification results are atomically persisted and recovered after
+   service restart.
+2. **Proof compatibility and invalidation.** The proof binds verifier version,
+   runtime identity, tool contract, policy, skill definition, and voice
+   evidence schema. Changed inputs move a stored skill to
+   `revalidation_required`; reuse is blocked until a new child proof passes.
+3. **Voice Evidence v0.2 diagnostics.** Deterministic analysis now reports
+   estimated SNR, noise floor, speech level, crest factor, DC offset, short
+   dropouts, and channel imbalance. These remain heuristic measurements and do
+   not claim learned acoustic diagnosis.
+
+The enhanced local regression suite passes 29/29 tests. A single-take browser
+demo shows upload, v0.2 analysis, compile, 7/7 verification, save, reuse,
+service restart recovery, runtime invalidation, one-click revalidation, and
+proof download.
+
 ## 14. Evidence Index
 
 - Source: `https://github.com/Chengyuann/radeon-voice-skill-foundry`

@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import type {
+  AudioDiagnostic,
   VoiceEvidence,
   VoiceEvidenceStatus
 } from "../shared/types.js";
@@ -24,15 +25,17 @@ export function analyzeAudioEvidence(buffer: Buffer): VoiceEvidence {
     const frames = Math.floor(samples.length / format.channels);
     const durationSeconds = frames / format.sampleRate;
     const metrics = measureSamples(samples);
+    const diagnostics = diagnoseSignal(samples, format, metrics);
     const assessment = assessEvidence({
       durationSeconds,
       sampleRateHz: format.sampleRate,
       channels: format.channels,
+      diagnostics,
       ...metrics
     });
 
     return {
-      schemaVersion: "0.1.0",
+      schemaVersion: "0.2.0",
       status: assessment.status,
       qualityScore: assessment.qualityScore,
       format: wavFormatName(format.audioFormat, format.bitsPerSample),
@@ -43,13 +46,25 @@ export function analyzeAudioEvidence(buffer: Buffer): VoiceEvidence {
       peakDbfs: round(metrics.peakDbfs, 2),
       clippingRatio: round(metrics.clippingRatio, 6),
       silenceRatio: round(metrics.silenceRatio, 4),
+      noiseFloorDbfs: round(metrics.noiseFloorDbfs, 2),
+      speechLevelDbfs: round(metrics.speechLevelDbfs, 2),
+      estimatedSnrDb: round(metrics.estimatedSnrDb, 2),
+      dcOffset: round(metrics.dcOffset, 6),
+      crestFactorDb: round(metrics.crestFactorDb, 2),
+      dropoutRatio: round(metrics.dropoutRatio, 5),
+      ...(metrics.channelImbalanceDb !== undefined
+        ? {
+            channelImbalanceDb: round(metrics.channelImbalanceDb, 2)
+          }
+        : {}),
       audioSha256,
       issues: assessment.issues,
+      diagnostics,
       analyzedAt
     };
   } catch (error) {
     return {
-      schemaVersion: "0.1.0",
+      schemaVersion: "0.2.0",
       status: "quarantine",
       qualityScore: 0,
       format: "unrecognized",
@@ -177,23 +192,144 @@ function measureSamples(samples: Float64Array) {
   let peak = 0;
   let clipped = 0;
   let silent = 0;
+  let sum = 0;
   const silenceThreshold = dbToAmplitude(-50);
 
   for (const sample of samples) {
     const amplitude = Math.abs(sample);
     sumSquares += sample * sample;
+    sum += sample;
     peak = Math.max(peak, amplitude);
     if (amplitude >= 0.995) clipped += 1;
     if (amplitude <= silenceThreshold) silent += 1;
   }
 
   const rms = Math.sqrt(sumSquares / samples.length);
+  const frameMetrics = measureFrames(samples);
+  const speechLevelDbfs = percentile(frameMetrics, 0.8);
+  const noiseFloorDbfs = percentile(frameMetrics, 0.1);
+  const frameDynamicRangeDb = speechLevelDbfs - noiseFloorDbfs;
+  const estimatedSnrDb =
+    frameDynamicRangeDb <= 2
+      ? 30
+      : Math.max(0, Math.min(80, frameDynamicRangeDb));
   return {
     rmsDbfs: amplitudeToDb(rms),
     peakDbfs: amplitudeToDb(peak),
     clippingRatio: clipped / samples.length,
-    silenceRatio: silent / samples.length
+    silenceRatio: silent / samples.length,
+    noiseFloorDbfs,
+    speechLevelDbfs,
+    estimatedSnrDb,
+    dcOffset: sum / samples.length,
+    crestFactorDb:
+      rms > 0 && peak > 0 ? 20 * Math.log10(peak / rms) : 0,
+    dropoutRatio: measureShortDropoutRatio(frameMetrics),
+    channelImbalanceDb: undefined as number | undefined
   };
+}
+
+function diagnoseSignal(
+  samples: Float64Array,
+  format: WavFormat,
+  metrics: ReturnType<typeof measureSamples>
+): AudioDiagnostic[] {
+  const diagnostics: AudioDiagnostic[] = [];
+  if (metrics.estimatedSnrDb < 10) {
+    diagnostics.push({
+      code: "low_snr",
+      severity: metrics.estimatedSnrDb < 5 ? "quarantine" : "review",
+      message: `Estimated signal-to-noise ratio is ${round(
+        metrics.estimatedSnrDb,
+        1
+      )} dB.`
+    });
+  }
+  if (Math.abs(metrics.dcOffset) > 0.03) {
+    diagnostics.push({
+      code: "dc_offset",
+      severity: Math.abs(metrics.dcOffset) > 0.08 ? "quarantine" : "review",
+      message: "DC offset may reduce usable headroom and bias level metrics."
+    });
+  }
+  if (metrics.dropoutRatio > 0.08 && metrics.silenceRatio < 0.9) {
+    diagnostics.push({
+      code: "dropout",
+      severity: metrics.dropoutRatio > 0.2 ? "quarantine" : "review",
+      message: `${round(
+        metrics.dropoutRatio * 100,
+        1
+      )}% of short-time frames look like dropouts.`
+    });
+  }
+  if (metrics.crestFactorDb < 2.5 && metrics.rmsDbfs > -45) {
+    diagnostics.push({
+      code: "low_dynamic_range",
+      severity: "review",
+      message: "Very low crest factor suggests limiting or flattened speech."
+    });
+  }
+  const channelImbalanceDb = measureChannelImbalance(samples, format.channels);
+  if (channelImbalanceDb !== undefined) {
+    metrics.channelImbalanceDb = channelImbalanceDb;
+    if (channelImbalanceDb > 12) {
+      diagnostics.push({
+        code: "channel_imbalance",
+        severity: channelImbalanceDb > 24 ? "quarantine" : "review",
+        message: `Channel energy differs by ${round(
+          channelImbalanceDb,
+          1
+        )} dB.`
+      });
+    }
+  }
+  return diagnostics;
+}
+
+function measureShortDropoutRatio(levels: number[]): number {
+  let dropoutFrames = 0;
+  for (let index = 1; index < levels.length - 1; index += 1) {
+    if (
+      levels[index] < -72 &&
+      levels[index - 1] > -42 &&
+      levels[index + 1] > -42
+    ) {
+      dropoutFrames += 1;
+    }
+  }
+  return dropoutFrames / Math.max(levels.length, 1);
+}
+
+function measureFrames(samples: Float64Array): number[] {
+  const frameSize = Math.max(160, Math.min(1_600, samples.length));
+  const frames: number[] = [];
+  for (let offset = 0; offset < samples.length; offset += frameSize) {
+    const end = Math.min(offset + frameSize, samples.length);
+    let sumSquares = 0;
+    for (let index = offset; index < end; index += 1) {
+      sumSquares += samples[index] * samples[index];
+    }
+    frames.push(amplitudeToDb(Math.sqrt(sumSquares / (end - offset))));
+  }
+  return frames.length ? frames : [-120];
+}
+
+function measureChannelImbalance(
+  samples: Float64Array,
+  channels: number
+): number | undefined {
+  if (channels < 2) return undefined;
+  const energies = Array.from({ length: channels }, () => 0);
+  const counts = Array.from({ length: channels }, () => 0);
+  for (let index = 0; index < samples.length; index += 1) {
+    const channel = index % channels;
+    energies[channel] += samples[index] * samples[index];
+    counts[channel] += 1;
+  }
+  const levels = energies.map((energy, index) =>
+    amplitudeToDb(Math.sqrt(energy / Math.max(counts[index], 1)))
+  );
+  return Math.max(...levels) - Math.min(...levels);
 }
 
 function assessEvidence(input: {
@@ -204,6 +340,8 @@ function assessEvidence(input: {
   peakDbfs: number;
   clippingRatio: number;
   silenceRatio: number;
+  estimatedSnrDb: number;
+  diagnostics: AudioDiagnostic[];
 }): {
   status: VoiceEvidenceStatus;
   qualityScore: number;
@@ -248,6 +386,15 @@ function assessEvidence(input: {
     reviewIssues.push("Multi-channel input was received; channel mixing should be reviewed.");
     score -= 8;
   }
+  for (const diagnostic of input.diagnostics) {
+    if (diagnostic.severity === "quarantine") {
+      quarantineIssues.push(diagnostic.message);
+      score -= 35;
+    } else {
+      reviewIssues.push(diagnostic.message);
+      score -= 12;
+    }
+  }
 
   return {
     status: quarantineIssues.length
@@ -279,4 +426,11 @@ function clamp(value: number): number {
 function round(value: number, digits: number): number {
   const scale = 10 ** digits;
   return Math.round(value * scale) / scale;
+}
+
+function percentile(values: number[], ratio: number): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  return sorted[
+    Math.max(0, Math.min(sorted.length - 1, Math.floor(ratio * sorted.length)))
+  ];
 }

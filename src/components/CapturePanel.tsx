@@ -222,6 +222,36 @@ export function CapturePanel({
                 </strong>
               </span>
               <span>
+                <small>Est. SNR</small>
+                <strong>
+                  {audioResult.voiceEvidence.estimatedSnrDb?.toFixed(1) || "--"}{" "}
+                  dB
+                </strong>
+              </span>
+              <span>
+                <small>Noise floor</small>
+                <strong>
+                  {audioResult.voiceEvidence.noiseFloorDbfs?.toFixed(1) || "--"}{" "}
+                  dBFS
+                </strong>
+              </span>
+              <span>
+                <small>Crest</small>
+                <strong>
+                  {audioResult.voiceEvidence.crestFactorDb?.toFixed(1) || "--"}{" "}
+                  dB
+                </strong>
+              </span>
+              <span>
+                <small>Dropout</small>
+                <strong>
+                  {(
+                    (audioResult.voiceEvidence.dropoutRatio || 0) * 100
+                  ).toFixed(2)}
+                  %
+                </strong>
+              </span>
+              <span>
                 <small>Source hash</small>
                 <strong>
                   {audioResult.voiceEvidence.audioSha256.slice(0, 10)}
@@ -233,7 +263,21 @@ export function CapturePanel({
             ) : audioResult.voiceEvidence.issues.length ? (
               <p>{audioResult.voiceEvidence.issues[0]}</p>
             ) : (
-              <p>Server-held audio evidence matches the ASR transcript.</p>
+              <p>
+                Server-held v{audioResult.voiceEvidence.schemaVersion} evidence
+                matches the ASR transcript.
+              </p>
+            )}
+            {audioResult.voiceEvidence.diagnostics?.length ? (
+              <div className="diagnostic-list">
+                {audioResult.voiceEvidence.diagnostics.map((diagnostic) => (
+                  <span key={diagnostic.code}>{diagnostic.message}</span>
+                ))}
+              </div>
+            ) : (
+              <div className="diagnostic-list diagnostic-clear">
+                <span>No acoustic diagnostics triggered.</span>
+              </div>
             )}
             {audioResult.voiceEvidence.status !== "quarantine" &&
             (audioResult.voiceEvidence.status === "review" ||

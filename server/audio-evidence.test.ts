@@ -13,6 +13,9 @@ describe("voice evidence analyzer", () => {
     expect(evidence.qualityScore).toBeGreaterThanOrEqual(90);
     expect(evidence.sampleRateHz).toBe(16_000);
     expect(evidence.audioSha256).toMatch(/^[a-f0-9]{64}$/);
+    expect(evidence.schemaVersion).toBe("0.2.0");
+    expect(evidence.estimatedSnrDb).toBeGreaterThanOrEqual(20);
+    expect(evidence.crestFactorDb).toBeGreaterThan(2);
   });
 
   it("quarantines silent audio", () => {
@@ -51,6 +54,41 @@ describe("voice evidence analyzer", () => {
     expect(evidence.status).toBe("review");
     expect(evidence.clippingRatio).toBeGreaterThan(0.005);
     expect(evidence.clippingRatio).toBeLessThan(0.04);
+  });
+
+  it("detects low signal-to-noise speech", () => {
+    const evidence = analyzeAudioEvidence(
+      buildWav({
+        seconds: 4,
+        sample: (time) => {
+          const noise = 0.025 * Math.sin(2 * Math.PI * 971 * time);
+          const speechBlock = Math.floor(time * 10) % 2 === 0;
+          return (
+            noise +
+            (speechBlock ? 0.035 * Math.sin(2 * Math.PI * 220 * time) : 0)
+          );
+        }
+      })
+    );
+
+    expect(evidence.diagnostics?.some((item) => item.code === "low_snr")).toBe(
+      true
+    );
+    expect(evidence.status).not.toBe("pass");
+  });
+
+  it("detects DC offset", () => {
+    const evidence = analyzeAudioEvidence(
+      buildWav({
+        seconds: 4,
+        sample: (time) => 0.12 + 0.12 * Math.sin(2 * Math.PI * 220 * time)
+      })
+    );
+
+    expect(evidence.dcOffset).toBeGreaterThan(0.1);
+    expect(
+      evidence.diagnostics?.some((item) => item.code === "dc_offset")
+    ).toBe(true);
   });
 });
 
