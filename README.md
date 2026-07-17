@@ -118,6 +118,7 @@ Measured hardware evidence is in:
 - `benchmarks/w7900-2026-07-17.json`
 - `benchmarks/optimization-w7900-2026-07-17.json`
 - `benchmarks/radeon-audio-proof-v8-2026-07-18.json`
+- `benchmarks/lifecycle-enhancements-v9-2026-07-18.json`
 - `docs/RADEON_W7900_BENCHMARK.md`
 - `docs/RADEON_OPTIMIZATION_BENCHMARK.md`
 

@@ -84,6 +84,7 @@ Raw measurements are in:
 - `benchmarks/w7900-2026-07-17.json`
 - `benchmarks/optimization-w7900-2026-07-17.json`
 - `benchmarks/radeon-audio-proof-v8-2026-07-18.json`
+- `benchmarks/lifecycle-enhancements-v9-2026-07-18.json`
 
 ## Current External Deliverable Status
 
