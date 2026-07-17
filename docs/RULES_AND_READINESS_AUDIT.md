@@ -66,9 +66,9 @@ than depending on it.
 | Tool invocation | Complete in deterministic workspace | mail/calendar/file/report capability model |
 | Multi-step planning | Complete | spoken SOP -> constraints -> skill -> tests -> proof |
 | Permission/privacy | Complete | mail.send deny, redaction, review, receipts |
-| RAG | Missing | no indexed policy/SOP retrieval in product |
-| Persistent multi-turn memory | Partial | generated skills exist, but no user-facing memory/reuse conversation |
-| Smooth multi-turn UX | Partial | current UI is compile/verify, not conversational refinement |
+| RAG | Complete | local policy/SOP index, retrieval evidence, context injected into compiler |
+| Persistent multi-turn memory | Complete | verified skills persist with versions and reuse counts |
+| Smooth multi-turn UX | Substantially complete | natural-language rule revisions create parent/child runs; polish still possible |
 | Real audio in product UI | Complete | browser recording/upload -> WAV -> persistent Radeon Qwen3-ASR -> transcript |
 | Targeted speed optimization | Partial | warm/cold and model-size benchmarks exist; no vLLM/quantization comparison |
 | Dedicated Radeon Model API | Missing | custom local server works; official vLLM Model API not created |
@@ -92,10 +92,9 @@ Current evidence-based estimate before the next implementation pass:
 
 The highest-value next work is:
 
-1. add a small local policy/SOP RAG store and verified-skill memory
-2. add conversational refinement of learned constraints
-3. benchmark Transformers versus an optimized path
-4. produce English specification, video, and poster
+1. benchmark Transformers versus an optimized path
+2. compare full replanning with verified-skill reuse
+3. produce English specification, video, and poster
 
 ## Platform readiness
 

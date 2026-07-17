@@ -10,6 +10,7 @@ import type {
 import { id } from "./hash.js";
 import { extractConstraintsWithModel } from "./model-adapter.js";
 import { getRuntimeInfo } from "./runtime.js";
+import { searchKnowledge } from "./storage.js";
 
 type Pattern = {
   kind: ConstraintKind;
@@ -20,6 +21,15 @@ type Pattern = {
 };
 
 const patterns: Pattern[] = [
+  {
+    kind: "requires_confirmation",
+    regex:
+      /\b(?:always\s+)?(?:ask|require)\s+(?:me\s+)?(?:for\s+)?(?:confirmation|approval)?\s*before\s+([^.]+)/gi,
+    statement: (match) =>
+      `Require human confirmation before ${clean(match[1])}`,
+    appliesTo: ["draft_email", "send_email", "create_calendar_hold"],
+    confidence: 0.97
+  },
   {
     kind: "must_not",
     regex: /\b(?:do not|don't|never)\s+(send[^.]*automatically|send[^.]*|delete[^.]*)/gi,
@@ -78,9 +88,19 @@ export async function compileSop(input: CompileRequest): Promise<CompileResult> 
   const startedAt = performance.now();
   let constraints: Constraint[] | null = null;
   let modelMetrics: CompileResult["modelMetrics"];
+  const ragMatches = await searchKnowledge(
+    `${input.scenario}\n${input.transcript}`,
+    4
+  );
+  const ragContext = ragMatches
+    .map((match) => `${match.title}: ${match.excerpt}`)
+    .join("\n");
 
   if (input.useModel) {
-    const extraction = await extractConstraintsWithModel(input);
+    const extraction = await extractConstraintsWithModel({
+      ...input,
+      ragContext
+    });
     constraints = extraction
       ? mergeModelConstraintsWithGuardrails(
           extraction.constraints,
@@ -111,7 +131,41 @@ export async function compileSop(input: CompileRequest): Promise<CompileResult> 
     policyYaml: renderPolicyYaml(constraints, permissions),
     compileDurationMs: roundDuration(performance.now() - startedAt),
     runtime,
+    ragMatches,
+    revision: 1,
     ...(modelMetrics ? { modelMetrics } : {})
+  };
+}
+
+export async function refineCompilation(
+  input: {
+    compilation: CompileResult;
+    message: string;
+    actions: ActionEvent[];
+    useModel?: boolean;
+  }
+): Promise<CompileResult> {
+  const prior = input.compilation;
+  const combinedTranscript = [
+    prior.constraints
+      .map(
+        (constraint) =>
+          `[existing ${constraint.kind}] ${constraint.statement}`
+      )
+      .join("\n"),
+    `[user revision] ${input.message}`
+  ].join("\n");
+  const refined = await compileSop({
+    projectName: prior.projectName,
+    scenario: prior.scenario,
+    transcript: combinedTranscript,
+    actions: input.actions,
+    useModel: input.useModel
+  });
+  return {
+    ...refined,
+    parentRunId: prior.runId,
+    revision: (prior.revision || 1) + 1
   };
 }
 

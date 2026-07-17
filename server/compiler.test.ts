@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { reviewFollowupDemo } from "../shared/demo.js";
 import {
+  compileSop,
   extractConstraintsDeterministically,
   inferPermissions,
-  mergeModelConstraintsWithGuardrails
+  mergeModelConstraintsWithGuardrails,
+  refineCompilation
 } from "./compiler.js";
 
 describe("SOP compiler", () => {
@@ -95,6 +97,26 @@ describe("SOP compiler", () => {
         (constraint) =>
           constraint.kind === "must_not" &&
           /sending/i.test(constraint.statement)
+      )
+    ).toBe(true);
+  });
+
+  it("attaches RAG evidence and increments revisions", async () => {
+    const compilation = await compileSop(reviewFollowupDemo);
+    const refined = await refineCompilation({
+      compilation,
+      message: "Always require confirmation before calendar holds.",
+      actions: reviewFollowupDemo.actions
+    });
+
+    expect(compilation.ragMatches?.length).toBeGreaterThan(0);
+    expect(refined.revision).toBe(2);
+    expect(refined.parentRunId).toBe(compilation.runId);
+    expect(
+      refined.constraints.some(
+        (constraint) =>
+          constraint.kind === "requires_confirmation" &&
+          /calendar holds/i.test(constraint.statement)
       )
     ).toBe(true);
   });

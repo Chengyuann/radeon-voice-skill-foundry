@@ -26,6 +26,10 @@ export async function buildSubmissionPackage(
     JSON.stringify(verification.proofBundle, null, 2)
   );
   root.file(
+    "rag_evidence.json",
+    JSON.stringify(compilation.ragMatches || [], null, 2)
+  );
+  root.file(
     "README.md",
     `# ${compilation.projectName}
 

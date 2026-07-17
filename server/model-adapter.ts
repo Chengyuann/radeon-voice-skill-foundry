@@ -9,6 +9,8 @@ type ModelInput = {
   transcript: string;
   scenario: string;
   actions: ActionEvent[];
+  ragContext?: string;
+  existingConstraints?: Constraint[];
 };
 
 type ModelExtraction = {
@@ -36,6 +38,7 @@ export async function extractConstraintsWithModel(
     body: JSON.stringify({
       model,
       temperature: 0.1,
+      max_tokens: 900,
       response_format: { type: "json_object" },
       messages: [
         {
@@ -60,19 +63,62 @@ export async function extractConstraintsWithModel(
     choices?: Array<{ message?: { content?: string } }>;
     metrics?: Partial<ModelMetrics>;
   };
-  const content = payload.choices?.[0]?.message?.content;
+  let content = payload.choices?.[0]?.message?.content;
   if (!content) {
     throw new Error("Radeon model returned no content");
   }
 
-  const parsed = JSON.parse(extractJson(content)) as {
-    constraints?: unknown;
-  };
+  let parsed: { constraints?: unknown };
+  try {
+    parsed = JSON.parse(extractJson(content)) as { constraints?: unknown };
+  } catch {
+    content = await repairJsonWithModel(baseUrl, model, content);
+    parsed = JSON.parse(extractJson(content)) as { constraints?: unknown };
+  }
   const metrics = normalizeMetrics(payload.metrics);
   return {
     constraints: constraintArraySchema.parse(parsed.constraints),
     ...(metrics ? { metrics } : {})
   };
+}
+
+async function repairJsonWithModel(
+  baseUrl: string,
+  model: string,
+  content: string
+): Promise<string> {
+  const response = await fetch(`${baseUrl}/chat/completions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(process.env.RADEON_API_KEY
+        ? { Authorization: `Bearer ${process.env.RADEON_API_KEY}` }
+        : {})
+    },
+    body: JSON.stringify({
+      model,
+      temperature: 0,
+      max_tokens: 900,
+      messages: [
+        {
+          role: "system",
+          content:
+            "Repair the following truncated or invalid JSON. Return one valid JSON object only. Preserve only complete constraints; do not invent new constraints."
+        },
+        { role: "user", content }
+      ]
+    }),
+    signal: AbortSignal.timeout(60_000)
+  });
+  if (!response.ok) {
+    throw new Error(`JSON repair failed with ${response.status}`);
+  }
+  const payload = (await response.json()) as {
+    choices?: Array<{ message?: { content?: string } }>;
+  };
+  const repaired = payload.choices?.[0]?.message?.content;
+  if (!repaired) throw new Error("JSON repair returned no content");
+  return repaired;
 }
 
 function extractJson(content: string): string {

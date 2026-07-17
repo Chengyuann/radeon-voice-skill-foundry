@@ -2,13 +2,30 @@ import express from "express";
 import Busboy from "busboy";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { compileRequestSchema } from "../shared/schema.js";
-import type { CompileResult, VerifyRequest, VerifyResult } from "../shared/types.js";
-import { compileSop } from "./compiler.js";
+import {
+  compileRequestSchema,
+  knowledgeDocumentInputSchema,
+  knowledgeSearchSchema,
+  refineRequestSchema
+} from "../shared/schema.js";
+import type {
+  CompileResult,
+  VerifyRequest,
+  VerifyResult
+} from "../shared/types.js";
+import { compileSop, refineCompilation } from "./compiler.js";
 import { buildSubmissionPackage } from "./package.js";
 import { getRuntimeInfo } from "./runtime.js";
 import { verifyCompilation } from "./verifier.js";
 import { transcribeAudioBuffer } from "./transcriber.js";
+import {
+  addKnowledge,
+  listKnowledge,
+  listSkills,
+  markSkillReused,
+  saveVerifiedSkill,
+  searchKnowledge
+} from "./storage.js";
 
 const app = express();
 const port = Number(process.env.PORT || 8791);
@@ -28,6 +45,32 @@ app.get("/api/runtime", (_request, response) => {
   response.json(getRuntimeInfo());
 });
 
+app.get("/api/knowledge", async (_request, response) => {
+  response.json(await listKnowledge());
+});
+
+app.post("/api/knowledge", async (request, response) => {
+  try {
+    const input = knowledgeDocumentInputSchema.parse(request.body);
+    response.status(201).json(await addKnowledge(input));
+  } catch (error) {
+    response.status(400).json({
+      error: error instanceof Error ? error.message : "Knowledge upload failed"
+    });
+  }
+});
+
+app.post("/api/knowledge/search", async (request, response) => {
+  try {
+    const input = knowledgeSearchSchema.parse(request.body);
+    response.json(await searchKnowledge(input.query, input.limit));
+  } catch (error) {
+    response.status(400).json({
+      error: error instanceof Error ? error.message : "Knowledge search failed"
+    });
+  }
+});
+
 app.post("/api/compile", async (request, response) => {
   try {
     const input = compileRequestSchema.parse(request.body);
@@ -36,6 +79,24 @@ app.post("/api/compile", async (request, response) => {
   } catch (error) {
     response.status(400).json({
       error: error instanceof Error ? error.message : "Compilation failed"
+    });
+  }
+});
+
+app.post("/api/refine", async (request, response) => {
+  try {
+    const input = refineRequestSchema.parse(request.body);
+    response.json(
+      await refineCompilation({
+        compilation: input.compilation as CompileResult,
+        message: input.message,
+        actions: input.actions,
+        useModel: input.useModel
+      })
+    );
+  } catch (error) {
+    response.status(400).json({
+      error: error instanceof Error ? error.message : "Refinement failed"
     });
   }
 });
@@ -97,6 +158,40 @@ app.get("/api/package/:runId", async (request, response) => {
       `attachment; filename="${result.compilation.projectName}-proof.zip"`
     )
     .send(archive);
+});
+
+app.get("/api/skills", async (_request, response) => {
+  response.json(await listSkills());
+});
+
+app.post("/api/skills/:runId", async (request, response) => {
+  try {
+    const result = results.get(request.params.runId);
+    if (!result || result.verification.status !== "verified") {
+      throw new Error("Verify this run before saving it as a skill");
+    }
+    const stored = await saveVerifiedSkill({
+      name: result.compilation.projectName,
+      status: "verified",
+      compilation: result.compilation,
+      verification: result.verification
+    });
+    response.status(201).json(stored);
+  } catch (error) {
+    response.status(400).json({
+      error: error instanceof Error ? error.message : "Skill save failed"
+    });
+  }
+});
+
+app.post("/api/skills/:skillId/reuse", async (request, response) => {
+  try {
+    response.json(await markSkillReused(request.params.skillId));
+  } catch (error) {
+    response.status(404).json({
+      error: error instanceof Error ? error.message : "Skill reuse failed"
+    });
+  }
 });
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));

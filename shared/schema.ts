@@ -41,3 +41,25 @@ export const constraintSchema = z.object({
 });
 
 export const constraintArraySchema = z.array(constraintSchema).max(40);
+
+export const knowledgeDocumentInputSchema = z.object({
+  title: z.string().min(2).max(120),
+  content: z.string().min(20).max(20000)
+});
+
+export const knowledgeSearchSchema = z.object({
+  query: z.string().min(2).max(4000),
+  limit: z.number().int().min(1).max(10).optional()
+});
+
+export const refineRequestSchema = z.object({
+  compilation: z.object({
+    runId: z.string(),
+    projectName: z.string(),
+    scenario: z.string(),
+    constraints: z.array(constraintSchema)
+  }).passthrough(),
+  message: z.string().min(3).max(4000),
+  actions: z.array(actionEventSchema).min(1).max(50),
+  useModel: z.boolean().optional()
+});

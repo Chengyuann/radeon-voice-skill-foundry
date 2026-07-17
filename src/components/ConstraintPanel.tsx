@@ -6,8 +6,11 @@ import {
   FileWarning,
   Filter,
   LockKeyhole,
+  MessageSquareText,
+  Save,
   TestTubeDiagonal
 } from "lucide-react";
+import { useState } from "react";
 import type {
   CompileResult,
   ConstraintKind,
@@ -29,14 +32,33 @@ type ConstraintPanelProps = {
   verification?: VerifyResult;
   isBusy: boolean;
   onVerify: () => void;
+  onRefine: (message: string) => Promise<void>;
+  onSaveSkill: () => Promise<void>;
+  isRefining: boolean;
+  isSaving: boolean;
+  savedSkillId?: string;
 };
 
 export function ConstraintPanel({
   compilation,
   verification,
   isBusy,
-  onVerify
+  onVerify,
+  onRefine,
+  onSaveSkill,
+  isRefining,
+  isSaving,
+  savedSkillId
 }: ConstraintPanelProps) {
+  const [revision, setRevision] = useState("");
+
+  const submitRevision = async () => {
+    const message = revision.trim();
+    if (!message) return;
+    await onRefine(message);
+    setRevision("");
+  };
+
   return (
     <section className="workspace-panel constraint-panel">
       <div className="panel-heading">
@@ -111,6 +133,26 @@ export function ConstraintPanel({
             </div>
           </div>
 
+          <div className="revision-section">
+            <div className="subheading-row">
+              <h3>Multi-turn refinement</h3>
+              <span>revision {compilation.revision || 1}</span>
+            </div>
+            <textarea
+              placeholder="Add or correct a rule, e.g. Always ask before creating calendar holds."
+              value={revision}
+              onChange={(event) => setRevision(event.target.value)}
+            />
+            <button
+              className="memory-reuse"
+              disabled={!revision.trim() || isRefining}
+              onClick={submitRevision}
+            >
+              <MessageSquareText size={14} />
+              {isRefining ? "Recompiling" : "Apply revision"}
+            </button>
+          </div>
+
           <div className="test-section">
             <div className="subheading-row">
               <h3>Generated tests</h3>
@@ -153,6 +195,20 @@ export function ConstraintPanel({
                 ? "Running sandbox"
                 : "Run local verification"}
           </button>
+          {verification?.status === "verified" ? (
+            <button
+              className="secondary-button save-skill-button"
+              disabled={isSaving || Boolean(savedSkillId)}
+              onClick={onSaveSkill}
+            >
+              <Save size={17} />
+              {savedSkillId
+                ? "Saved to skill memory"
+                : isSaving
+                  ? "Saving"
+                  : "Save verified skill"}
+            </button>
+          ) : null}
         </>
       )}
     </section>

@@ -69,6 +69,21 @@ export type ModelMetrics = {
   peakVramGiB?: number;
 };
 
+export type KnowledgeDocument = {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  source: "seed" | "user";
+};
+
+export type KnowledgeMatch = {
+  documentId: string;
+  title: string;
+  excerpt: string;
+  score: number;
+};
+
 export type CompileRequest = {
   projectName: string;
   scenario: string;
@@ -101,6 +116,9 @@ export type CompileResult = {
   compileDurationMs: number;
   runtime: RuntimeInfo;
   modelMetrics?: ModelMetrics;
+  ragMatches?: KnowledgeMatch[];
+  revision?: number;
+  parentRunId?: string;
 };
 
 export type Receipt = {
@@ -132,6 +150,25 @@ export type VerifyResult = {
   metrics: VerificationMetric[];
   proofBundle: Record<string, unknown>;
   verificationDurationMs: number;
+};
+
+export type StoredSkill = {
+  id: string;
+  name: string;
+  version: number;
+  status: "verified";
+  createdAt: string;
+  updatedAt: string;
+  reuseCount: number;
+  compilation: CompileResult;
+  verification: VerifyResult;
+};
+
+export type RefineRequest = {
+  compilation: CompileResult;
+  message: string;
+  actions: ActionEvent[];
+  useModel?: boolean;
 };
 
 export type DemoPreset = {

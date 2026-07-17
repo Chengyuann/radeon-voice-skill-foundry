@@ -34,6 +34,14 @@ The web UI now supports:
 - persistent Qwen3-ASR transcription on Radeon
 - automatic transcript-to-SOP compilation
 - generated permission guardrails, tests, receipts, and proof ZIP
+- local policy/SOP RAG with retrieved evidence
+- persistent verified-skill memory with versioning and reuse counts
+- multi-turn natural-language constraint refinement
+
+Local state is stored under `.rvsf-data/`:
+
+- `knowledge.json`: policy and SOP documents
+- `skills.json`: verified skill versions, proof evidence, and reuse counters
 
 ## Run
 

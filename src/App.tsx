@@ -4,16 +4,30 @@ import { reviewFollowupDemo } from "../shared/demo";
 import type {
   ActionEvent,
   CompileResult,
+  KnowledgeDocument,
   RuntimeInfo,
+  StoredSkill,
   TranscribeResult,
   VerifyResult
 } from "../shared/types";
-import { compileSop, getRuntime, transcribeAudio, verifySop } from "./api";
+import {
+  addKnowledge,
+  compileSop,
+  getRuntime,
+  listKnowledge,
+  listSkills,
+  refineSop,
+  reuseSkill,
+  saveSkill,
+  transcribeAudio,
+  verifySop
+} from "./api";
 import { CapturePanel } from "./components/CapturePanel";
 import { ConstraintPanel } from "./components/ConstraintPanel";
 import { ProofPanel } from "./components/ProofPanel";
 import { StepRail } from "./components/StepRail";
 import { TopBar } from "./components/TopBar";
+import { MemoryPanel } from "./components/MemoryPanel";
 
 export function App() {
   const [projectName, setProjectName] = useState(reviewFollowupDemo.projectName);
@@ -27,15 +41,32 @@ export function App() {
   const [compilation, setCompilation] = useState<CompileResult>();
   const [verification, setVerification] = useState<VerifyResult>();
   const [busy, setBusy] = useState<
-    "compile" | "verify" | "transcribe" | null
+    | "compile"
+    | "verify"
+    | "transcribe"
+    | "refine"
+    | "memory"
+    | null
   >(null);
   const [error, setError] = useState<string>();
   const [audioResult, setAudioResult] = useState<TranscribeResult>();
+  const [knowledge, setKnowledge] = useState<KnowledgeDocument[]>([]);
+  const [skills, setSkills] = useState<StoredSkill[]>([]);
+  const [savedSkillId, setSavedSkillId] = useState<string>();
 
   useEffect(() => {
     getRuntime().then(setRuntime).catch((requestError: Error) => {
       setError(requestError.message);
     });
+  }, []);
+
+  useEffect(() => {
+    void Promise.all([listKnowledge(), listSkills()])
+      .then(([documents, storedSkills]) => {
+        setKnowledge(documents);
+        setSkills(storedSkills);
+      })
+      .catch((requestError: Error) => setError(requestError.message));
   }, []);
 
   const status = useMemo(() => {
@@ -64,6 +95,7 @@ export function App() {
     setCompilation(undefined);
     setVerification(undefined);
     setAudioResult(undefined);
+    setSavedSkillId(undefined);
     setError(undefined);
   };
 
@@ -102,9 +134,99 @@ export function App() {
         useModel
       });
       setCompilation(result);
+      setSavedSkillId(undefined);
     } catch (requestError) {
       setError(
         requestError instanceof Error ? requestError.message : "Compilation failed"
+      );
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const handleRefine = async (message: string) => {
+    if (!compilation) return;
+    setBusy("refine");
+    setError(undefined);
+    setVerification(undefined);
+    setSavedSkillId(undefined);
+    try {
+      setCompilation(
+        await refineSop({
+          compilation,
+          message,
+          actions,
+          useModel
+        })
+      );
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error ? requestError.message : "Refinement failed"
+      );
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const handleSaveSkill = async () => {
+    if (!verification) return;
+    setBusy("memory");
+    setError(undefined);
+    try {
+      const stored = await saveSkill(verification.runId);
+      setSavedSkillId(stored.id);
+      setSkills(await listSkills());
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error ? requestError.message : "Skill save failed"
+      );
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const handleAddKnowledge = async (input: {
+    title: string;
+    content: string;
+  }) => {
+    setBusy("memory");
+    setError(undefined);
+    try {
+      await addKnowledge(input);
+      setKnowledge(await listKnowledge());
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "Knowledge upload failed"
+      );
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const handleReuseSkill = async (skillId: string) => {
+    setBusy("memory");
+    setError(undefined);
+    try {
+      const stored = await reuseSkill(skillId);
+      setProjectName(stored.compilation.projectName);
+      setScenario(stored.compilation.scenario);
+      setTranscript(
+        stored.compilation.constraints
+          .map((constraint) => constraint.sourceText)
+          .join(" ")
+      );
+      setCompilation({
+        ...stored.compilation,
+        runId: `reused-${stored.id}-${stored.reuseCount}`,
+        createdAt: new Date().toISOString()
+      });
+      setVerification(undefined);
+      setSkills(await listSkills());
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error ? requestError.message : "Skill reuse failed"
       );
     } finally {
       setBusy(null);
@@ -175,6 +297,11 @@ export function App() {
             verification={verification}
             isBusy={busy === "verify"}
             onVerify={handleVerify}
+            onRefine={handleRefine}
+            onSaveSkill={handleSaveSkill}
+            isRefining={busy === "refine"}
+            isSaving={busy === "memory"}
+            savedSkillId={savedSkillId}
           />
           <ProofPanel
             runtime={runtime}
@@ -182,6 +309,14 @@ export function App() {
             verification={verification}
           />
         </div>
+        <MemoryPanel
+          documents={knowledge}
+          matches={compilation?.ragMatches || []}
+          skills={skills}
+          isBusy={busy === "memory"}
+          onAddKnowledge={handleAddKnowledge}
+          onReuseSkill={handleReuseSkill}
+        />
       </main>
     </div>
   );

@@ -1,7 +1,10 @@
 import type {
   CompileRequest,
   CompileResult,
+  KnowledgeDocument,
+  KnowledgeMatch,
   RuntimeInfo,
+  StoredSkill,
   TranscribeResult,
   VerifyResult
 } from "../shared/types";
@@ -55,6 +58,61 @@ export function verifySop(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ compilation, actions })
+  });
+}
+
+export function listKnowledge(): Promise<KnowledgeDocument[]> {
+  return requestJson(apiUrl("/api/knowledge"));
+}
+
+export function addKnowledge(input: {
+  title: string;
+  content: string;
+}): Promise<KnowledgeDocument> {
+  return requestJson(apiUrl("/api/knowledge"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input)
+  });
+}
+
+export function searchKnowledge(
+  query: string,
+  limit = 4
+): Promise<KnowledgeMatch[]> {
+  return requestJson(apiUrl("/api/knowledge/search"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, limit })
+  });
+}
+
+export function refineSop(input: {
+  compilation: CompileResult;
+  message: string;
+  actions: CompileRequest["actions"];
+  useModel?: boolean;
+}): Promise<CompileResult> {
+  return requestJson(apiUrl("/api/refine"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input)
+  });
+}
+
+export function listSkills(): Promise<StoredSkill[]> {
+  return requestJson(apiUrl("/api/skills"));
+}
+
+export function saveSkill(runId: string): Promise<StoredSkill> {
+  return requestJson(apiUrl(`/api/skills/${runId}`), {
+    method: "POST"
+  });
+}
+
+export function reuseSkill(skillId: string): Promise<StoredSkill> {
+  return requestJson(apiUrl(`/api/skills/${skillId}/reuse`), {
+    method: "POST"
   });
 }
 

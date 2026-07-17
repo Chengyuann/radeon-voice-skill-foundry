@@ -1050,6 +1050,183 @@ h3 {
   background: #25282a;
 }
 
+.revision-section {
+  padding: 15px 16px 0;
+}
+
+.revision-section textarea,
+.knowledge-form input,
+.knowledge-form textarea {
+  width: 100%;
+  padding: 9px 10px;
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  border-radius: 5px;
+  background: var(--surface-strong);
+  resize: vertical;
+  outline: none;
+}
+
+.revision-section textarea {
+  min-height: 72px;
+}
+
+.revision-section .memory-reuse {
+  width: 100%;
+  margin-top: 8px;
+  justify-content: center;
+}
+
+.save-skill-button {
+  margin-top: 0;
+  color: var(--green);
+  border-color: #b9d0c2;
+  background: var(--green-bg);
+}
+
+.memory-panel {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.memory-column {
+  min-width: 0;
+  border-right: 1px solid var(--line);
+}
+
+.memory-column:last-child {
+  border-right: 0;
+}
+
+.memory-heading {
+  min-height: 66px;
+  padding: 13px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-strong);
+}
+
+.memory-heading h2 {
+  font-size: 14px;
+}
+
+.memory-list,
+.evidence-list,
+.skill-memory-list {
+  max-height: 280px;
+  overflow: auto;
+}
+
+.memory-list article {
+  min-height: 52px;
+  padding: 10px 15px;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+  border-bottom: 1px solid var(--line);
+}
+
+.memory-list article > div {
+  min-width: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.memory-list strong,
+.evidence-list strong,
+.skill-memory-list strong {
+  overflow: hidden;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.memory-list span,
+.skill-memory-list span {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8px;
+}
+
+.knowledge-form {
+  padding: 12px 15px;
+  display: grid;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.knowledge-form textarea {
+  min-height: 94px;
+}
+
+.knowledge-form .secondary-button {
+  width: 100%;
+  margin: 0;
+}
+
+.evidence-list article,
+.skill-memory-list article {
+  padding: 11px 15px;
+  border-bottom: 1px solid var(--line);
+}
+
+.evidence-list article > div,
+.skill-memory-list article > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.evidence-list code {
+  color: var(--blue);
+  font-family: var(--mono);
+  font-size: 8px;
+}
+
+.evidence-list p,
+.skill-memory-list p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.memory-reuse {
+  min-height: 29px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 0 9px;
+  color: #555d60;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: var(--surface-strong);
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.memory-reuse:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.memory-empty {
+  padding: 28px 15px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.5;
+  text-align: center;
+}
+
 .download-disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -1150,6 +1327,15 @@ h3 {
 
   .workspace-grid {
     grid-template-columns: 1fr;
+  }
+
+  .memory-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .memory-column {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
   }
 
   .proof-panel {

@@ -66,6 +66,21 @@ End-to-end synthetic SOP voice fixture:
 The test audio was generated locally as a reproducible demo fixture; it is not
 presented as a human recording.
 
+## Local RAG and procedural memory
+
+Validated on the same Radeon Cloud workspace:
+
+- retrieved 3 local documents for the voice SOP
+  - Project Review Follow-up SOP
+  - Email and Calendar Action Policy
+  - External Reporting and Privacy Policy
+- natural-language refinement created revision 2 with a parent run reference
+- "Always require confirmation before creating calendar holds" was compiled
+  into a `requires_confirmation` rule
+- refined skill verification passed
+- verified skill persisted as version 1
+- reuse count incremented from 0 to 1
+
 ## Application verification
 
 The project was copied to Radeon Cloud and verified with a public npm lock:
