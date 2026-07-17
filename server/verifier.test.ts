@@ -20,4 +20,103 @@ describe("proof verifier", () => {
     );
     expect(result.proofBundle).toHaveProperty("proofHash");
   });
+
+  it("quarantines a voice-seeded skill when audio evidence fails", async () => {
+    const compilation = await compileSop({
+      ...reviewFollowupDemo,
+      voiceEvidence: {
+        schemaVersion: "0.1.0",
+        status: "quarantine",
+        qualityScore: 5,
+        format: "PCM 16-bit WAV",
+        audioSha256: "a".repeat(64),
+        issues: ["Audio is mostly silent."],
+        analyzedAt: new Date().toISOString()
+      }
+    });
+    const result = await verifyCompilation(
+      compilation,
+      reviewFollowupDemo.actions
+    );
+
+    expect(result.status).toBe("quarantined");
+    expect(
+      result.fixtures.find(
+        (fixture) => fixture.name === "Voice evidence gate is satisfied"
+      )?.status
+    ).toBe("failed");
+  });
+
+  it("accepts review-quality audio only after transcript acknowledgement", async () => {
+    const base = {
+      ...reviewFollowupDemo,
+      voiceEvidence: {
+        schemaVersion: "0.1.0" as const,
+        status: "review" as const,
+        qualityScore: 78,
+        format: "PCM 16-bit WAV",
+        audioSha256: "b".repeat(64),
+        issues: ["Speech level is low."],
+        analyzedAt: new Date().toISOString()
+      }
+    };
+    const unreviewed = await compileSop(base);
+    const unreviewedResult = await verifyCompilation(
+      unreviewed,
+      reviewFollowupDemo.actions
+    );
+    const reviewed = await compileSop({
+      ...base,
+      voiceEvidenceReviewed: true
+    });
+    const reviewedResult = await verifyCompilation(
+      reviewed,
+      reviewFollowupDemo.actions
+    );
+
+    expect(unreviewedResult.status).toBe("quarantined");
+    expect(reviewedResult.status).toBe("verified");
+    expect(
+      reviewedResult.receipts.some(
+        (receipt) => receipt.decision === "REVIEW"
+      )
+    ).toBe(true);
+  });
+
+  it("requires acknowledgement when the ASR transcript was edited", async () => {
+    const base = {
+      ...reviewFollowupDemo,
+      voiceEvidence: {
+        schemaVersion: "0.1.0" as const,
+        status: "pass" as const,
+        qualityScore: 98,
+        format: "PCM 16-bit WAV",
+        audioSha256: "c".repeat(64),
+        asrTranscriptSha256: "d".repeat(64),
+        issues: [],
+        analyzedAt: new Date().toISOString()
+      },
+      voiceTranscriptModified: true
+    };
+    const unreviewed = await compileSop(base);
+    const unreviewedResult = await verifyCompilation(
+      unreviewed,
+      reviewFollowupDemo.actions
+    );
+    const reviewed = await compileSop({
+      ...base,
+      voiceEvidenceReviewed: true
+    });
+    const reviewedResult = await verifyCompilation(
+      reviewed,
+      reviewFollowupDemo.actions
+    );
+
+    expect(unreviewedResult.status).toBe("quarantined");
+    expect(reviewedResult.status).toBe("verified");
+    expect(reviewedResult.proofBundle).toMatchObject({
+      voiceTranscriptModified: true,
+      voiceEvidenceReviewed: true
+    });
+  });
 });

@@ -118,6 +118,26 @@ export async function verifyCompilation(
           : "pending-radeon"
     }
   ];
+  if (compilation.voiceEvidence) {
+    metrics.push(
+      {
+        label: "Voice evidence score",
+        value: compilation.voiceEvidence.qualityScore,
+        unit: "/100",
+        source: "measured"
+      },
+      {
+        label: "Voice evidence gate",
+        value: compilation.voiceEvidence.status.toUpperCase(),
+        source: "measured"
+      },
+      {
+        label: "Voice transcript state",
+        value: compilation.voiceTranscriptModified ? "EDITED" : "ASR ORIGINAL",
+        source: "measured"
+      }
+    );
+  }
   const status = failed.length ? "quarantined" : "verified";
 
   const proofCore = {
@@ -126,6 +146,10 @@ export async function verifyCompilation(
     projectName: compilation.projectName,
     status,
     runtime: compilation.runtime,
+    voiceEvidence: compilation.voiceEvidence,
+    voiceEvidenceId: compilation.voiceEvidenceId,
+    voiceEvidenceReviewed: compilation.voiceEvidenceReviewed || false,
+    voiceTranscriptModified: compilation.voiceTranscriptModified || false,
     constraints: compilation.constraints,
     permissions: compilation.permissions,
     fixtures,
@@ -162,7 +186,39 @@ function executeFixture(
   let decision: Receipt["decision"] = "ALLOW";
   const ruleIds: string[] = [];
 
-  if (fixture.name === "Happy path creates a review package") {
+  if (fixture.name === "Voice evidence gate is satisfied") {
+    const evidence = compilation.voiceEvidence;
+    if (!evidence) {
+      passed = true;
+      detail = "No audio was attached; deterministic text demo remains eligible";
+    } else if (
+      evidence.status === "pass" &&
+      !compilation.voiceTranscriptModified
+    ) {
+      passed = true;
+      detail = `Server-held audio evidence and ASR transcript passed with quality score ${evidence.qualityScore}`;
+    } else if (
+      evidence.status !== "quarantine" &&
+      compilation.voiceEvidenceReviewed
+    ) {
+      passed = true;
+      decision = "REVIEW";
+      ruleIds.push("voice-evidence-gate");
+      detail = compilation.voiceTranscriptModified
+        ? `Edited transcript review acknowledged for quality score ${evidence.qualityScore}`
+        : `Transcript review acknowledged for quality score ${evidence.qualityScore}`;
+    } else {
+      passed = false;
+      decision = evidence.status === "quarantine" ? "BLOCK" : "REVIEW";
+      ruleIds.push("voice-evidence-gate");
+      detail =
+        evidence.status === "quarantine"
+          ? "Audio evidence requires a new recording"
+          : compilation.voiceTranscriptModified
+            ? "Edited transcript review is required before skill promotion"
+            : "Transcript review is required before skill promotion";
+    }
+  } else if (fixture.name === "Happy path creates a review package") {
     const included = workspace.findings.filter((finding) =>
       ["P0", "P1"].includes(finding.severity)
     );

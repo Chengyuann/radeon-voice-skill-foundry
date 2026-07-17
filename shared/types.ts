@@ -90,6 +90,28 @@ export type CompileRequest = {
   transcript: string;
   actions: ActionEvent[];
   useModel?: boolean;
+  voiceEvidenceId?: string;
+  voiceEvidenceReviewed?: boolean;
+};
+
+export type VoiceEvidenceStatus = "pass" | "review" | "quarantine";
+
+export type VoiceEvidence = {
+  schemaVersion: "0.1.0";
+  status: VoiceEvidenceStatus;
+  qualityScore: number;
+  format: string;
+  sampleRateHz?: number;
+  channels?: number;
+  durationSeconds?: number;
+  rmsDbfs?: number;
+  peakDbfs?: number;
+  clippingRatio?: number;
+  silenceRatio?: number;
+  audioSha256: string;
+  asrTranscriptSha256?: string;
+  issues: string[];
+  analyzedAt: string;
 };
 
 export type TranscribeResult = {
@@ -101,6 +123,8 @@ export type TranscribeResult = {
   xRealtime: number;
   peakVramGiB?: number;
   runtime: RuntimeInfo;
+  voiceEvidence: VoiceEvidence;
+  voiceEvidenceId: string;
 };
 
 export type CompileResult = {
@@ -117,6 +141,10 @@ export type CompileResult = {
   runtime: RuntimeInfo;
   modelMetrics?: ModelMetrics;
   ragMatches?: KnowledgeMatch[];
+  voiceEvidence?: VoiceEvidence;
+  voiceEvidenceId?: string;
+  voiceEvidenceReviewed?: boolean;
+  voiceTranscriptModified?: boolean;
   revision?: number;
   parentRunId?: string;
 };

@@ -31,6 +31,8 @@ The web UI now supports:
 - microphone recording
 - local audio upload
 - browser-side conversion to 16 kHz mono WAV
+- server-authoritative Voice Evidence Gate for level, clipping, silence, format,
+  source hash, and ASR transcript hash
 - persistent Qwen3-ASR transcription on Radeon
 - automatic transcript-to-SOP compilation
 - generated permission guardrails, tests, receipts, and proof ZIP
@@ -39,6 +41,7 @@ The web UI now supports:
 - measured full-compilation versus verified-skill reuse speedup
 - multi-turn natural-language constraint refinement
 - compact model output with runtime-owned IDs and confidence metadata
+- proof-bound `pass` / `review` / `quarantine` handling for audio evidence
 
 Local state is stored under `.rvsf-data/`:
 
@@ -70,7 +73,8 @@ Open `http://127.0.0.1:8791`.
 
 ## Demo workflow
 
-1. Review or edit the spoken SOP transcript and aligned action trace.
+1. Review the spoken SOP transcript and aligned action trace. Editing the ASR
+   transcript requires explicit acknowledgement before skill promotion.
 2. Select `Compile spoken SOP`.
 3. Inspect generated constraints, capabilities, tests, and `SKILL.md`.
 4. Select `Run local verification`.
@@ -106,6 +110,12 @@ Measured optimization results on the same Radeon allocation:
   semantics
 - verified-skill reuse took 2.18 ms median HTTP round-trip versus a 24.09 s
   full compilation (`11,052x` for exact verified-skill reuse)
+
+The repository's synthetic Chinese SOP WAV also passes the local Voice Evidence
+Gate at `100/100`: 20.39 seconds, 16 kHz mono, -18.36 dBFS RMS, zero clipping,
+and 17.17% near-silence. The proof bundle stores server-held derived metrics,
+the source SHA-256, the original ASR transcript hash, and whether the transcript
+was edited and reviewed. It does not include raw audio.
 
 The next isolated serving experiment is Transformers versus vLLM. It should run
 in a separate template or container so the validated Transformers environment
@@ -146,6 +156,9 @@ npm run benchmark:optimization -- benchmarks/optimization-latest.json
 Spoken SOP + action trace
           |
           v
+Voice Evidence Gate
+          |
+          v
 Constraint compiler
           |
           v
@@ -169,3 +182,4 @@ See:
 - `docs/RADEON_W7900_BENCHMARK.md`
 - `docs/VOICE_INTEGRATION.md`
 - `docs/VOICE_SOP_FEASIBILITY_RESEARCH.md`
+- `docs/VOICE_AI_SPACE_SIGNALS_2026-07-18.md`

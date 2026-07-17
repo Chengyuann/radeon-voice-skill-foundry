@@ -1,0 +1,75 @@
+# Radeon Voice Skill Foundry - Track 2 Submission
+
+**Speak the SOP. Prove the Skill.**
+
+Radeon Voice Skill Foundry turns a private spoken SOP and an aligned workflow
+demonstration into a verified, reusable Agent Skill before the Agent is allowed
+to perform risky actions.
+
+## Entry
+
+- Track: Track 2 - Localized Private AI Agents
+- Team: N/A (solo)
+- GitHub ID: `Chengyuann`
+- Project repository:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry`
+- License: MIT
+
+## Why It Matters
+
+Action traces capture what an expert did. Voice captures why, when, exceptions,
+privacy boundaries, and what must never happen.
+
+The system compiles both signals into:
+
+- typed SOP constraints
+- least-privilege capability policy
+- positive and adversarial fixtures
+- deterministic verification
+- governance receipts
+- a hash-bound proof bundle
+- a versioned Verified Skill that can be reused without replanning
+
+## Submission Materials
+
+- `PROJECT_SPECIFICATION.pdf` - required English project specification
+- `PROJECT_SPECIFICATION.md` - accessible source version
+- `ARCHITECTURE.png` - Agent architecture diagram
+- `POSTER.pdf` - supplementary one-page poster
+- `POSTER.png` - poster preview
+- `DEMO_SCRIPT.md` - 3-5 minute English demo narration and shot list
+- `FINAL_SUBMISSION_CHECKLIST.md` - completion and evidence ledger
+
+## Measured Radeon Evidence
+
+- GPU: Radeon Pro W7900-class, `gfx1100`, 47.98 GiB VRAM
+- ROCm: 7.2.1
+- Agent: Qwen3-4B-Instruct-2507, Transformers FP16
+- Agent median TTFT: 108.87 ms
+- Agent median throughput: 22.02 tokens/s
+- ASR: Qwen3-ASR-0.6B
+- ASR warm median RTF: 0.0556, approximately 17.98x real-time
+- compact output protocol: 29.42% fewer output tokens
+- compact output protocol: 30.03% lower generation latency
+- exact Verified Skill reuse: 2.18 ms median HTTP round-trip
+- full optimized compilation: 24.09 s HTTP round-trip
+- exact-reuse speedup for the measured skill: 11,052.03x
+- final permission decision: `mail.send = deny`
+- original Radeon workflow verification: 6/6 fixtures passed
+- local audio-backed proof: 7/7, including Voice Evidence Gate
+- Radeon audio-backed 7/7 rerun: pending final submission sync
+
+Raw measurements are in:
+
+- `benchmarks/w7900-2026-07-17.json`
+- `benchmarks/optimization-w7900-2026-07-17.json`
+
+## Current External Deliverable Status
+
+- Source repository: complete
+- English specification: complete
+- Architecture diagram: complete
+- Poster: complete
+- Demo script: complete
+- Demo video URL: pending recording/upload
+- Official hackathon PR: pending final video URL

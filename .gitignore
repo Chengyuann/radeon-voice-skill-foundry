@@ -9,3 +9,6 @@ dist/
 coverage/
 outputs/
 .rvsf-data/
+.playwright-cli/
+tmp/
+output/playwright/

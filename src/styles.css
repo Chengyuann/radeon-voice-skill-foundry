@@ -486,6 +486,96 @@ h3 {
   height: 34px;
 }
 
+.voice-evidence {
+  padding: 10px 11px;
+  border-bottom: 1px solid var(--line);
+  background: #f5f8f6;
+}
+
+.voice-evidence-review {
+  background: #faf6ec;
+}
+
+.voice-evidence-quarantine {
+  background: #fbefee;
+}
+
+.voice-evidence-heading,
+.voice-evidence-heading > div {
+  display: flex;
+  align-items: center;
+}
+
+.voice-evidence-heading {
+  justify-content: space-between;
+}
+
+.voice-evidence-heading > div {
+  gap: 7px;
+}
+
+.voice-evidence-heading strong,
+.voice-evidence-heading > span {
+  font-size: 10px;
+}
+
+.voice-evidence-heading > span {
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+.voice-evidence-grid {
+  margin-top: 9px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid rgba(91, 100, 104, 0.15);
+  border-left: 1px solid rgba(91, 100, 104, 0.15);
+}
+
+.voice-evidence-grid > span {
+  min-width: 0;
+  padding: 7px;
+  display: grid;
+  gap: 3px;
+  border-right: 1px solid rgba(91, 100, 104, 0.15);
+  border-bottom: 1px solid rgba(91, 100, 104, 0.15);
+}
+
+.voice-evidence-grid small {
+  color: var(--muted);
+  font-size: 7px;
+  text-transform: uppercase;
+}
+
+.voice-evidence-grid strong {
+  overflow: hidden;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.voice-evidence p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.evidence-review-control {
+  margin-top: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  color: var(--text);
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.evidence-review-control input {
+  margin: 1px 0 0;
+}
+
 .recording-state {
   display: flex;
   align-items: center;

@@ -29,6 +29,21 @@ export async function buildSubmissionPackage(
     "rag_evidence.json",
     JSON.stringify(compilation.ragMatches || [], null, 2)
   );
+  if (compilation.voiceEvidence) {
+    root.file(
+      "voice_evidence.json",
+      JSON.stringify(
+        {
+          ...compilation.voiceEvidence,
+          transcriptReviewed: compilation.voiceEvidenceReviewed || false,
+          transcriptModified: compilation.voiceTranscriptModified || false,
+          rawAudioIncluded: false
+        },
+        null,
+        2
+      )
+    );
+  }
   root.file(
     "README.md",
     `# ${compilation.projectName}
@@ -44,6 +59,7 @@ Status: ${verification.status}
 - \`fixtures.json\`: positive and negative verification fixtures
 - \`receipts.jsonl\`: append-only governance decisions
 - \`proof_bundle.json\`: hashes, runtime metadata, and verification evidence
+${compilation.voiceEvidence ? "- `voice_evidence.json`: derived audio-quality evidence and source hash" : ""}
 `
   );
 

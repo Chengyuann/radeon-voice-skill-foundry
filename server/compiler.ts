@@ -5,7 +5,8 @@ import type {
   Constraint,
   ConstraintKind,
   Permission,
-  TestFixture
+  TestFixture,
+  VoiceEvidence
 } from "../shared/types.js";
 import { id } from "./hash.js";
 import { extractConstraintsWithModel } from "./model-adapter.js";
@@ -18,6 +19,11 @@ type Pattern = {
   statement: (match: RegExpMatchArray) => string;
   appliesTo: string[];
   confidence: number;
+};
+
+type TrustedCompileRequest = CompileRequest & {
+  voiceEvidence?: VoiceEvidence;
+  voiceTranscriptModified?: boolean;
 };
 
 const patterns: Pattern[] = [
@@ -86,7 +92,9 @@ const patterns: Pattern[] = [
   }
 ];
 
-export async function compileSop(input: CompileRequest): Promise<CompileResult> {
+export async function compileSop(
+  input: TrustedCompileRequest
+): Promise<CompileResult> {
   const startedAt = performance.now();
   let constraints: Constraint[] | null = null;
   let modelMetrics: CompileResult["modelMetrics"];
@@ -116,8 +124,18 @@ export async function compileSop(input: CompileRequest): Promise<CompileResult> 
     input.actions
   );
 
-  const permissions = inferPermissions(input.actions, constraints);
-  const fixtures = generateFixtures(constraints, permissions);
+  const permissions = inferPermissions(
+    input.actions,
+    constraints,
+    input.voiceEvidence,
+    input.voiceTranscriptModified,
+    input.voiceEvidenceReviewed
+  );
+  const fixtures = generateFixtures(
+    constraints,
+    permissions,
+    input.voiceEvidence
+  );
   const runId = id("run");
   const runtime = getRuntimeInfo();
 
@@ -134,6 +152,16 @@ export async function compileSop(input: CompileRequest): Promise<CompileResult> 
     compileDurationMs: roundDuration(performance.now() - startedAt),
     runtime,
     ragMatches,
+    ...(input.voiceEvidence ? { voiceEvidence: input.voiceEvidence } : {}),
+    ...(input.voiceEvidenceId
+      ? { voiceEvidenceId: input.voiceEvidenceId }
+      : {}),
+    ...(input.voiceEvidenceReviewed
+      ? { voiceEvidenceReviewed: input.voiceEvidenceReviewed }
+      : {}),
+    ...(input.voiceTranscriptModified
+      ? { voiceTranscriptModified: input.voiceTranscriptModified }
+      : {}),
     revision: 1,
     ...(modelMetrics ? { modelMetrics } : {})
   };
@@ -162,7 +190,11 @@ export async function refineCompilation(
     scenario: prior.scenario,
     transcript: combinedTranscript,
     actions: input.actions,
-    useModel: input.useModel
+    useModel: input.useModel,
+    voiceEvidenceId: prior.voiceEvidenceId,
+    voiceEvidence: prior.voiceEvidence,
+    voiceEvidenceReviewed: prior.voiceEvidenceReviewed,
+    voiceTranscriptModified: prior.voiceTranscriptModified
   });
   return {
     ...refined,
@@ -272,7 +304,10 @@ export function extractConstraintsDeterministically(
 
 export function inferPermissions(
   actions: ActionEvent[],
-  constraints: Constraint[]
+  constraints: Constraint[],
+  voiceEvidence?: VoiceEvidence,
+  voiceTranscriptModified = false,
+  voiceEvidenceReviewed = false
 ): Permission[] {
   const permissions = new Map<string, Permission>();
 
@@ -332,13 +367,31 @@ export function inferPermissions(
 
   add("desktop:control", "deny", "Arbitrary desktop control is outside MVP");
   add("network:write", "deny", "Local-first proof path");
+  if (voiceEvidence) {
+    const needsReview =
+      voiceEvidence.status === "review" || voiceTranscriptModified;
+    add(
+      "voice:evidence",
+      voiceEvidence.status === "quarantine"
+        ? "deny"
+        : needsReview && !voiceEvidenceReviewed
+          ? "review"
+          : "allow",
+      voiceEvidence.status === "quarantine"
+        ? "Audio evidence requires a new recording"
+        : needsReview
+          ? "Transcript review is bound to the voice-seeded skill"
+          : "Server-held audio evidence matches the ASR transcript"
+    );
+  }
 
   return [...permissions.values()];
 }
 
 export function generateFixtures(
   constraints: Constraint[],
-  permissions: Permission[]
+  permissions: Permission[],
+  voiceEvidence?: VoiceEvidence
 ): TestFixture[] {
   const fixtures: TestFixture[] = [
     {
@@ -349,6 +402,17 @@ export function generateFixtures(
       severity: "high"
     }
   ];
+
+  if (voiceEvidence) {
+    fixtures.unshift({
+      id: id("test"),
+      name: "Voice evidence gate is satisfied",
+      intent: "Promote a skill compiled from measured audio evidence",
+      expected:
+        "Audio passes locally or a review-quality transcript is acknowledged",
+      severity: "critical"
+    });
+  }
 
   for (const constraint of constraints) {
     if (constraint.kind === "must_not" && /send/i.test(constraint.statement)) {

@@ -10,6 +10,10 @@ export function stableHash(value: unknown): string {
     .digest("hex");
 }
 
+export function textHash(value: string): string {
+  return createHash("sha256").update(value, "utf8").digest("hex");
+}
+
 function sortObject(value: unknown): unknown {
   if (Array.isArray(value)) {
     return value.map(sortObject);

@@ -16,12 +16,32 @@ export const actionEventSchema = z.object({
   payload: z.record(z.unknown()).optional()
 });
 
+export const voiceEvidenceSchema = z.object({
+  schemaVersion: z.literal("0.1.0"),
+  status: z.enum(["pass", "review", "quarantine"]),
+  qualityScore: z.number().min(0).max(100),
+  format: z.string(),
+  sampleRateHz: z.number().positive().optional(),
+  channels: z.number().int().positive().optional(),
+  durationSeconds: z.number().nonnegative().optional(),
+  rmsDbfs: z.number().optional(),
+  peakDbfs: z.number().optional(),
+  clippingRatio: z.number().min(0).max(1).optional(),
+  silenceRatio: z.number().min(0).max(1).optional(),
+  audioSha256: z.string().regex(/^[a-f0-9]{64}$/),
+  asrTranscriptSha256: z.string().regex(/^[a-f0-9]{64}$/).optional(),
+  issues: z.array(z.string()).max(20),
+  analyzedAt: z.string()
+});
+
 export const compileRequestSchema = z.object({
   projectName: z.string().min(2).max(80),
   scenario: z.string().min(10).max(1000),
   transcript: z.string().min(20).max(12000),
   actions: z.array(actionEventSchema).min(1).max(50),
-  useModel: z.boolean().optional()
+  useModel: z.boolean().optional(),
+  voiceEvidenceId: z.string().regex(/^voice_[a-f0-9]{12}$/).optional(),
+  voiceEvidenceReviewed: z.boolean().optional()
 });
 
 export const constraintSchema = z.object({

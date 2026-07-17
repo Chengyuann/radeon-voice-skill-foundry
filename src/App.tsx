@@ -51,6 +51,7 @@ export function App() {
   >(null);
   const [error, setError] = useState<string>();
   const [audioResult, setAudioResult] = useState<TranscribeResult>();
+  const [voiceEvidenceReviewed, setVoiceEvidenceReviewed] = useState(false);
   const [knowledge, setKnowledge] = useState<KnowledgeDocument[]>([]);
   const [skills, setSkills] = useState<StoredSkill[]>([]);
   const [savedSkillId, setSavedSkillId] = useState<string>();
@@ -97,6 +98,7 @@ export function App() {
     setCompilation(undefined);
     setVerification(undefined);
     setAudioResult(undefined);
+    setVoiceEvidenceReviewed(false);
     setSavedSkillId(undefined);
     setLastReuse(undefined);
     setError(undefined);
@@ -107,6 +109,8 @@ export function App() {
     setError(undefined);
     setCompilation(undefined);
     setVerification(undefined);
+    setAudioResult(undefined);
+    setVoiceEvidenceReviewed(false);
     try {
       const result = await transcribeAudio(audio);
       setAudioResult(result);
@@ -134,7 +138,9 @@ export function App() {
         scenario,
         transcript,
         actions,
-        useModel
+        useModel,
+        voiceEvidenceId: audioResult?.voiceEvidenceId,
+        voiceEvidenceReviewed
       });
       setCompilation(result);
       setSavedSkillId(undefined);
@@ -144,6 +150,13 @@ export function App() {
       );
     } finally {
       setBusy(null);
+    }
+  };
+
+  const handleTranscript = (value: string) => {
+    setTranscript(value);
+    if (audioResult && value !== audioResult.transcript) {
+      setVoiceEvidenceReviewed(false);
     }
   };
 
@@ -222,11 +235,11 @@ export function App() {
           .map((constraint) => constraint.sourceText)
           .join(" ")
       );
-      setCompilation({
-        ...stored.compilation,
-        runId: `reused-${stored.id}-${stored.reuseCount}`,
-        createdAt: new Date().toISOString()
-      });
+      setCompilation(stored.compilation);
+      setAudioResult(undefined);
+      setVoiceEvidenceReviewed(
+        stored.compilation.voiceEvidenceReviewed || false
+      );
       setVerification(undefined);
       setLastReuse(reuse);
       setSkills(await listSkills());
@@ -290,10 +303,15 @@ export function App() {
             isBusy={busy === "compile" || busy === "transcribe"}
             isTranscribing={busy === "transcribe"}
             audioResult={audioResult}
+            voiceEvidenceReviewed={voiceEvidenceReviewed}
+            transcriptEdited={Boolean(
+              audioResult && transcript !== audioResult.transcript
+            )}
             onProjectName={setProjectName}
             onScenario={setScenario}
-            onTranscript={setTranscript}
+            onTranscript={handleTranscript}
             onUseModel={setUseModel}
+            onVoiceEvidenceReviewed={setVoiceEvidenceReviewed}
             onTranscribe={handleTranscribe}
             onReset={reset}
             onCompile={handleCompile}

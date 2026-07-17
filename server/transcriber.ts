@@ -3,15 +3,25 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import type { TranscribeResult } from "../shared/types.js";
+import { analyzeAudioEvidence } from "./audio-evidence.js";
 import { id } from "./hash.js";
 import { getRuntimeInfo } from "./runtime.js";
+import { registerVoiceEvidence } from "./voice-evidence-store.js";
+
+type RawTranscribeResult = Omit<
+  TranscribeResult,
+  "runtime" | "voiceEvidence" | "voiceEvidenceId"
+>;
 
 export async function transcribeAudioBuffer(
   buffer: Buffer,
   filename: string
 ): Promise<TranscribeResult> {
   const runtime = getRuntimeInfo();
-  if (runtime.mode !== "radeon") {
+  const voiceEvidence = analyzeAudioEvidence(buffer);
+  const asrBaseUrl = process.env.RADEON_ASR_BASE_URL?.replace(/\/$/, "");
+  const asrCommand = process.env.RADEON_ASR_COMMAND?.trim();
+  if (!asrBaseUrl && !asrCommand) {
     throw new Error(
       "Radeon ASR is not configured. Set RADEON_ASR_COMMAND or run the Radeon model stack."
     );
@@ -23,7 +33,6 @@ export async function transcribeAudioBuffer(
   await writeFile(inputPath, buffer);
 
   try {
-    const asrBaseUrl = process.env.RADEON_ASR_BASE_URL?.replace(/\/$/, "");
     if (asrBaseUrl) {
       const response = await fetch(`${asrBaseUrl}/transcribe`, {
         method: "POST",
@@ -35,7 +44,7 @@ export async function transcribeAudioBuffer(
         signal: AbortSignal.timeout(180_000)
       });
       const payload = (await response.json()) as
-        | Omit<TranscribeResult, "runtime">
+        | RawTranscribeResult
         | { error?: string };
       if (!response.ok) {
         throw new Error(
@@ -44,25 +53,32 @@ export async function transcribeAudioBuffer(
             : `Radeon ASR service failed with ${response.status}`
         );
       }
+      const result = payload as RawTranscribeResult;
+      const record = registerVoiceEvidence(voiceEvidence, result.transcript);
       return {
-        ...(payload as Omit<TranscribeResult, "runtime">),
-        runtime
+        ...result,
+        audioSeconds: voiceEvidence.durationSeconds ?? result.audioSeconds,
+        runtime,
+        voiceEvidence: record.evidence,
+        voiceEvidenceId: record.id
       };
     }
 
-    const command =
-      process.env.RADEON_ASR_COMMAND ||
-      "python scripts/radeon_asr_transcribe.py";
+    const command = asrCommand as string;
     const started = performance.now();
     const output = await runCommand(command, [inputPath]);
-    const parsed = JSON.parse(output) as Omit<TranscribeResult, "runtime">;
+    const parsed = JSON.parse(output) as RawTranscribeResult;
+    const record = registerVoiceEvidence(voiceEvidence, parsed.transcript);
     return {
       ...parsed,
+      audioSeconds: voiceEvidence.durationSeconds ?? parsed.audioSeconds,
       inferenceMs:
         typeof parsed.inferenceMs === "number"
           ? parsed.inferenceMs
           : Math.round(performance.now() - started),
-      runtime
+      runtime,
+      voiceEvidence: record.evidence,
+      voiceEvidenceId: record.id
     };
   } finally {
     await rm(dir, { recursive: true, force: true });

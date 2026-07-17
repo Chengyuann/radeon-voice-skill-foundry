@@ -1,7 +1,10 @@
 import {
+  AudioWaveform,
+  CheckCircle2,
   FileAudio,
   Mic,
   RotateCcw,
+  ShieldAlert,
   Sparkles,
   Square,
   Upload,
@@ -21,10 +24,13 @@ type CapturePanelProps = {
   isBusy: boolean;
   isTranscribing: boolean;
   audioResult?: TranscribeResult;
+  voiceEvidenceReviewed: boolean;
+  transcriptEdited: boolean;
   onProjectName: (value: string) => void;
   onScenario: (value: string) => void;
   onTranscript: (value: string) => void;
   onUseModel: (value: boolean) => void;
+  onVoiceEvidenceReviewed: (value: boolean) => void;
   onTranscribe: (audio: Blob) => Promise<void>;
   onReset: () => void;
   onCompile: () => void;
@@ -39,10 +45,13 @@ export function CapturePanel({
   isBusy,
   isTranscribing,
   audioResult,
+  voiceEvidenceReviewed,
+  transcriptEdited,
   onProjectName,
   onScenario,
   onTranscript,
   onUseModel,
+  onVoiceEvidenceReviewed,
   onTranscribe,
   onReset,
   onCompile
@@ -172,6 +181,78 @@ export function CapturePanel({
             <audio controls src={audioUrl} />
           </div>
         ) : null}
+        {audioResult ? (
+          <div
+            className={`voice-evidence voice-evidence-${audioResult.voiceEvidence.status}`}
+          >
+            <div className="voice-evidence-heading">
+              <div>
+                {audioResult.voiceEvidence.status === "pass" ? (
+                  <CheckCircle2 size={16} />
+                ) : (
+                  <ShieldAlert size={16} />
+                )}
+                <strong>Voice Evidence Gate</strong>
+              </div>
+              <span>{audioResult.voiceEvidence.qualityScore}/100</span>
+            </div>
+            <div className="voice-evidence-grid">
+              <span>
+                <small>RMS</small>
+                <strong>
+                  {audioResult.voiceEvidence.rmsDbfs?.toFixed(1) || "--"} dBFS
+                </strong>
+              </span>
+              <span>
+                <small>Clipping</small>
+                <strong>
+                  {(
+                    (audioResult.voiceEvidence.clippingRatio || 0) * 100
+                  ).toFixed(2)}
+                  %
+                </strong>
+              </span>
+              <span>
+                <small>Silence</small>
+                <strong>
+                  {(
+                    (audioResult.voiceEvidence.silenceRatio || 0) * 100
+                  ).toFixed(1)}
+                  %
+                </strong>
+              </span>
+              <span>
+                <small>Source hash</small>
+                <strong>
+                  {audioResult.voiceEvidence.audioSha256.slice(0, 10)}
+                </strong>
+              </span>
+            </div>
+            {transcriptEdited ? (
+              <p>The transcript differs from the server-bound ASR result.</p>
+            ) : audioResult.voiceEvidence.issues.length ? (
+              <p>{audioResult.voiceEvidence.issues[0]}</p>
+            ) : (
+              <p>Server-held audio evidence matches the ASR transcript.</p>
+            )}
+            {audioResult.voiceEvidence.status !== "quarantine" &&
+            (audioResult.voiceEvidence.status === "review" ||
+              transcriptEdited) ? (
+              <label className="evidence-review-control">
+                <input
+                  type="checkbox"
+                  checked={voiceEvidenceReviewed}
+                  onChange={(event) =>
+                    onVoiceEvidenceReviewed(event.target.checked)
+                  }
+                />
+                <span>
+                  I reviewed the current transcript against the source audio.
+                </span>
+              </label>
+            ) : null}
+          </div>
+        ) : null}
         <textarea
           className="transcript-input"
           aria-label="Voice SOP transcript"
@@ -192,7 +273,7 @@ export function CapturePanel({
           ))}
         </div>
         <div className="voice-note">
-          <Mic size={15} />
+          <AudioWaveform size={15} />
           {isTranscribing
             ? "Qwen3-ASR is transcribing this audio on Radeon."
             : audioResult
