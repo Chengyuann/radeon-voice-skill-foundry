@@ -1,9 +1,11 @@
-import { constraintArraySchema } from "../shared/schema.js";
+import { compactConstraintArraySchema } from "../shared/schema.js";
 import type {
   ActionEvent,
   Constraint,
+  ConstraintKind,
   ModelMetrics
 } from "../shared/types.js";
+import { id } from "./hash.js";
 
 type ModelInput = {
   transcript: string;
@@ -17,6 +19,9 @@ type ModelExtraction = {
   constraints: Constraint[];
   metrics?: ModelMetrics;
 };
+
+const MODEL_MAX_OUTPUT_TOKENS = 520;
+const MODEL_REPAIR_MAX_OUTPUT_TOKENS = 900;
 
 export async function extractConstraintsWithModel(
   input: ModelInput
@@ -38,13 +43,13 @@ export async function extractConstraintsWithModel(
     body: JSON.stringify({
       model,
       temperature: 0.1,
-      max_tokens: 900,
+      max_tokens: MODEL_MAX_OUTPUT_TOKENS,
       response_format: { type: "json_object" },
       messages: [
         {
           role: "system",
           content:
-            "Extract enforceable SOP constraints. Return JSON with a constraints array. Each item must contain id, kind (must, must_not, only_if, unless, redact, requires_confirmation), statement, sourceText, confidence from 0 to 1, and appliesTo action type strings. Use redact for sensitive fields that must be removed, masked, aliased, or excluded from an output. Use must_not for prohibited actions such as send, delete, publish, or execute. Use only_if for conditions, and requires_confirmation when missing context or risk requires human review. Separate compound spoken rules into distinct constraints. Do not invent rules."
+            "Extract enforceable SOP constraints as compact JSON: {\"constraints\":[{\"kind\":\"must|must_not|only_if|unless|redact|requires_confirmation\",\"statement\":\"...\",\"sourceText\":\"...\",\"appliesTo\":[\"action_type\"]}]}. Omit id and confidence; the runtime supplies them. Sensitive-field exclusion, masking, aliasing, or replacement MUST use redact, even when phrased as never include. Example: 'Never include compensation data' is redact, not must_not. Prohibited side effects MUST use must_not. Split allowed work and its prohibition into separate rules, such as draft email plus do not send. Use only_if for conditions and requires_confirmation for risk or missing context. Return atomic, non-duplicate rules only. Do not invent rules."
         },
         {
           role: "user",
@@ -77,9 +82,26 @@ export async function extractConstraintsWithModel(
   }
   const metrics = normalizeMetrics(payload.metrics);
   return {
-    constraints: constraintArraySchema.parse(parsed.constraints),
+    constraints: hydrateModelConstraints(
+      compactConstraintArraySchema.parse(parsed.constraints)
+    ),
     ...(metrics ? { metrics } : {})
   };
+}
+
+export function hydrateModelConstraints(
+  constraints: Array<{
+    kind: ConstraintKind;
+    statement: string;
+    sourceText: string;
+    appliesTo: string[];
+  }>
+): Constraint[] {
+  return constraints.map((constraint) => ({
+    ...constraint,
+    id: id("rule"),
+    confidence: modelConfidence(constraint.kind)
+  }));
 }
 
 async function repairJsonWithModel(
@@ -98,7 +120,7 @@ async function repairJsonWithModel(
     body: JSON.stringify({
       model,
       temperature: 0,
-      max_tokens: 900,
+      max_tokens: MODEL_REPAIR_MAX_OUTPUT_TOKENS,
       messages: [
         {
           role: "system",
@@ -119,6 +141,12 @@ async function repairJsonWithModel(
   const repaired = payload.choices?.[0]?.message?.content;
   if (!repaired) throw new Error("JSON repair returned no content");
   return repaired;
+}
+
+function modelConfidence(kind: ConstraintKind): number {
+  return ["must_not", "redact", "requires_confirmation"].includes(kind)
+    ? 0.92
+    : 0.9;
 }
 
 function extractJson(content: string): string {

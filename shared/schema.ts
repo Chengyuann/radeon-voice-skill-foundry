@@ -42,6 +42,15 @@ export const constraintSchema = z.object({
 
 export const constraintArraySchema = z.array(constraintSchema).max(40);
 
+export const compactConstraintSchema = constraintSchema.omit({
+  id: true,
+  confidence: true
+});
+
+export const compactConstraintArraySchema = z
+  .array(compactConstraintSchema)
+  .max(24);
+
 export const knowledgeDocumentInputSchema = z.object({
   title: z.string().min(2).max(120),
   content: z.string().min(20).max(20000)

@@ -24,7 +24,7 @@ const patterns: Pattern[] = [
   {
     kind: "requires_confirmation",
     regex:
-      /\b(?:always\s+)?(?:ask|require)\s+(?:me\s+)?(?:for\s+)?(?:confirmation|approval)?\s*before\s+([^.]+)/gi,
+      /\b(?:always\s+)?(?:ask|require)\s+(?:me\s+)?(?:for\s+)?(?:confirmation|approval)?\s*before\s+([^\n.]+)/gi,
     statement: (match) =>
       `Require human confirmation before ${clean(match[1])}`,
     appliesTo: ["draft_email", "send_email", "create_calendar_hold"],
@@ -32,21 +32,23 @@ const patterns: Pattern[] = [
   },
   {
     kind: "must_not",
-    regex: /\b(?:do not|don't|never)\s+(send[^.]*automatically|send[^.]*|delete[^.]*)/gi,
+    regex:
+      /\b(?:do not|don't|never)\s+(send[^\n.]*automatically|send[^\n.]*|delete[^\n.]*)/gi,
     statement: (match) => `Prohibit: ${clean(match[1])}`,
     appliesTo: ["send_email", "draft_email"],
     confidence: 0.98
   },
   {
     kind: "redact",
-    regex: /\b(?:never include|redact|remove)\s+([^.]*(?:data|information|name)[^.]*)/gi,
+    regex:
+      /\b(?:never include|redact|remove)\s+([^\n.]*(?:data|information|name)[^\n.]*)/gi,
     statement: (match) => `Redact ${clean(match[1])}`,
     appliesTo: ["write_report", "draft_email"],
     confidence: 0.97
   },
   {
     kind: "only_if",
-    regex: /\bonly (?:include|process|keep)\s+([^.]+)/gi,
+    regex: /\bonly (?:include|process|keep)\s+([^\n.]+)/gi,
     statement: (match) => `Only include ${clean(match[1])}`,
     appliesTo: ["filter_findings", "write_report"],
     confidence: 0.96
@@ -54,7 +56,7 @@ const patterns: Pattern[] = [
   {
     kind: "requires_confirmation",
     regex:
-      /\bif\s+([^,]+),\s*(?:mark|set)\s+([^.]*(?:confirmation|confirm)[^.]*)/gi,
+      /\bif\s+([^\n,]+),\s*(?:mark|set)\s+([^\n.]*(?:confirmation|confirm)[^\n.]*)/gi,
     statement: (match) =>
       `When ${clean(match[1])}, require ${clean(match[2])}`,
     appliesTo: ["select_commitment", "draft_email"],
@@ -62,14 +64,14 @@ const patterns: Pattern[] = [
   },
   {
     kind: "only_if",
-    regex: /\bonly when\s+([^.]+)/gi,
+    regex: /\bonly when\s+([^\n.]+)/gi,
     statement: (match) => `Execute only when ${clean(match[1])}`,
     appliesTo: ["create_calendar_hold"],
     confidence: 0.94
   },
   {
     kind: "must",
-    regex: /\breplace\s+([^.]*)\s+before\s+([^.]+)/gi,
+    regex: /\breplace\s+([^\n.]*)\s+before\s+([^\n.]+)/gi,
     statement: (match) =>
       `Replace ${clean(match[1])} before ${clean(match[2])}`,
     appliesTo: ["write_report"],
@@ -77,7 +79,7 @@ const patterns: Pattern[] = [
   },
   {
     kind: "must",
-    regex: /\b(?:draft|create|write)\s+([^.]+)/gi,
+    regex: /\b(?:draft|create|write)\s+([^\n.]+)/gi,
     statement: (match) => `Produce ${clean(match[1])}`,
     appliesTo: ["draft_email", "create_calendar_hold", "write_report"],
     confidence: 0.76

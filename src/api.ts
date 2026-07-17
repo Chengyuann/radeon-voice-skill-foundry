@@ -4,6 +4,7 @@ import type {
   KnowledgeDocument,
   KnowledgeMatch,
   RuntimeInfo,
+  SkillReuseResult,
   StoredSkill,
   TranscribeResult,
   VerifyResult
@@ -110,10 +111,26 @@ export function saveSkill(runId: string): Promise<StoredSkill> {
   });
 }
 
-export function reuseSkill(skillId: string): Promise<StoredSkill> {
-  return requestJson(apiUrl(`/api/skills/${skillId}/reuse`), {
-    method: "POST"
-  });
+export async function reuseSkill(skillId: string): Promise<SkillReuseResult> {
+  const startedAt = performance.now();
+  const result = await requestJson<SkillReuseResult>(
+    apiUrl(`/api/skills/${skillId}/reuse`),
+    {
+      method: "POST"
+    }
+  );
+  const httpRoundTripMs = Math.max(
+    0.01,
+    Math.round((performance.now() - startedAt) * 100) / 100
+  );
+  return {
+    ...result,
+    httpRoundTripMs,
+    httpSpeedup:
+      Math.round(
+        (result.originalCompileDurationMs / httpRoundTripMs) * 10
+      ) / 10
+  };
 }
 
 export async function transcribeAudio(file: Blob): Promise<TranscribeResult> {

@@ -5,8 +5,9 @@ import type {
   ActionEvent,
   CompileResult,
   KnowledgeDocument,
-  RuntimeInfo,
-  StoredSkill,
+    RuntimeInfo,
+    SkillReuseResult,
+    StoredSkill,
   TranscribeResult,
   VerifyResult
 } from "../shared/types";
@@ -53,6 +54,7 @@ export function App() {
   const [knowledge, setKnowledge] = useState<KnowledgeDocument[]>([]);
   const [skills, setSkills] = useState<StoredSkill[]>([]);
   const [savedSkillId, setSavedSkillId] = useState<string>();
+  const [lastReuse, setLastReuse] = useState<SkillReuseResult>();
 
   useEffect(() => {
     getRuntime().then(setRuntime).catch((requestError: Error) => {
@@ -96,6 +98,7 @@ export function App() {
     setVerification(undefined);
     setAudioResult(undefined);
     setSavedSkillId(undefined);
+    setLastReuse(undefined);
     setError(undefined);
   };
 
@@ -175,6 +178,7 @@ export function App() {
     try {
       const stored = await saveSkill(verification.runId);
       setSavedSkillId(stored.id);
+      setLastReuse(undefined);
       setSkills(await listSkills());
     } catch (requestError) {
       setError(
@@ -209,7 +213,8 @@ export function App() {
     setBusy("memory");
     setError(undefined);
     try {
-      const stored = await reuseSkill(skillId);
+      const reuse = await reuseSkill(skillId);
+      const stored = reuse.skill;
       setProjectName(stored.compilation.projectName);
       setScenario(stored.compilation.scenario);
       setTranscript(
@@ -223,6 +228,7 @@ export function App() {
         createdAt: new Date().toISOString()
       });
       setVerification(undefined);
+      setLastReuse(reuse);
       setSkills(await listSkills());
     } catch (requestError) {
       setError(
@@ -313,6 +319,7 @@ export function App() {
           documents={knowledge}
           matches={compilation?.ragMatches || []}
           skills={skills}
+          lastReuse={lastReuse}
           isBusy={busy === "memory"}
           onAddKnowledge={handleAddKnowledge}
           onReuseSkill={handleReuseSkill}

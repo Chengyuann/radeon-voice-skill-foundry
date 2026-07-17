@@ -3,6 +3,7 @@ import path from "node:path";
 import type {
   KnowledgeDocument,
   KnowledgeMatch,
+  SkillReuseResult,
   StoredSkill
 } from "../shared/types.js";
 import { id } from "./hash.js";
@@ -113,7 +114,10 @@ export async function saveVerifiedSkill(
   return stored;
 }
 
-export async function markSkillReused(idValue: string): Promise<StoredSkill> {
+export async function markSkillReused(
+  idValue: string
+): Promise<SkillReuseResult> {
+  const startedAt = performance.now();
   const skills = await listSkills();
   const index = skills.findIndex((skill) => skill.id === idValue);
   if (index < 0) throw new Error("Stored skill not found");
@@ -123,7 +127,23 @@ export async function markSkillReused(idValue: string): Promise<StoredSkill> {
     updatedAt: new Date().toISOString()
   };
   await writeJson(skillsPath, skills);
-  return skills[index];
+  const skill = skills[index];
+  const reuseLatencyMs = roundDuration(performance.now() - startedAt);
+  const originalCompileDurationMs = skill.compilation.compileDurationMs;
+  return {
+    skill,
+    reuseLatencyMs,
+    originalCompileDurationMs,
+    speedup: roundRatio(
+      originalCompileDurationMs / Math.max(reuseLatencyMs, 0.01)
+    ),
+    ...(skill.compilation.modelMetrics
+      ? {
+          avoidedModelOutputTokens:
+            skill.compilation.modelMetrics.outputTokens
+        }
+      : {})
+  };
 }
 
 async function readJson<T>(file: string, fallback: T): Promise<T> {
@@ -163,4 +183,12 @@ function excerptFor(content: string, terms: string[]): string {
     .filter((position) => position >= 0);
   const start = Math.max(0, (positions.length ? Math.min(...positions) : 0) - 50);
   return content.slice(start, start + 240);
+}
+
+function roundDuration(value: number): number {
+  return Math.max(0.01, Math.round(value * 100) / 100);
+}
+
+function roundRatio(value: number): number {
+  return Math.round(value * 10) / 10;
 }

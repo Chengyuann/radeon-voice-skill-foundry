@@ -7,6 +7,7 @@ import {
   mergeModelConstraintsWithGuardrails,
   refineCompilation
 } from "./compiler.js";
+import { hydrateModelConstraints } from "./model-adapter.js";
 
 describe("SOP compiler", () => {
   it("extracts the critical spoken constraints", () => {
@@ -101,6 +102,21 @@ describe("SOP compiler", () => {
     ).toBe(true);
   });
 
+  it("hydrates compact model rules with runtime-owned metadata", () => {
+    const constraints = hydrateModelConstraints([
+      {
+        kind: "redact",
+        statement: "Remove compensation data",
+        sourceText: "Do not include compensation data",
+        appliesTo: ["write_report"]
+      }
+    ]);
+
+    expect(constraints[0].id).toMatch(/^rule_/);
+    expect(constraints[0].confidence).toBe(0.92);
+    expect(constraints[0].statement).toBe("Remove compensation data");
+  });
+
   it("attaches RAG evidence and increments revisions", async () => {
     const compilation = await compileSop(reviewFollowupDemo);
     const refined = await refineCompilation({
@@ -117,6 +133,13 @@ describe("SOP compiler", () => {
         (constraint) =>
           constraint.kind === "requires_confirmation" &&
           /calendar holds/i.test(constraint.statement)
+      )
+    ).toBe(true);
+    expect(
+      refined.constraints.every(
+        (constraint) =>
+          !constraint.statement.includes("[existing") &&
+          !constraint.sourceText.includes("\n")
       )
     ).toBe(true);
   });

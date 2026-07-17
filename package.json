@@ -9,7 +9,8 @@
     "start": "tsx server/index.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "benchmark:optimization": "node scripts/benchmark_optimizations.mjs"
   },
   "dependencies": {
     "busboy": "1.6.0",

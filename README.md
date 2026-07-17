@@ -36,7 +36,9 @@ The web UI now supports:
 - generated permission guardrails, tests, receipts, and proof ZIP
 - local policy/SOP RAG with retrieved evidence
 - persistent verified-skill memory with versioning and reuse counts
+- measured full-compilation versus verified-skill reuse speedup
 - multi-turn natural-language constraint refinement
+- compact model output with runtime-owned IDs and confidence metadata
 
 Local state is stored under `.rvsf-data/`:
 
@@ -91,13 +93,23 @@ OpenAI-compatible `/chat/completions` endpoint with JSON response support.
 Measured hardware evidence is in:
 
 - `benchmarks/w7900-2026-07-17.json`
+- `benchmarks/optimization-w7900-2026-07-17.json`
 - `docs/RADEON_W7900_BENCHMARK.md`
+- `docs/RADEON_OPTIMIZATION_BENCHMARK.md`
 
-Next optimization work:
+Measured optimization results on the same Radeon allocation:
 
-- compare Transformers against vLLM or another optimized serving path
-- compare sequential versus batched fixture generation
-- compare full replanning versus verified-skill reuse
+- compact structured output reduced median model output from 656 to 463
+  tokens (`29.42%`)
+- median generation latency fell from 30.80 s to 21.55 s (`30.03%`)
+- all compact runs retained the required compensation-redaction and no-send
+  semantics
+- verified-skill reuse took 2.18 ms median HTTP round-trip versus a 24.09 s
+  full compilation (`11,052x` for exact verified-skill reuse)
+
+The next isolated serving experiment is Transformers versus vLLM. It should run
+in a separate template or container so the validated Transformers environment
+remains reproducible.
 
 Radeon Cloud local model server:
 
@@ -120,6 +132,12 @@ python scripts/radeon_asr_server.py
 npm run typecheck
 npm test
 npm run build
+```
+
+Radeon optimization benchmark:
+
+```bash
+npm run benchmark:optimization -- benchmarks/optimization-latest.json
 ```
 
 ## Architecture

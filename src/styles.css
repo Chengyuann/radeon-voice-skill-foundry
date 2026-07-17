@@ -1198,6 +1198,36 @@ h3 {
   line-height: 1.5;
 }
 
+.reuse-benchmark {
+  min-height: 28px;
+  display: grid;
+  grid-template-columns: 14px auto minmax(0, 1fr);
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  padding: 6px 8px;
+  color: #275d42;
+  border: 1px solid #b8dac8;
+  border-radius: 4px;
+  background: #f1faf5;
+}
+
+.reuse-benchmark strong {
+  color: #184b33;
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.reuse-benchmark span {
+  min-width: 0;
+  overflow: hidden;
+  color: #46715a;
+  font-family: var(--mono);
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .memory-reuse {
   min-height: 29px;
   display: inline-flex;

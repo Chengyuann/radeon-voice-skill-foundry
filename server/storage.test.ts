@@ -75,7 +75,10 @@ describe("local RAG and skill memory", () => {
 
     expect(first.version).toBe(1);
     expect(second.version).toBe(2);
-    expect(reused.reuseCount).toBe(1);
+    expect(reused.skill.reuseCount).toBe(1);
+    expect(reused.reuseLatencyMs).toBeGreaterThan(0);
+    expect(reused.originalCompileDurationMs).toBe(1);
+    expect(reused.speedup).toBeGreaterThan(0);
     expect(await listSkills()).toHaveLength(2);
   });
 });

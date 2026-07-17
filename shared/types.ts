@@ -164,6 +164,16 @@ export type StoredSkill = {
   verification: VerifyResult;
 };
 
+export type SkillReuseResult = {
+  skill: StoredSkill;
+  reuseLatencyMs: number;
+  httpRoundTripMs?: number;
+  originalCompileDurationMs: number;
+  speedup: number;
+  httpSpeedup?: number;
+  avoidedModelOutputTokens?: number;
+};
+
 export type RefineRequest = {
   compilation: CompileResult;
   message: string;

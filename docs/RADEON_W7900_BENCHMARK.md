@@ -81,13 +81,57 @@ Validated on the same Radeon Cloud workspace:
 - verified skill persisted as version 1
 - reuse count incremented from 0 to 1
 
+## Radeon optimization experiment
+
+The final optimization benchmark used the same W7900-class allocation,
+Qwen3-4B model, ROCm 7.2.1 runtime, and Transformers FP16 serving path.
+
+Compact structured-output protocol, three steady-state runs per variant:
+
+| metric | baseline | compact | change |
+|---|---:|---:|---:|
+| median output tokens | 656 | 463 | -29.42% |
+| median generation latency | 30.80 s | 21.55 s | -30.03% |
+| median throughput | 21.30 tok/s | 21.49 tok/s | +0.89% |
+| semantic gate | pass | pass | preserved |
+
+The semantic gate required every run to produce:
+
+- a `must_not` rule for sending email
+- a `redact` rule covering compensation data
+
+Full optimized product flow:
+
+- full compilation HTTP round-trip: `24,093.42 ms`
+- model output: `506` tokens
+- peak allocated VRAM: `7.825 GiB`
+- final `mail.send`: `deny`
+- verification: `6/6` fixtures passed
+
+Exact Verified Skill reuse, five HTTP calls:
+
+- median server-side retrieval/update: `0.85 ms`
+- median HTTP round-trip: `2.18 ms`
+- speedup versus the measured full compilation: `11,052.03x`
+- model output avoided per reuse: `506` tokens
+
+This reuse comparison measures an exact, already-verified skill lookup, not a
+changed task or approximate semantic match. It demonstrates the procedural
+memory fast path without claiming the same ratio for all Agent workloads.
+
+Detailed method and limitations:
+`docs/RADEON_OPTIMIZATION_BENCHMARK.md`.
+
+Raw data:
+`benchmarks/optimization-w7900-2026-07-17.json`.
+
 ## Application verification
 
 The project was copied to Radeon Cloud and verified with a public npm lock:
 
 - `npm ci`: passed
 - `npm run build`: passed
-- unit tests: `3/3` passed
+- unit tests: `10/10` passed
 - final merged constraints: 8, including deterministic spoken-safety guardrails
 - generated verification fixtures: `6/6` passed
 - `mail.send`: denied by the spoken SOP guardrail

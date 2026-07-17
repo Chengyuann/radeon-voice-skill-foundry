@@ -4,12 +4,14 @@ import {
   Plus,
   RotateCw,
   Search,
-  ShieldCheck
+  ShieldCheck,
+  Zap
 } from "lucide-react";
 import { useState } from "react";
 import type {
   KnowledgeDocument,
   KnowledgeMatch,
+  SkillReuseResult,
   StoredSkill
 } from "../../shared/types";
 import { Badge } from "./Badge";
@@ -18,6 +20,7 @@ type MemoryPanelProps = {
   documents: KnowledgeDocument[];
   matches: KnowledgeMatch[];
   skills: StoredSkill[];
+  lastReuse?: SkillReuseResult;
   isBusy: boolean;
   onAddKnowledge: (input: { title: string; content: string }) => Promise<void>;
   onReuseSkill: (skillId: string) => Promise<void>;
@@ -27,6 +30,7 @@ export function MemoryPanel({
   documents,
   matches,
   skills,
+  lastReuse,
   isBusy,
   onAddKnowledge,
   onReuseSkill
@@ -150,6 +154,25 @@ export function MemoryPanel({
                     {skill.compilation.constraints.length} rules · reused{" "}
                     {skill.reuseCount} times
                   </p>
+                  {lastReuse?.skill.id === skill.id ? (
+                    <div className="reuse-benchmark">
+                      <Zap size={12} />
+                      <strong>
+                        {(
+                          lastReuse.httpRoundTripMs ??
+                          lastReuse.reuseLatencyMs
+                        ).toFixed(2)}{" "}
+                        ms
+                      </strong>
+                      <span>
+                        {(lastReuse.httpSpeedup ?? lastReuse.speedup) >= 1
+                          ? `${(
+                              lastReuse.httpSpeedup ?? lastReuse.speedup
+                            ).toFixed(1)}x vs ${lastReuse.originalCompileDurationMs.toFixed(2)} ms`
+                          : "exact verified lookup"}
+                      </span>
+                    </div>
+                  ) : null}
                   <button
                     className="memory-reuse"
                     disabled={isBusy}
