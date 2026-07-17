@@ -429,6 +429,63 @@ h3 {
   border-bottom: 1px solid var(--line);
 }
 
+.audio-actions {
+  padding: 9px 11px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.audio-action {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: #4f565a;
+  border: 1px solid var(--line-strong);
+  border-radius: 5px;
+  background: var(--surface-strong);
+  cursor: pointer;
+}
+
+.audio-action:hover {
+  border-color: #aeb3b6;
+  background: #f3f4f4;
+}
+
+.audio-action:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.audio-recording {
+  color: white;
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.audio-file-input {
+  display: none;
+}
+
+.audio-preview {
+  min-height: 48px;
+  padding: 6px 11px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+  background: #f4f5f5;
+}
+
+.audio-preview audio {
+  width: 100%;
+  height: 34px;
+}
+
 .recording-state {
   display: flex;
   align-items: center;

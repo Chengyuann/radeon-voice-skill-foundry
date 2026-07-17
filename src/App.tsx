@@ -5,9 +5,10 @@ import type {
   ActionEvent,
   CompileResult,
   RuntimeInfo,
+  TranscribeResult,
   VerifyResult
 } from "../shared/types";
-import { compileSop, getRuntime, verifySop } from "./api";
+import { compileSop, getRuntime, transcribeAudio, verifySop } from "./api";
 import { CapturePanel } from "./components/CapturePanel";
 import { ConstraintPanel } from "./components/ConstraintPanel";
 import { ProofPanel } from "./components/ProofPanel";
@@ -25,8 +26,11 @@ export function App() {
   const [runtime, setRuntime] = useState<RuntimeInfo>();
   const [compilation, setCompilation] = useState<CompileResult>();
   const [verification, setVerification] = useState<VerifyResult>();
-  const [busy, setBusy] = useState<"compile" | "verify" | null>(null);
+  const [busy, setBusy] = useState<
+    "compile" | "verify" | "transcribe" | null
+  >(null);
   const [error, setError] = useState<string>();
+  const [audioResult, setAudioResult] = useState<TranscribeResult>();
 
   useEffect(() => {
     getRuntime().then(setRuntime).catch((requestError: Error) => {
@@ -59,7 +63,30 @@ export function App() {
     setUseModel(false);
     setCompilation(undefined);
     setVerification(undefined);
+    setAudioResult(undefined);
     setError(undefined);
+  };
+
+  const handleTranscribe = async (audio: Blob) => {
+    setBusy("transcribe");
+    setError(undefined);
+    setCompilation(undefined);
+    setVerification(undefined);
+    try {
+      const result = await transcribeAudio(audio);
+      setAudioResult(result);
+      setTranscript(result.transcript);
+      setUseModel(true);
+      setRuntime(result.runtime);
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "Transcription failed"
+      );
+    } finally {
+      setBusy(null);
+    }
   };
 
   const handleCompile = async () => {
@@ -132,11 +159,14 @@ export function App() {
             transcript={transcript}
             actions={actions}
             useModel={useModel}
-            isBusy={busy === "compile"}
+            isBusy={busy === "compile" || busy === "transcribe"}
+            isTranscribing={busy === "transcribe"}
+            audioResult={audioResult}
             onProjectName={setProjectName}
             onScenario={setScenario}
             onTranscript={setTranscript}
             onUseModel={setUseModel}
+            onTranscribe={handleTranscribe}
             onReset={reset}
             onCompile={handleCompile}
           />

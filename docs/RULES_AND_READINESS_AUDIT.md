@@ -69,7 +69,7 @@ than depending on it.
 | RAG | Missing | no indexed policy/SOP retrieval in product |
 | Persistent multi-turn memory | Partial | generated skills exist, but no user-facing memory/reuse conversation |
 | Smooth multi-turn UX | Partial | current UI is compile/verify, not conversational refinement |
-| Real audio in product UI | Missing | ASR measured separately but not connected to browser upload/record |
+| Real audio in product UI | Complete | browser recording/upload -> WAV -> persistent Radeon Qwen3-ASR -> transcript |
 | Targeted speed optimization | Partial | warm/cold and model-size benchmarks exist; no vLLM/quantization comparison |
 | Dedicated Radeon Model API | Missing | custom local server works; official vLLM Model API not created |
 | English source README | Partial | usable but still describes planned work that is now complete |
@@ -92,11 +92,10 @@ Current evidence-based estimate before the next implementation pass:
 
 The highest-value next work is:
 
-1. connect real audio upload/recording to Qwen3-ASR and SOP compilation
-2. add a small local policy/SOP RAG store and verified-skill memory
-3. add conversational refinement of learned constraints
-4. benchmark Transformers versus an optimized path
-5. produce English specification, video, and poster
+1. add a small local policy/SOP RAG store and verified-skill memory
+2. add conversational refinement of learned constraints
+3. benchmark Transformers versus an optimized path
+4. produce English specification, video, and poster
 
 ## Platform readiness
 

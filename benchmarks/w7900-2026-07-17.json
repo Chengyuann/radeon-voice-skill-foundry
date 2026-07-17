@@ -42,7 +42,17 @@
     "warmMedianRtf": 0.0556,
     "warmXRealtime": 17.98,
     "peakVramGiB": 1.752,
-    "recognizedText": "甚至出现交易几乎停滞的情况。"
+    "recognizedText": "甚至出现交易几乎停滞的情况。",
+    "voicePipelineFixture": {
+      "source": "synthetic Chinese demo fixture",
+      "audioSeconds": 20.3898,
+      "inferenceSeconds": 5.5021,
+      "rtf": 0.2698,
+      "xRealtime": 3.71,
+      "mailSendDecision": "deny",
+      "verificationPassed": "6/6",
+      "proofHash": "a9d7a6c2046e0b524b31d1126eb665257fef8e93924c4b6d7847cbe9b8ae0438"
+    }
   },
   "application": {
     "nodeBuild": "passed",

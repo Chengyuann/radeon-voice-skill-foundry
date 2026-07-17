@@ -120,13 +120,35 @@ export function mergeModelConstraintsWithGuardrails(
   guardrails: Constraint[]
 ): Constraint[] {
   const merged: Constraint[] = [];
+  const normalizedModelConstraints = modelConstraints.flatMap((constraint) => {
+    const text = `${constraint.sourceText} ${constraint.statement}`;
+    const additions: Constraint[] = [constraint];
+    if (
+      constraint.kind !== "must_not" &&
+      /(不要|不得|不能|禁止|不应|never|do not|don't|must not).{0,30}(send|发送|自动发送)|(?:send|发送|自动发送).{0,30}(不要|不得|不能|禁止|不应|never|do not|don't|must not)/i.test(
+        text
+      )
+    ) {
+      additions.unshift({
+        ...constraint,
+        id: `${constraint.id}-safety-deny`,
+        kind: "must_not",
+        statement: "Prohibit automatic sending",
+        confidence: Math.max(constraint.confidence, 0.99)
+      });
+    }
+    return additions;
+  });
   const safetyGuardrails = guardrails.filter((constraint) =>
     ["must_not", "redact", "only_if", "requires_confirmation"].includes(
       constraint.kind
     )
   );
 
-  for (const constraint of [...safetyGuardrails, ...modelConstraints]) {
+  for (const constraint of [
+    ...safetyGuardrails,
+    ...normalizedModelConstraints
+  ]) {
     const sourceKey = normalizeConstraintText(constraint.sourceText);
     const statementKey = normalizeConstraintText(constraint.statement);
 

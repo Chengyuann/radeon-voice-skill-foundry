@@ -1,4 +1,5 @@
 import express from "express";
+import Busboy from "busboy";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { compileRequestSchema } from "../shared/schema.js";
@@ -7,6 +8,7 @@ import { compileSop } from "./compiler.js";
 import { buildSubmissionPackage } from "./package.js";
 import { getRuntimeInfo } from "./runtime.js";
 import { verifyCompilation } from "./verifier.js";
+import { transcribeAudioBuffer } from "./transcriber.js";
 
 const app = express();
 const port = Number(process.env.PORT || 8791);
@@ -34,6 +36,24 @@ app.post("/api/compile", async (request, response) => {
   } catch (error) {
     response.status(400).json({
       error: error instanceof Error ? error.message : "Compilation failed"
+    });
+  }
+});
+
+app.post("/api/transcribe", async (request, response) => {
+  try {
+    const contentType = request.headers["content-type"];
+    if (!contentType?.includes("multipart/form-data")) {
+      throw new Error("Expected multipart/form-data audio upload");
+    }
+
+    const audio = await readAudioUpload(request);
+    const result = await transcribeAudioBuffer(audio.buffer, audio.filename);
+    response.json(result);
+  } catch (error) {
+    response.status(400).json({
+      error:
+        error instanceof Error ? error.message : "Audio transcription failed"
     });
   }
 });
@@ -93,3 +113,36 @@ app.listen(port, host, () => {
     `Radeon Voice Skill Foundry API listening on http://${host}:${port}`
   );
 });
+
+type UploadedAudio = {
+  buffer: Buffer;
+  filename: string;
+};
+
+function readAudioUpload(request: express.Request): Promise<UploadedAudio> {
+  return new Promise((resolve, reject) => {
+    const busboy = Busboy({ headers: request.headers });
+    const chunks: Buffer[] = [];
+    let filename = "audio";
+    let resolved = false;
+
+    busboy.on("file", (_name, file, info) => {
+      filename = info.filename || filename;
+      file.on("data", (chunk: Buffer) => chunks.push(chunk));
+      file.on("limit", () => reject(new Error("Audio upload too large")));
+    });
+    busboy.on("field", () => undefined);
+    busboy.on("error", reject);
+    busboy.on("finish", () => {
+      if (resolved) return;
+      resolved = true;
+      const buffer = Buffer.concat(chunks);
+      if (!buffer.length) {
+        reject(new Error("No audio file uploaded"));
+        return;
+      }
+      resolve({ buffer, filename });
+    });
+    request.pipe(busboy);
+  });
+}

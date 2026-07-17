@@ -74,4 +74,28 @@ describe("SOP compiler", () => {
       )
     ).toBe(true);
   });
+
+  it("promotes Chinese no-send language to a must_not guardrail", () => {
+    const merged = mergeModelConstraintsWithGuardrails(
+      [
+        {
+          id: "model-cn-draft",
+          kind: "must" as const,
+          statement: "邮件必须生成草稿，不要自动发送。",
+          sourceText: "邮件只能生成草稿，不要自动发送。",
+          confidence: 1,
+          appliesTo: ["draft_email"]
+        }
+      ],
+      []
+    );
+
+    expect(
+      merged.some(
+        (constraint) =>
+          constraint.kind === "must_not" &&
+          /sending/i.test(constraint.statement)
+      )
+    ).toBe(true);
+  });
 });

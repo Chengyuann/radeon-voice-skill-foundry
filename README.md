@@ -26,6 +26,15 @@ Validated Radeon stack:
 - Agent median throughput: 22.02 tokens/s
 - ASR warm median RTF: 0.0556, approximately 17.98x real-time
 
+The web UI now supports:
+
+- microphone recording
+- local audio upload
+- browser-side conversion to 16 kHz mono WAV
+- persistent Qwen3-ASR transcription on Radeon
+- automatic transcript-to-SOP compilation
+- generated permission guardrails, tests, receipts, and proof ZIP
+
 ## Run
 
 Requirements:
@@ -78,7 +87,6 @@ Measured hardware evidence is in:
 
 Next optimization work:
 
-- connect real audio upload/recording to the ASR model
 - compare Transformers against vLLM or another optimized serving path
 - compare sequential versus batched fixture generation
 - compare full replanning versus verified-skill reuse
@@ -89,6 +97,13 @@ Radeon Cloud local model server:
 . /workspace/.venv-rvsf/bin/activate
 MODEL_ID=Qwen/Qwen3-4B-Instruct-2507 \
   python scripts/radeon_model_server.py
+```
+
+Persistent Radeon ASR service:
+
+```bash
+. /workspace/.venv-rvsf/bin/activate
+python scripts/radeon_asr_server.py
 ```
 
 ## Verify

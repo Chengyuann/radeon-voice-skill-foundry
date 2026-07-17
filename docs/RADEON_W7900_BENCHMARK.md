@@ -49,6 +49,23 @@ Official Chinese sample:
 - warm throughput: about `17.98x real-time`
 - peak allocated VRAM: `1.752 GiB`
 
+End-to-end synthetic SOP voice fixture:
+
+- browser-compatible WAV duration: `20.3898 s`
+- ASR transcription:
+  `项目评审之后，之处理P零和P一问题。外部报告里不能包含薪资数据。邮件只能生成草稿，不要自动发送。如果负责人缺失，必须标记为需要确认。只有存在截止日期时，才创建日历站位。`
+- upload endpoint inference: `5.5021 s`
+- upload endpoint RTF: `0.2698`
+- upload endpoint speed: `3.71x real-time`
+- semantic guardrail promoted the recognized no-send rule to `must_not`
+- final permission: `mail.send = deny`
+- final fixtures: `6/6` passed
+- final voice-pipeline proof hash:
+  `a9d7a6c2046e0b524b31d1126eb665257fef8e93924c4b6d7847cbe9b8ae0438`
+
+The test audio was generated locally as a reproducible demo fixture; it is not
+presented as a human recording.
+
 ## Application verification
 
 The project was copied to Radeon Cloud and verified with a public npm lock:

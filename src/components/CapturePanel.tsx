@@ -1,5 +1,15 @@
-import { Mic, RotateCcw, Sparkles, WandSparkles } from "lucide-react";
-import type { ActionEvent } from "../../shared/types";
+import {
+  FileAudio,
+  Mic,
+  RotateCcw,
+  Sparkles,
+  Square,
+  Upload,
+  WandSparkles
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import type { ActionEvent, TranscribeResult } from "../../shared/types";
+import { convertBlobToWav } from "../audio";
 import { IconButton } from "./IconButton";
 
 type CapturePanelProps = {
@@ -9,10 +19,13 @@ type CapturePanelProps = {
   actions: ActionEvent[];
   useModel: boolean;
   isBusy: boolean;
+  isTranscribing: boolean;
+  audioResult?: TranscribeResult;
   onProjectName: (value: string) => void;
   onScenario: (value: string) => void;
   onTranscript: (value: string) => void;
   onUseModel: (value: boolean) => void;
+  onTranscribe: (audio: Blob) => Promise<void>;
   onReset: () => void;
   onCompile: () => void;
 };
@@ -24,13 +37,70 @@ export function CapturePanel({
   actions,
   useModel,
   isBusy,
+  isTranscribing,
+  audioResult,
   onProjectName,
   onScenario,
   onTranscript,
   onUseModel,
+  onTranscribe,
   onReset,
   onCompile
 }: CapturePanelProps) {
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string>();
+  const recorderRef = useRef<MediaRecorder | undefined>(undefined);
+  const streamRef = useRef<MediaStream | undefined>(undefined);
+  const chunksRef = useRef<Blob[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    return () => {
+      streamRef.current?.getTracks().forEach((track) => track.stop());
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+    };
+  }, [audioUrl]);
+
+  const useAudio = async (audio: Blob) => {
+    if (audioUrl) URL.revokeObjectURL(audioUrl);
+    setAudioUrl(URL.createObjectURL(audio));
+    await onTranscribe(audio);
+  };
+
+  const startRecording = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    streamRef.current = stream;
+    chunksRef.current = [];
+    const recorder = new MediaRecorder(stream);
+    recorderRef.current = recorder;
+    recorder.ondataavailable = (event) => {
+      if (event.data.size) chunksRef.current.push(event.data);
+    };
+    recorder.onstop = () => {
+      stream.getTracks().forEach((track) => track.stop());
+      setIsRecording(false);
+      const blob = new Blob(chunksRef.current, {
+        type: recorder.mimeType || "audio/webm"
+      });
+      void convertBlobToWav(blob).then(useAudio);
+    };
+    recorder.start();
+    setIsRecording(true);
+  };
+
+  const stopRecording = () => {
+    recorderRef.current?.stop();
+  };
+
+  const handleFile = (file: File | undefined) => {
+    if (!file) return;
+    if (file.type === "audio/wav" || file.name.toLowerCase().endsWith(".wav")) {
+      void useAudio(file);
+      return;
+    }
+    void convertBlobToWav(file).then(useAudio);
+  };
+
   return (
     <section className="workspace-panel capture-panel">
       <div className="panel-heading">
@@ -69,6 +139,39 @@ export function CapturePanel({
           </div>
           <span className="mono-meta">{transcript.length} chars</span>
         </div>
+        <div className="audio-actions">
+          <button
+            className={`audio-action ${isRecording ? "audio-recording" : ""}`}
+            type="button"
+            disabled={isTranscribing}
+            onClick={isRecording ? stopRecording : startRecording}
+          >
+            {isRecording ? <Square size={15} /> : <Mic size={15} />}
+            {isRecording ? "Stop recording" : "Record SOP"}
+          </button>
+          <button
+            className="audio-action"
+            type="button"
+            disabled={isRecording || isTranscribing}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Upload size={15} />
+            Upload audio
+          </button>
+          <input
+            ref={fileInputRef}
+            className="audio-file-input"
+            type="file"
+            accept="audio/*,.wav,.mp3,.m4a,.webm,.ogg"
+            onChange={(event) => handleFile(event.target.files?.[0])}
+          />
+        </div>
+        {audioUrl ? (
+          <div className="audio-preview">
+            <FileAudio size={15} />
+            <audio controls src={audioUrl} />
+          </div>
+        ) : null}
         <textarea
           className="transcript-input"
           aria-label="Voice SOP transcript"
@@ -90,8 +193,15 @@ export function CapturePanel({
         </div>
         <div className="voice-note">
           <Mic size={15} />
-          Recorded audio upload and Radeon ASR adapter are the next hardware
-          milestone. The deterministic transcript path is active now.
+          {isTranscribing
+            ? "Qwen3-ASR is transcribing this audio on Radeon."
+            : audioResult
+              ? `${audioResult.language} · ${audioResult.audioSeconds.toFixed(
+                  2
+                )}s audio · RTF ${audioResult.rtf.toFixed(
+                  4
+                )} · ${audioResult.xRealtime.toFixed(2)}x real-time`
+              : "Record or upload audio. The transcript will replace the SOP text and enable the Radeon model adapter."}
         </div>
       </div>
 
@@ -134,7 +244,11 @@ export function CapturePanel({
           onClick={onCompile}
         >
           {isBusy ? <Sparkles size={17} /> : <WandSparkles size={17} />}
-          {isBusy ? "Compiling" : "Compile spoken SOP"}
+          {isTranscribing
+            ? "Transcribing on Radeon"
+            : isBusy
+              ? "Compiling"
+              : "Compile spoken SOP"}
         </button>
       </div>
     </section>

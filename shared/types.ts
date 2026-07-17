@@ -77,6 +77,17 @@ export type CompileRequest = {
   useModel?: boolean;
 };
 
+export type TranscribeResult = {
+  transcript: string;
+  language: string;
+  audioSeconds: number;
+  inferenceMs: number;
+  rtf: number;
+  xRealtime: number;
+  peakVramGiB?: number;
+  runtime: RuntimeInfo;
+};
+
 export type CompileResult = {
   runId: string;
   createdAt: string;
