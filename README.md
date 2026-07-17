@@ -5,6 +5,9 @@
 Final 3-minute 40-second demo:
 `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
 
+Official AMD hackathon submission:
+`https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07/pull/7`
+
 Radeon Voice Skill Foundry is a Track 2 project for the AMD AI DevMaster
 Hackathon. It turns a private spoken SOP and a structured workflow demonstration
 into a GAIA-compatible Agent Skill with:

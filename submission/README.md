@@ -18,6 +18,8 @@ to perform risky actions.
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
 - Demo captions:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt`
+- Official submission PR:
+  `https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07/pull/7`
 
 ## Why It Matters
 
@@ -84,4 +86,4 @@ Raw measurements are in:
 - Poster: complete
 - Demo script: complete
 - Demo video URL: complete
-- Official hackathon PR: pending
+- Official hackathon PR: open and publicly verified

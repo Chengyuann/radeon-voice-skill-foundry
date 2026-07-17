@@ -35,7 +35,7 @@ Deadline: 2026-08-06 23:59 UTC+8.
 - [x] Record final demo video
 - [x] Upload demo video and verify public access
 - [x] Add video URL to `submission/README.md`
-- [ ] Add video URL to official submission PR body
+- [x] Add video URL to official submission PR body
 
 ## Quality Gates
 
@@ -59,14 +59,17 @@ Deadline: 2026-08-06 23:59 UTC+8.
 
 ## Official Repository Submission
 
-- [ ] Fork `AMD-DEV-CONTEST/Radeon-hackathon-2026-07`
-- [ ] Create submission branch
-- [ ] Add `submissions/track2-na-radeon-voice-skill-foundry/`
-- [ ] Include submission index and required materials
-- [ ] Open English PR
+- [x] Fork `AMD-DEV-CONTEST/Radeon-hackathon-2026-07`
+- [x] Create submission branch
+- [x] Add `submissions/track2-na-radeon-voice-skill-foundry/`
+- [x] Include submission index and required materials
+- [x] Open English PR
 - [ ] PR title:
   `Track 2, N/A, Radeon Voice Skill Foundry`
-- [ ] Verify all links from an incognito browser
+- [x] Verify all links from an incognito browser
+
+Official PR:
+`https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07/pull/7`
 
 ## Evidence Values
 
