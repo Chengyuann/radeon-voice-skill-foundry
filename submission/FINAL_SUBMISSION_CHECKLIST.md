@@ -53,6 +53,8 @@ Deadline: 2026-08-06 23:59 UTC+8.
 - [x] Original Radeon workflow fixtures: 6/6 passed
 - [x] Local audio-backed verification: 7/7 fixtures passed
 - [x] Re-run audio-backed verification on Radeon: 7/7 fixtures
+- [x] Radeon v9 lifecycle enhancement suite: 29/29 passed
+- [x] Radeon v9 production build: passed
 - [x] Benchmark JSON validates
 - [x] Proof ZIP integrity validates
 - [x] Secret scan passed
@@ -101,6 +103,8 @@ Official PR:
   `a21a0ee3678370263bea60fa8028dea90513306c466d5e0c278082773344d033`
 - Voice Evidence v0.2 lifecycle proof hash:
   `0c175843082b4464094f578c00598e8ec1b416ccbf5f7855c0e4d65e9deb5edf`
+- Lifecycle enhancement validation commit:
+  `efec128059fea3b68521aa1dd333c71d5ea6a679`
 - Optimization JSON SHA-256:
   `ce2848f92c7f93b30fe558c99128cb6eba1988319931f7ab0bdcc803d291298d`
 - W7900-class GPU: `gfx1100`, 47.98 GiB VRAM

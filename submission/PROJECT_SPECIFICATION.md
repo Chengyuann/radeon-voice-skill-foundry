@@ -455,6 +455,11 @@ demo shows upload, v0.2 analysis, compile, 7/7 verification, save, reuse,
 service restart recovery, runtime invalidation, one-click revalidation, and
 proof download.
 
+The same public enhancement commit
+`efec128059fea3b68521aa1dd333c71d5ea6a679` was clean-cloned on Radeon Cloud.
+`npm ci`, 29/29 tests, and the production build passed on ROCm 7.2.1,
+`gfx1100`, with 51,522,830,336 bytes of VRAM.
+
 ## 14. Evidence Index
 
 - Source: `https://github.com/Chengyuann/radeon-voice-skill-foundry`

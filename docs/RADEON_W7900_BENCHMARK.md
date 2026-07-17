@@ -158,6 +158,22 @@ untrusted fields, resolved the authoritative compile run, and still returned
 Raw summary:
 `benchmarks/radeon-audio-proof-v8-2026-07-18.json`.
 
+## Lifecycle enhancement validation
+
+Measured on the same Radeon Cloud instance using public source commit
+`efec128059fea3b68521aa1dd333c71d5ea6a679`:
+
+- clean clone and `npm ci`: passed
+- enhanced unit suite: `29/29` passed
+- production build: passed
+- ROCm: `7.2.1`
+- architecture: `gfx1100`
+- VRAM: `51,522,830,336` bytes
+
+The v9 check validates the deterministic persistence, proof-compatibility, and
+Voice Evidence v0.2 code paths. It does not replace or modify the v8
+Qwen3-ASR/Qwen3-4B performance measurements above.
+
 ## Application verification
 
 The project was copied to Radeon Cloud and verified with a public npm lock:
