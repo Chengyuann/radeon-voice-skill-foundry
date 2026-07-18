@@ -198,6 +198,21 @@ describe("SOP compiler", () => {
     expect(constraints[0].statement).toBe("Remove compensation data");
   });
 
+  it("accepts model constraints with an omitted action scope", () => {
+    const constraints = hydrateModelConstraints(
+      [
+        {
+          kind: "must_not",
+          statement: "Do not send email automatically",
+          sourceText: "Only create a draft"
+        }
+      ],
+      reviewFollowupDemo.actions
+    );
+
+    expect(constraints[0].appliesTo).toEqual(["open_document"]);
+  });
+
   it("attaches RAG evidence and increments revisions", async () => {
     const compilation = await compileSop(reviewFollowupDemo);
     const refined = await refineCompilation({

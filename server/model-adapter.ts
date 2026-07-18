@@ -83,7 +83,8 @@ export async function extractConstraintsWithModel(
   const metrics = normalizeMetrics(payload.metrics);
   return {
     constraints: hydrateModelConstraints(
-      compactConstraintArraySchema.parse(parsed.constraints)
+      compactConstraintArraySchema.parse(parsed.constraints),
+      input.actions
     ),
     ...(metrics ? { metrics } : {})
   };
@@ -94,14 +95,26 @@ export function hydrateModelConstraints(
     kind: ConstraintKind;
     statement: string;
     sourceText: string;
-    appliesTo: string[];
-  }>
+    appliesTo?: string[];
+  }>,
+  actions: ActionEvent[] = []
 ): Constraint[] {
   return constraints.map((constraint) => ({
     ...constraint,
+    appliesTo: alignModelActions(constraint.appliesTo || [], actions),
     id: id("rule"),
     confidence: modelConfidence(constraint.kind)
   }));
+}
+
+function alignModelActions(
+  suggested: string[],
+  actions: ActionEvent[]
+): string[] {
+  if (!actions.length) return suggested;
+  const available = new Set(actions.map((action) => action.type));
+  const aligned = suggested.filter((type) => available.has(type as ActionEvent["type"]));
+  return aligned.length ? aligned : [actions[0].type];
 }
 
 async function repairJsonWithModel(

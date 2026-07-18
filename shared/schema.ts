@@ -90,6 +90,8 @@ export const constraintArraySchema = z.array(constraintSchema).max(40);
 export const compactConstraintSchema = constraintSchema.omit({
   id: true,
   confidence: true
+}).extend({
+  appliesTo: z.array(z.string()).default([])
 });
 
 export const compactConstraintArraySchema = z
