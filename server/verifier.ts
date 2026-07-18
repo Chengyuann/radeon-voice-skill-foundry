@@ -7,6 +7,7 @@ import type {
   VerifyResult
 } from "../shared/types.js";
 import { id, stableHash } from "./hash.js";
+import { isSendConstraint } from "./compiler.js";
 import { createProofCompatibilityManifest } from "./proof-compatibility.js";
 
 type Workspace = {
@@ -247,7 +248,7 @@ function executeFixture(
         .filter(
           (constraint) =>
             constraint.kind === "must_not" &&
-            /send/i.test(constraint.statement)
+            isSendConstraint(constraint)
         )
         .map((constraint) => constraint.id)
     );

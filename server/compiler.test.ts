@@ -104,6 +104,32 @@ describe("SOP compiler", () => {
     ).toBe(true);
   });
 
+  it("denies mail send and generates its fixture from Chinese ASR text", () => {
+    const transcript =
+      "邮件只能生成草稿，不要自动发送。如果负责人缺失，必须标记为需要确认。";
+    const constraints = extractConstraintsDeterministically(
+      transcript,
+      reviewFollowupDemo.actions
+    );
+    const permissions = inferPermissions(reviewFollowupDemo.actions, constraints);
+    const fixtures = generateFixtures(constraints, permissions);
+
+    expect(
+      constraints.some(
+        (constraint) =>
+          constraint.kind === "must_not" &&
+          /automatic sending/i.test(constraint.statement)
+      )
+    ).toBe(true);
+    expect(
+      permissions.find((permission) => permission.permission === "mail:send")
+        ?.state
+    ).toBe("deny");
+    expect(
+      fixtures.some((fixture) => fixture.name === "Automatic send is blocked")
+    ).toBe(true);
+  });
+
   it("preserves Chinese redaction, confirmation, and date conditions", () => {
     const transcript =
       "项目评审之后，只处理P零和P一问题。外部报告里不能包含薪资数据。" +

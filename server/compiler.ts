@@ -45,6 +45,15 @@ const patterns: Pattern[] = [
     confidence: 0.98
   },
   {
+    kind: "must_not",
+    regex:
+      /(?:不要|不得|不能|禁止|不应)(?:再|进行)?(?:自动)?(?:发送|发出|投递)([^。！？\n]*)/g,
+    statement: (match) =>
+      `Prohibit automatic sending${clean(match[1]) ? `: ${clean(match[1])}` : ""}`,
+    appliesTo: ["send_email", "draft_email"],
+    confidence: 0.99
+  },
+  {
     kind: "redact",
     regex:
       /\b(?:never include|redact|remove)\s+([^\n.]*(?:data|information|name)[^\n.]*)/gi,
@@ -379,7 +388,7 @@ export function inferPermissions(
   const prohibitSend = constraints.some(
     (constraint) =>
       constraint.kind === "must_not" &&
-      /send/i.test(constraint.statement)
+      isSendConstraint(constraint)
   );
   if (prohibitSend) {
     add("mail:send", "deny", "Spoken SOP prohibits automatic sending");
@@ -441,7 +450,10 @@ export function generateFixtures(
   }
 
   for (const constraint of constraints) {
-    if (constraint.kind === "must_not" && /send/i.test(constraint.statement)) {
+    if (
+      constraint.kind === "must_not" &&
+      isSendConstraint(constraint)
+    ) {
       fixtures.push({
         id: id("test"),
         name: "Automatic send is blocked",
@@ -588,6 +600,12 @@ function normalizeConstraintText(value: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9\u4e00-\u9fff]+/g, " ")
     .trim();
+}
+
+export function isSendConstraint(constraint: Constraint): boolean {
+  return /\b(?:send|sends|sending|sent)\b|发送|发出|投递/i.test(
+    `${constraint.statement} ${constraint.sourceText}`
+  );
 }
 
 function slugify(value: string): string {
