@@ -5,6 +5,7 @@ import {
   ListTree,
   ShieldCheck
 } from "lucide-react";
+import { Stepper } from "../react-bits/Stepper";
 
 const steps = [
   { id: "capture", label: "Capture", icon: AudioWaveform },
@@ -19,21 +20,5 @@ type StepRailProps = {
 };
 
 export function StepRail({ active }: StepRailProps) {
-  return (
-    <nav className="step-rail" aria-label="Foundry progress">
-      {steps.map((step, index) => {
-        const Icon = step.icon;
-        const state =
-          index < active ? "complete" : index === active ? "active" : "pending";
-        return (
-          <div className={`step-item step-${state}`} key={step.id}>
-            <div className="step-icon">
-              <Icon size={17} strokeWidth={1.8} />
-            </div>
-            <span>{step.label}</span>
-          </div>
-        );
-      })}
-    </nav>
-  );
+  return <Stepper steps={steps} active={active} />;
 }

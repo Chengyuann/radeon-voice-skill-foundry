@@ -37,6 +37,8 @@ Validated Radeon stack:
 
 The web UI now supports:
 
+- React Bits-inspired interaction patterns adapted for this workbench:
+  DecryptedText, CountUp, SpotlightCard, AnimatedContent, Magnet, and Stepper
 - microphone recording
 - local audio upload
 - browser-side conversion to 16 kHz mono WAV

@@ -6,6 +6,7 @@ import {
   ShieldCheck
 } from "lucide-react";
 import type { RuntimeInfo } from "../../shared/types";
+import { DecryptedText } from "../react-bits/DecryptedText";
 import { Badge } from "./Badge";
 
 type TopBarProps = {
@@ -21,7 +22,9 @@ export function TopBar({ runtime, status }: TopBarProps) {
           <AudioLines size={19} strokeWidth={1.8} />
         </div>
         <div>
-          <strong>Radeon Voice Skill Foundry</strong>
+          <strong>
+            <DecryptedText text="Radeon Voice Skill Foundry" speed={18} />
+          </strong>
           <span>Speak the SOP. Prove the Skill.</span>
         </div>
       </div>

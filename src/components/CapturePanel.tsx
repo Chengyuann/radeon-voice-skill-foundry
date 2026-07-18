@@ -13,6 +13,8 @@ import {
 import { useEffect, useRef, useState } from "react";
 import type { ActionEvent, TranscribeResult } from "../../shared/types";
 import { convertBlobToWav } from "../audio";
+import { Magnet } from "../react-bits/Magnet";
+import { SpotlightCard } from "../react-bits/SpotlightCard";
 import { IconButton } from "./IconButton";
 
 type CapturePanelProps = {
@@ -111,7 +113,11 @@ export function CapturePanel({
   };
 
   return (
-    <section className="workspace-panel capture-panel">
+    <SpotlightCard
+      as="section"
+      className="workspace-panel capture-panel"
+      spotlightColor="rgba(194, 58, 53, 0.07)"
+    >
       <div className="panel-heading">
         <div>
           <p className="eyebrow">Input stream</p>
@@ -372,19 +378,25 @@ export function CapturePanel({
             <small>Use configured OpenAI-compatible endpoint</small>
           </span>
         </label>
-        <button
-          className="primary-button"
+        <Magnet
+          className="primary-magnet"
           disabled={isBusy}
-          onClick={onCompile}
+          strength={10}
         >
-          {isBusy ? <Sparkles size={17} /> : <WandSparkles size={17} />}
-          {isTranscribing
-            ? "Transcribing on Radeon"
-            : isBusy
-              ? "Compiling"
-              : "Compile spoken SOP"}
-        </button>
+          <button
+            className="primary-button"
+            disabled={isBusy}
+            onClick={onCompile}
+          >
+            {isBusy ? <Sparkles size={17} /> : <WandSparkles size={17} />}
+            {isTranscribing
+              ? "Transcribing on Radeon"
+              : isBusy
+                ? "Compiling"
+                : "Compile spoken SOP"}
+          </button>
+        </Magnet>
       </div>
-    </section>
+    </SpotlightCard>
   );
 }

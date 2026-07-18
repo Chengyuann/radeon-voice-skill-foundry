@@ -12,6 +12,7 @@ import type {
   RuntimeInfo,
   VerifyResult
 } from "../../shared/types";
+import { SpotlightCard } from "../react-bits/SpotlightCard";
 import { Badge } from "./Badge";
 
 type ProofPanelProps = {
@@ -33,7 +34,11 @@ export function ProofPanel({
           )?.[1] || "";
 
   return (
-    <section className="workspace-panel proof-panel">
+    <SpotlightCard
+      as="section"
+      className="workspace-panel proof-panel"
+      spotlightColor="rgba(47, 106, 79, 0.07)"
+    >
       <div className="panel-heading">
         <div>
           <p className="eyebrow">GAIA artifact</p>
@@ -195,6 +200,6 @@ the GAIA-compatible skill artifact.`}
         <Download size={17} />
         Download proof package
       </a>
-    </section>
+    </SpotlightCard>
   );
 }

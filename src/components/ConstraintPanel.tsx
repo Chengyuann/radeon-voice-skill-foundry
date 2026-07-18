@@ -16,6 +16,7 @@ import type {
   ConstraintKind,
   VerifyResult
 } from "../../shared/types";
+import { SpotlightCard } from "../react-bits/SpotlightCard";
 import { Badge } from "./Badge";
 
 const constraintIcons: Record<ConstraintKind, typeof Ban> = {
@@ -60,7 +61,11 @@ export function ConstraintPanel({
   };
 
   return (
-    <section className="workspace-panel constraint-panel">
+    <SpotlightCard
+      as="section"
+      className="workspace-panel constraint-panel"
+      spotlightColor="rgba(52, 95, 120, 0.065)"
+    >
       <div className="panel-heading">
         <div>
           <p className="eyebrow">Policy compiler</p>
@@ -211,6 +216,6 @@ export function ConstraintPanel({
           ) : null}
         </>
       )}
-    </section>
+    </SpotlightCard>
   );
 }

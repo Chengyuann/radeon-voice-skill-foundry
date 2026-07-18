@@ -26,10 +26,12 @@ import {
 } from "./api";
 import { CapturePanel } from "./components/CapturePanel";
 import { ConstraintPanel } from "./components/ConstraintPanel";
+import { PerformanceStrip } from "./components/PerformanceStrip";
 import { ProofPanel } from "./components/ProofPanel";
 import { StepRail } from "./components/StepRail";
 import { TopBar } from "./components/TopBar";
 import { MemoryPanel } from "./components/MemoryPanel";
+import { AnimatedContent } from "./react-bits/AnimatedContent";
 
 export function App() {
   const [projectName, setProjectName] = useState(reviewFollowupDemo.projectName);
@@ -308,7 +310,7 @@ export function App() {
     <div className="app-shell">
       <TopBar runtime={runtime} status={status} />
       <main>
-        <div className="context-strip">
+        <AnimatedContent className="context-strip">
           <div>
             <span>AMD AI DevMaster Hackathon</span>
             <ChevronRight size={14} />
@@ -318,67 +320,76 @@ export function App() {
             One spoken SOP becomes an experimental GAIA skill, a capability
             manifest, adversarial fixtures, and a local proof package.
           </p>
-        </div>
+        </AnimatedContent>
+        <PerformanceStrip runtime={runtime} />
         <StepRail active={activeStep} />
 
         {error ? (
-          <div className="error-banner">
+          <AnimatedContent className="error-banner" distance={8}>
             <AlertCircle size={17} />
             <span>{error}</span>
             <button onClick={() => setError(undefined)}>Dismiss</button>
-          </div>
+          </AnimatedContent>
         ) : null}
 
         <div className="workspace-grid">
-          <CapturePanel
-            projectName={projectName}
-            scenario={scenario}
-            transcript={transcript}
-            actions={actions}
-            useModel={useModel}
-            isBusy={busy === "compile" || busy === "transcribe"}
-            isTranscribing={busy === "transcribe"}
-            audioResult={audioResult}
-            voiceEvidenceReviewed={voiceEvidenceReviewed}
-            transcriptEdited={Boolean(
-              audioResult && transcript !== audioResult.transcript
-            )}
-            onProjectName={setProjectName}
-            onScenario={setScenario}
-            onTranscript={handleTranscript}
-            onUseModel={setUseModel}
-            onVoiceEvidenceReviewed={setVoiceEvidenceReviewed}
-            onTranscribe={handleTranscribe}
-            onReset={reset}
-            onCompile={handleCompile}
-          />
-          <ConstraintPanel
-            compilation={compilation}
-            verification={verification}
-            isBusy={busy === "verify"}
-            onVerify={handleVerify}
-            onRefine={handleRefine}
-            onSaveSkill={handleSaveSkill}
-            isRefining={busy === "refine"}
-            isSaving={busy === "memory"}
-            savedSkillId={savedSkillId}
-          />
-          <ProofPanel
-            runtime={runtime}
-            compilation={compilation}
-            verification={verification}
-          />
+          <AnimatedContent className="workspace-motion capture-motion" delay={0.1}>
+            <CapturePanel
+              projectName={projectName}
+              scenario={scenario}
+              transcript={transcript}
+              actions={actions}
+              useModel={useModel}
+              isBusy={busy === "compile" || busy === "transcribe"}
+              isTranscribing={busy === "transcribe"}
+              audioResult={audioResult}
+              voiceEvidenceReviewed={voiceEvidenceReviewed}
+              transcriptEdited={Boolean(
+                audioResult && transcript !== audioResult.transcript
+              )}
+              onProjectName={setProjectName}
+              onScenario={setScenario}
+              onTranscript={handleTranscript}
+              onUseModel={setUseModel}
+              onVoiceEvidenceReviewed={setVoiceEvidenceReviewed}
+              onTranscribe={handleTranscribe}
+              onReset={reset}
+              onCompile={handleCompile}
+            />
+          </AnimatedContent>
+          <AnimatedContent className="workspace-motion constraint-motion" delay={0.16}>
+            <ConstraintPanel
+              compilation={compilation}
+              verification={verification}
+              isBusy={busy === "verify"}
+              onVerify={handleVerify}
+              onRefine={handleRefine}
+              onSaveSkill={handleSaveSkill}
+              isRefining={busy === "refine"}
+              isSaving={busy === "memory"}
+              savedSkillId={savedSkillId}
+            />
+          </AnimatedContent>
+          <AnimatedContent className="workspace-motion proof-motion" delay={0.22}>
+            <ProofPanel
+              runtime={runtime}
+              compilation={compilation}
+              verification={verification}
+            />
+          </AnimatedContent>
         </div>
-        <MemoryPanel
-          documents={knowledge}
-          matches={compilation?.ragMatches || []}
-          skills={skills}
-          lastReuse={lastReuse}
-          isBusy={busy === "memory"}
-          onAddKnowledge={handleAddKnowledge}
-          onReuseSkill={handleReuseSkill}
-          onRevalidateSkill={handleRevalidateSkill}
-        />
+        <AnimatedContent delay={0.26}>
+          <MemoryPanel
+            documents={knowledge}
+            matches={compilation?.ragMatches || []}
+            skills={skills}
+            lastReuse={lastReuse}
+            isBusy={busy === "memory"}
+            onAddKnowledge={handleAddKnowledge}
+            onReuseSkill={handleReuseSkill}
+            onRevalidateSkill={handleRevalidateSkill}
+          />
+        </AnimatedContent>
       </main>
     </div>
   );
