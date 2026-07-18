@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "benchmark:optimization": "node scripts/benchmark_optimizations.mjs"
+    "benchmark:optimization": "node scripts/benchmark_optimizations.mjs",
+    "deploy:pages": "npm run build && wrangler pages deploy dist --project-name radeon-voice-skill-foundry --branch main"
   },
   "dependencies": {
     "busboy": "1.6.0",
@@ -37,6 +38,7 @@
     "tsx": "4.21.0",
     "typescript": "5.9.3",
     "vite": "7.3.3",
-    "vitest": "4.1.10"
+    "vitest": "4.1.10",
+    "wrangler": "4.112.0"
   }
 }

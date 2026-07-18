@@ -95,6 +95,34 @@ npm start
 
 Open `http://127.0.0.1:8791`.
 
+## Public Cloudflare deployment
+
+The production web app is deployed on Cloudflare Pages. Browser requests remain
+same-origin under `/api`; `functions/api/[[path]].ts` forwards those requests to
+the Radeon-hosted API and injects `RVSF_API_TOKEN`.
+
+Required Pages secrets:
+
+```text
+RADEON_API_ORIGIN=https://<radeon-tunnel-host>
+RVSF_API_TOKEN=<shared-random-token>
+```
+
+The same token must be present in the W7900 Node process. Local development does
+not require it. Build and deploy with:
+
+```bash
+npm run deploy:pages
+```
+
+The public app is only a complete demo while the W7900 services are available:
+
+```text
+8000  Qwen3-4B OpenAI-compatible model server
+8001  Qwen3-ASR-0.6B service
+8791  Radeon Voice Skill Foundry API
+```
+
 ## Demo workflow
 
 1. Review the spoken SOP transcript and aligned action trace. Editing the ASR

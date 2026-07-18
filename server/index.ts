@@ -1,5 +1,6 @@
 import express from "express";
 import Busboy from "busboy";
+import { timingSafeEqual } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -48,6 +49,24 @@ const host = process.env.HOST || "127.0.0.1";
 const maxAudioUploadBytes = 25 * 1024 * 1024;
 
 app.use(express.json({ limit: "2mb" }));
+app.use("/api", (request, response, next) => {
+  const expected = process.env.RVSF_API_TOKEN?.trim();
+  if (!expected) {
+    next();
+    return;
+  }
+  const provided = request.header("x-rvsf-api-token") || "";
+  const expectedBytes = Buffer.from(expected);
+  const providedBytes = Buffer.from(provided);
+  if (
+    expectedBytes.length !== providedBytes.length ||
+    !timingSafeEqual(expectedBytes, providedBytes)
+  ) {
+    response.status(401).json({ error: "Unauthorized API request" });
+    return;
+  }
+  next();
+});
 
 app.get("/api/health", async (_request, response) => {
   response.json({
