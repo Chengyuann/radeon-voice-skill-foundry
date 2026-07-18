@@ -142,7 +142,7 @@ export async function verifyCompilation(
   const status = failed.length ? "quarantined" : "verified";
 
   const proofCore = {
-    schemaVersion: "0.2.0",
+    schemaVersion: "0.3.0",
     runId: compilation.runId,
     projectName: compilation.projectName,
     status,

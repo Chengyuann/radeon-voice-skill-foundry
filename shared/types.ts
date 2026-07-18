@@ -106,6 +106,7 @@ export type AudioDiagnostic = {
     | "low_snr"
     | "dc_offset"
     | "dropout"
+    | "burst_loss"
     | "channel_imbalance"
     | "low_dynamic_range";
   severity: "review" | "quarantine";
@@ -113,7 +114,7 @@ export type AudioDiagnostic = {
 };
 
 export type VoiceEvidence = {
-  schemaVersion: "0.1.0" | "0.2.0";
+  schemaVersion: "0.1.0" | "0.2.0" | "0.3.0";
   status: VoiceEvidenceStatus;
   qualityScore: number;
   format: string;
@@ -130,6 +131,7 @@ export type VoiceEvidence = {
   dcOffset?: number;
   crestFactorDb?: number;
   dropoutRatio?: number;
+  burstLossRatio?: number;
   channelImbalanceDb?: number;
   audioSha256: string;
   asrTranscriptSha256?: string;
@@ -205,7 +207,7 @@ export type VerifyResult = {
 };
 
 export type ProofCompatibilityManifest = {
-  schemaVersion: "0.2.0";
+  schemaVersion: "0.2.0" | "0.3.0";
   verifierVersion: string;
   runtimeHash: string;
   toolContractHash: string;

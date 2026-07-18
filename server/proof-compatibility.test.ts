@@ -84,6 +84,54 @@ describe("proof compatibility", () => {
         compilation,
         reviewFollowupDemo.actions
       ).schemaVersion
-    ).toBe("0.2.0");
+    ).toBe("0.3.0");
+  });
+
+  it("invalidates proofs created before Voice Evidence v0.3", async () => {
+    const compilation = await compileSop({
+      ...reviewFollowupDemo,
+      voiceEvidence: {
+        schemaVersion: "0.3.0",
+        status: "pass",
+        qualityScore: 100,
+        format: "PCM 16-bit WAV",
+        sampleRateHz: 16_000,
+        channels: 1,
+        durationSeconds: 4,
+        burstLossRatio: 0,
+        audioSha256: "a".repeat(64),
+        issues: [],
+        diagnostics: [],
+        analyzedAt: "2026-07-18T00:00:00.000Z"
+      }
+    });
+    const verification = await verifyCompilation(
+      compilation,
+      reviewFollowupDemo.actions
+    );
+    const compatibility = verification.proofBundle.compatibility as {
+      schemaVersion: "0.2.0" | "0.3.0";
+      voiceEvidenceSchemaVersion?: "0.1.0" | "0.2.0" | "0.3.0";
+    };
+    const legacyVerification = {
+      ...verification,
+      proofBundle: {
+        ...verification.proofBundle,
+        compatibility: {
+          ...compatibility,
+          schemaVersion: "0.2.0",
+          voiceEvidenceSchemaVersion: "0.2.0"
+        }
+      }
+    };
+    const assessed = assessProofCompatibility({
+      compilation,
+      actions: reviewFollowupDemo.actions,
+      verification: legacyVerification,
+      runtime: compilation.runtime
+    });
+
+    expect(assessed.status).toBe("revalidation_required");
+    expect(assessed.reasons).toContain("Voice evidence schema changed.");
   });
 });

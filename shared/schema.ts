@@ -17,7 +17,7 @@ export const actionEventSchema = z.object({
 });
 
 export const voiceEvidenceSchema = z.object({
-  schemaVersion: z.enum(["0.1.0", "0.2.0"]),
+  schemaVersion: z.enum(["0.1.0", "0.2.0", "0.3.0"]),
   status: z.enum(["pass", "review", "quarantine"]),
   qualityScore: z.number().min(0).max(100),
   format: z.string(),
@@ -34,6 +34,7 @@ export const voiceEvidenceSchema = z.object({
   dcOffset: z.number().min(-1).max(1).optional(),
   crestFactorDb: z.number().nonnegative().optional(),
   dropoutRatio: z.number().min(0).max(1).optional(),
+  burstLossRatio: z.number().min(0).max(1).optional(),
   channelImbalanceDb: z.number().nonnegative().optional(),
   audioSha256: z.string().regex(/^[a-f0-9]{64}$/),
   asrTranscriptSha256: z.string().regex(/^[a-f0-9]{64}$/).optional(),
@@ -45,6 +46,7 @@ export const voiceEvidenceSchema = z.object({
           "low_snr",
           "dc_offset",
           "dropout",
+          "burst_loss",
           "channel_imbalance",
           "low_dynamic_range"
         ]),

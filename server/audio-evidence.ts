@@ -24,7 +24,7 @@ export function analyzeAudioEvidence(buffer: Buffer): VoiceEvidence {
     const samples = decodeWavSamples(buffer, format);
     const frames = Math.floor(samples.length / format.channels);
     const durationSeconds = frames / format.sampleRate;
-    const metrics = measureSamples(samples);
+    const metrics = measureSamples(samples, format);
     const diagnostics = diagnoseSignal(samples, format, metrics);
     const assessment = assessEvidence({
       durationSeconds,
@@ -35,7 +35,7 @@ export function analyzeAudioEvidence(buffer: Buffer): VoiceEvidence {
     });
 
     return {
-      schemaVersion: "0.2.0",
+      schemaVersion: "0.3.0",
       status: assessment.status,
       qualityScore: assessment.qualityScore,
       format: wavFormatName(format.audioFormat, format.bitsPerSample),
@@ -52,6 +52,7 @@ export function analyzeAudioEvidence(buffer: Buffer): VoiceEvidence {
       dcOffset: round(metrics.dcOffset, 6),
       crestFactorDb: round(metrics.crestFactorDb, 2),
       dropoutRatio: round(metrics.dropoutRatio, 5),
+      burstLossRatio: round(metrics.burstLossRatio, 5),
       ...(metrics.channelImbalanceDb !== undefined
         ? {
             channelImbalanceDb: round(metrics.channelImbalanceDb, 2)
@@ -64,7 +65,7 @@ export function analyzeAudioEvidence(buffer: Buffer): VoiceEvidence {
     };
   } catch (error) {
     return {
-      schemaVersion: "0.2.0",
+      schemaVersion: "0.3.0",
       status: "quarantine",
       qualityScore: 0,
       format: "unrecognized",
@@ -185,7 +186,7 @@ function readSample(buffer: Buffer, offset: number, format: WavFormat): number {
   }
 }
 
-function measureSamples(samples: Float64Array) {
+function measureSamples(samples: Float64Array, format: WavFormat) {
   if (!samples.length) throw new Error("WAV contains no samples");
 
   let sumSquares = 0;
@@ -225,6 +226,11 @@ function measureSamples(samples: Float64Array) {
     crestFactorDb:
       rms > 0 && peak > 0 ? 20 * Math.log10(peak / rms) : 0,
     dropoutRatio: measureShortDropoutRatio(frameMetrics),
+    burstLossRatio: measureBurstLossRatio(
+      samples,
+      format.sampleRate,
+      format.channels
+    ),
     channelImbalanceDb: undefined as number | undefined
   };
 }
@@ -260,6 +266,16 @@ function diagnoseSignal(
         metrics.dropoutRatio * 100,
         1
       )}% of short-time frames look like dropouts.`
+    });
+  }
+  if (metrics.burstLossRatio > 0.04 && metrics.silenceRatio < 0.9) {
+    diagnostics.push({
+      code: "burst_loss",
+      severity: metrics.burstLossRatio > 0.12 ? "quarantine" : "review",
+      message: `${round(
+        metrics.burstLossRatio * 100,
+        1
+      )}% of active speech is interrupted by multi-frame digital silence.`
     });
   }
   if (metrics.crestFactorDb < 2.5 && metrics.rmsDbfs > -45) {
@@ -300,8 +316,44 @@ function measureShortDropoutRatio(levels: number[]): number {
   return dropoutFrames / Math.max(levels.length, 1);
 }
 
-function measureFrames(samples: Float64Array): number[] {
-  const frameSize = Math.max(160, Math.min(1_600, samples.length));
+function measureBurstLossRatio(
+  samples: Float64Array,
+  sampleRate: number,
+  channels: number
+): number {
+  const frameSize = Math.max(
+    channels,
+    Math.round(sampleRate * 0.02) * channels
+  );
+  const levels = measureFrames(samples, frameSize);
+  let burstFrames = 0;
+  let index = 0;
+  while (index < levels.length) {
+    if (levels[index] >= -72) {
+      index += 1;
+      continue;
+    }
+    const start = index;
+    while (index < levels.length && levels[index] < -72) index += 1;
+    const runLength = index - start;
+    const boundedBySpeech =
+      start > 0 &&
+      index < levels.length &&
+      levels[start - 1] > -42 &&
+      levels[index] > -42;
+    if (boundedBySpeech && runLength >= 2) {
+      burstFrames += runLength;
+    }
+  }
+  return burstFrames / Math.max(levels.length, 1);
+}
+
+function measureFrames(
+  samples: Float64Array,
+  requestedFrameSize?: number
+): number[] {
+  const frameSize =
+    requestedFrameSize ?? Math.max(160, Math.min(1_600, samples.length));
   const frames: number[] = [];
   for (let offset = 0; offset < samples.length; offset += frameSize) {
     const end = Math.min(offset + frameSize, samples.length);

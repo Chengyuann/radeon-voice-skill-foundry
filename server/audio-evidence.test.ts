@@ -13,7 +13,7 @@ describe("voice evidence analyzer", () => {
     expect(evidence.qualityScore).toBeGreaterThanOrEqual(90);
     expect(evidence.sampleRateHz).toBe(16_000);
     expect(evidence.audioSha256).toMatch(/^[a-f0-9]{64}$/);
-    expect(evidence.schemaVersion).toBe("0.2.0");
+    expect(evidence.schemaVersion).toBe("0.3.0");
     expect(evidence.estimatedSnrDb).toBeGreaterThanOrEqual(20);
     expect(evidence.crestFactorDb).toBeGreaterThan(2);
   });
@@ -90,7 +90,71 @@ describe("voice evidence analyzer", () => {
       evidence.diagnostics?.some((item) => item.code === "dc_offset")
     ).toBe(true);
   });
+
+  it("does not flag natural pauses as burst loss", () => {
+    const evidence = analyzeAudioEvidence(
+      buildWav({
+        seconds: 4,
+        sample: (time) => {
+          const phase = time % 1;
+          return phase > 0.72
+            ? 0.001 * Math.sin(2 * Math.PI * 731 * time)
+            : 0.18 * Math.sin(2 * Math.PI * 220 * time);
+        }
+      })
+    );
+
+    expect(evidence.burstLossRatio).toBe(0);
+    expect(
+      evidence.diagnostics?.some((item) => item.code === "burst_loss")
+    ).toBe(false);
+  });
+
+  it("requires review for repeated 120 ms burst loss", () => {
+    const evidence = analyzeAudioEvidence(
+      buildBurstLossWav(120, 1.5)
+    );
+
+    expect(evidence.burstLossRatio).toBeGreaterThan(0.04);
+    expect(evidence.burstLossRatio).toBeLessThanOrEqual(0.12);
+    expect(
+      evidence.diagnostics?.some(
+        (item) =>
+          item.code === "burst_loss" && item.severity === "review"
+      )
+    ).toBe(true);
+    expect(evidence.status).toBe("review");
+  });
+
+  it("quarantines repeated 280 ms burst loss", () => {
+    const evidence = analyzeAudioEvidence(
+      buildBurstLossWav(280, 1.1)
+    );
+
+    expect(evidence.burstLossRatio).toBeGreaterThan(0.12);
+    expect(
+      evidence.diagnostics?.some(
+        (item) =>
+          item.code === "burst_loss" && item.severity === "quarantine"
+      )
+    ).toBe(true);
+    expect(evidence.status).toBe("quarantine");
+  });
 });
+
+function buildBurstLossWav(dropoutMs: number, spacingSeconds: number): Buffer {
+  return buildWav({
+    seconds: 6,
+    sample: (time) => {
+      const afterOffset = time - 0.7;
+      if (afterOffset >= 0) {
+        const withinCycle = afterOffset % spacingSeconds;
+        if (withinCycle < dropoutMs / 1000) return 0;
+      }
+      return 0.18 * Math.sin(2 * Math.PI * 220 * time);
+    }
+  });
+}
 
 function buildWav(input: {
   seconds: number;

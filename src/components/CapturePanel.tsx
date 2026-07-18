@@ -252,6 +252,15 @@ export function CapturePanel({
                 </strong>
               </span>
               <span>
+                <small>Burst loss</small>
+                <strong>
+                  {(
+                    (audioResult.voiceEvidence.burstLossRatio || 0) * 100
+                  ).toFixed(2)}
+                  %
+                </strong>
+              </span>
+              <span>
                 <small>Source hash</small>
                 <strong>
                   {audioResult.voiceEvidence.audioSha256.slice(0, 10)}
