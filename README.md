@@ -125,6 +125,20 @@ The public app is only a complete demo while the W7900 services are available:
 8791  Radeon Voice Skill Foundry API
 ```
 
+On the W7900 workspace, recover or inspect the authenticated public stack with:
+
+```bash
+bash scripts/radeon_public_api.sh start
+bash scripts/radeon_public_api.sh status
+```
+
+If a Quick Tunnel restart creates a new origin, update the encrypted Pages
+secret and redeploy from the local repository:
+
+```bash
+bash scripts/update_cloudflare_origin.sh https://<new-origin>
+```
+
 ## Demo workflow
 
 1. Review the spoken SOP transcript and aligned action trace. Editing the ASR
