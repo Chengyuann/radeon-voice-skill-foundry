@@ -101,6 +101,8 @@ The production web app is deployed on Cloudflare Pages. Browser requests remain
 same-origin under `/api`; `functions/api/[[path]].ts` forwards those requests to
 the Radeon-hosted API and injects `RVSF_API_TOKEN`.
 
+**Live demo:** https://radeon-voice-skill-foundry.pages.dev/
+
 Required Pages secrets:
 
 ```text
