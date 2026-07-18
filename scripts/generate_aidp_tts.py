@@ -7,6 +7,7 @@ import base64
 import json
 import os
 import re
+import subprocess
 import time
 import urllib.error
 import urllib.request
@@ -16,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 NARRATION = ROOT / "submission" / "DEMO_NARRATION.md"
 OUTPUT = ROOT / "tmp" / "tts-v2"
 MODEL = "gemini-3.1-flash-tts-preview"
-VOICE = "Kore"
+VOICE = os.environ.get("AIDP_TTS_VOICE", "Charon")
 ENDPOINT = "https://aidp.bytedance.net/api/modelhub/online/multimodal/crawl"
 
 SCENE_ORDER = [
@@ -30,11 +31,13 @@ SCENE_ORDER = [
 ]
 
 VOICE_DIRECTION = (
-    "Narrate this premium technical product demo in a warm, composed, "
-    "confident documentary voice. Use natural conversational rhythm, measured "
-    "pacing, crisp articulation, subtle energy, and short intentional pauses. "
-    "Avoid robotic cadence, exaggerated advertising tone, and sing-song "
-    "delivery. Keep technical numbers clear without sounding like a list. "
+    "Use an adult male technical documentary voice with a natural lower "
+    "register. Sound composed, credible, and quietly confident. Use measured "
+    "conversational pacing, crisp articulation, subtle energy, and short "
+    "intentional pauses. Avoid robotic cadence, exaggerated advertising tone, "
+    "and sing-song delivery. Keep technical numbers clear without sounding "
+    "like a list. Read the supplied text exactly once and stop after the final "
+    "sentence. Do not repeat, improvise, or add an outro. "
     "Pronounce Radeon as ray-dee-on, ROCm as rock-em, Qwen as kwen, and ASR as "
     "A-S-R."
 )
@@ -95,9 +98,34 @@ def main() -> None:
     sections = parse_sections()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     for index, title in enumerate(SCENE_ORDER, start=1):
-        audio = generate(ak, sections[title])
         path = OUTPUT / f"scene-{index:02d}.mp3"
-        path.write_bytes(audio)
+        text = sections[title]
+        for generation_attempt in range(1, 4):
+            path.write_bytes(generate(ak, text))
+            audio_duration = float(
+                subprocess.check_output(
+                    [
+                        "ffprobe",
+                        "-v",
+                        "error",
+                        "-show_entries",
+                        "format=duration",
+                        "-of",
+                        "default=noprint_wrappers=1:nokey=1",
+                        str(path),
+                    ],
+                    text=True,
+                ).strip()
+            )
+            duration_limit = max(45.0, len(text.split()) * 0.9)
+            if audio_duration <= duration_limit:
+                break
+            if generation_attempt == 3:
+                raise RuntimeError(
+                    f"Scene {index} narration duration {audio_duration:.3f}s "
+                    f"exceeds {duration_limit:.3f}s"
+                )
+            time.sleep(8)
         print(path)
         if index < len(SCENE_ORDER):
             time.sleep(6)

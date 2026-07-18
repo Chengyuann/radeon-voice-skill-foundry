@@ -1,7 +1,7 @@
 # Demo Narration
 
 The narration is AI-generated with AIDP
-`gemini-3.1-flash-tts-preview`, voice `Kore`. Radeon runtime screenshots and
+`gemini-3.1-flash-tts-preview`, male voice `Charon`. Radeon runtime screenshots and
 metrics come from the actual `c759a41` validation run. Product UI scenes are a
 deterministic replay using the same source WAV and application revision; they
 are labeled as replay footage in the video.

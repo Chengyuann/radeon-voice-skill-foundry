@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate step-level Kore narration for the continuous browser demo."""
+"""Generate step-level AIDP narration for the continuous browser demo."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "submission" / "CONTINUOUS_DEMO_NARRATION.md"
 OUTPUT = ROOT / "tmp" / "continuous-narration"
 MODEL = "gemini-3.1-flash-tts-preview"
-VOICE = "Kore"
+VOICE = os.environ.get("AIDP_TTS_VOICE", "Charon")
 ENDPOINT = "https://aidp.bytedance.net/api/modelhub/online/multimodal/crawl"
 
 TITLES = [
@@ -32,12 +32,14 @@ TITLES = [
 ]
 
 DIRECTION = (
-    "Narrate a continuous technical product demonstration in a calm, natural, "
-    "confident documentary voice. Use conversational rhythm and concise "
-    "pauses. Keep the delivery energetic enough to match visible mouse "
-    "actions, but never sound like an advertisement or a list. Pronounce "
-    "Radeon as ray-dee-on, ROCm as rock-em, Qwen as kwen, ASR as A-S-R, and "
-    "P0 and P1 as P-zero and P-one."
+    "Use an adult male technical documentary voice with a natural lower "
+    "register. Narrate this continuous product demonstration in a calm, "
+    "credible, quietly confident manner. Use conversational rhythm and concise "
+    "pauses. Keep enough energy to match visible mouse actions, but never sound "
+    "like an advertisement or a list. Read the supplied text exactly once and "
+    "stop after the final sentence. Do not repeat, improvise, or add an outro. "
+    "Pronounce Radeon as ray-dee-on, ROCm as rock-em, Qwen as kwen, ASR as "
+    "A-S-R, and P0 and P1 as P-zero and P-one."
 )
 
 
@@ -102,15 +104,32 @@ def main() -> None:
     ak = os.environ.get("AIDP_TTS_AK")
     if not ak:
         raise SystemExit("Set AIDP_TTS_AK in the runtime environment")
+    only_index = int(os.environ.get("AIDP_TTS_ONLY_INDEX", "0"))
     content = sections()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     timings = []
     for index, title in enumerate(TITLES, start=1):
         path = OUTPUT / f"step-{index:02d}.mp3"
-        path.write_bytes(generate(ak, content[title]))
-        timings.append({"index": index, "title": title, "duration": duration(path)})
+        text = content[title]
+        if only_index in {0, index}:
+            for generation_attempt in range(1, 4):
+                path.write_bytes(generate(ak, text))
+                audio_duration = duration(path)
+                duration_limit = max(45.0, len(text.split()) * 0.9)
+                if audio_duration <= duration_limit:
+                    break
+                if generation_attempt == 3:
+                    raise RuntimeError(
+                        f"Step {index} narration duration {audio_duration:.3f}s "
+                        f"exceeds {duration_limit:.3f}s"
+                    )
+                time.sleep(8)
+        elif not path.exists():
+            raise RuntimeError(f"Missing existing narration: {path}")
+        audio_duration = duration(path)
+        timings.append({"index": index, "title": title, "duration": audio_duration})
         print(path)
-        if index < len(TITLES):
+        if only_index == 0 and index < len(TITLES):
             time.sleep(6)
     (OUTPUT / "timings.json").write_text(
         json.dumps(timings, indent=2), encoding="utf-8"

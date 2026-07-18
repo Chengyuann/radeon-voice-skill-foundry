@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "tmp" / "video" / "assets"
 WORK = ROOT / "tmp" / "video" / "build"
 OUTPUT = ROOT / "submission" / "RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4"
+HARD_CAPTIONED = WORK / "hard-captioned.mp4"
 NARRATION = ROOT / "submission" / "DEMO_NARRATION.md"
 
 WIDTH = 1920
@@ -482,13 +483,47 @@ def build() -> None:
             "copy",
             "-movflags",
             "+faststart",
-            str(OUTPUT),
+            str(HARD_CAPTIONED),
         ]
     )
     run(command)
-    (ROOT / "submission" / "RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt").write_text(
+    published_srt = ROOT / "submission" / "RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt"
+    published_srt.write_text(
         subtitles.read_text(encoding="utf-8"),
         encoding="utf-8",
+    )
+    run(
+        [
+            "ffmpeg",
+            "-y",
+            "-loglevel",
+            "error",
+            "-i",
+            str(HARD_CAPTIONED),
+            "-i",
+            str(published_srt),
+            "-map",
+            "0:v",
+            "-map",
+            "0:a",
+            "-map",
+            "1:0",
+            "-c:v",
+            "copy",
+            "-c:a",
+            "copy",
+            "-c:s",
+            "mov_text",
+            "-metadata:s:s:0",
+            "language=eng",
+            "-metadata:s:s:0",
+            "title=English narration",
+            "-disposition:s:0",
+            "0",
+            "-movflags",
+            "+faststart",
+            str(OUTPUT),
+        ]
     )
     print(OUTPUT)
     print(f"duration={probe_duration(OUTPUT):.3f}s")

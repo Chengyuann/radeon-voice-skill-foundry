@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -16,7 +17,18 @@ AUDIO_DIR = ROOT / "tmp" / "continuous-narration"
 WORK = ROOT / "tmp" / "continuous-demo" / "build"
 OUTPUT = ROOT / "submission" / "CONTINUOUS_OPERATION_DEMO.mp4"
 SRT = ROOT / "submission" / "CONTINUOUS_OPERATION_DEMO.srt"
+SOURCE = ROOT / "submission" / "CONTINUOUS_DEMO_NARRATION.md"
 FONT_BOLD = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
+TITLES = [
+    "Open the Workbench",
+    "Upload the Spoken SOP",
+    "Compile Voice into Policy",
+    "Run Adversarial Verification",
+    "Save and Reuse the Verified Skill",
+    "Restart and Recover Durable Runs",
+    "Change Runtime and Invalidate Proof",
+    "Revalidate and Download Proof",
+]
 
 
 def run(command: list[str]) -> None:
@@ -49,8 +61,24 @@ def srt_time(value: float) -> str:
     return f"{hours:02d}:{minutes:02d}:{seconds:02d},{milliseconds:03d}"
 
 
+def wrap(draw: ImageDraw.ImageDraw, text: str, typeface, width: int) -> list[str]:
+    lines: list[str] = []
+    current = ""
+    for word in text.split():
+        candidate = f"{current} {word}".strip()
+        if draw.textlength(candidate, font=typeface) <= width:
+            current = candidate
+        else:
+            if current:
+                lines.append(current)
+            current = word
+    if current:
+        lines.append(current)
+    return lines
+
+
 def caption_card(text: str, index: int) -> Path:
-    width, height = 1300, 92
+    width, height = 1320, 132
     image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
     draw.rounded_rectangle(
@@ -60,22 +88,51 @@ def caption_card(text: str, index: int) -> Path:
         outline=(255, 255, 255, 48),
         width=2,
     )
-    typeface = ImageFont.truetype(FONT_BOLD, 29)
-    bbox = draw.textbbox((0, 0), text, font=typeface)
-    draw.text(
-        ((width - (bbox[2] - bbox[0])) // 2, 27),
-        text,
-        font=typeface,
-        fill="white",
-    )
-    path = WORK / f"caption-{index:02d}.png"
+    typeface = ImageFont.truetype(FONT_BOLD, 28)
+    lines = wrap(draw, text, typeface, width - 96)
+    if len(lines) > 2:
+        typeface = ImageFont.truetype(FONT_BOLD, 23)
+        lines = wrap(draw, text, typeface, width - 96)
+    line_height = typeface.size + 8
+    y = (height - len(lines) * line_height) // 2
+    for line in lines:
+        bbox = draw.textbbox((0, 0), line, font=typeface)
+        draw.text(
+            ((width - (bbox[2] - bbox[0])) // 2, y),
+            line,
+            font=typeface,
+            fill="white",
+        )
+        y += line_height
+    path = WORK / f"caption-{index:03d}.png"
     image.save(path, optimize=True)
     return path
+
+
+def narration_sections() -> dict[str, str]:
+    text = SOURCE.read_text(encoding="utf-8")
+    matches = list(re.finditer(r"^## (.+)$", text, flags=re.MULTILINE))
+    result = {}
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        result[match.group(1)] = re.sub(
+            r"\s+", " ", text[match.end() : end]
+        ).strip()
+    return result
+
+
+def sentences(text: str) -> list[str]:
+    return [
+        part.strip()
+        for part in re.split(r"(?<=[.!?])\s+", text)
+        if part.strip()
+    ]
 
 
 def main() -> None:
     WORK.mkdir(parents=True, exist_ok=True)
     events = json.loads(EVENTS.read_text())
+    narration = narration_sections()
     raw_duration = duration(RAW)
     audio_inputs = [AUDIO_DIR / f"step-{index:02d}.mp3" for index in range(1, 9)]
 
@@ -129,16 +186,27 @@ def main() -> None:
     )
     run(command)
 
-    caption_inputs = []
-    caption_filters = []
+    caption_entries: list[tuple[float, float, str]] = []
+    for event, audio, title in zip(events, audio_inputs, TITLES):
+        parts = sentences(narration[title])
+        weights = [max(1, len(part.split())) for part in parts]
+        total_weight = sum(weights)
+        start = event["startMs"] / 1000 + 0.25
+        usable = duration(audio)
+        cursor = start
+        for part, weight in zip(parts, weights):
+            part_duration = usable * weight / total_weight
+            end = min(raw_duration - 0.05, cursor + part_duration)
+            caption_entries.append((cursor, end, part))
+            cursor = end
+
+    caption_inputs: list[str] = []
+    caption_filters: list[str] = []
     previous = "0:v"
-    srt_rows = []
-    for index, event in enumerate(events, start=1):
-        title = event["label"]
-        card = caption_card(title, index)
+    srt_rows: list[str] = []
+    for index, (start, end, text) in enumerate(caption_entries, start=1):
+        card = caption_card(text, index)
         caption_inputs.extend(["-loop", "1", "-i", str(card)])
-        start = event["startMs"] / 1000
-        end = event["endMs"] / 1000
         output = f"v{index}"
         caption_filters.append(
             f"[{previous}][{index}:v]overlay=(W-w)/2:H-h-22:"
@@ -149,11 +217,13 @@ def main() -> None:
             [
                 str(index),
                 f"{srt_time(start)} --> {srt_time(end)}",
-                title,
+                text,
                 "",
             ]
         )
+    SRT.write_text("\n".join(srt_rows), encoding="utf-8")
 
+    hard_captioned = WORK / "hard-captioned.mp4"
     run(
         [
             "ffmpeg",
@@ -183,10 +253,42 @@ def main() -> None:
             "copy",
             "-movflags",
             "+faststart",
+            str(hard_captioned),
+        ]
+    )
+    run(
+        [
+            "ffmpeg",
+            "-y",
+            "-loglevel",
+            "error",
+            "-i",
+            str(hard_captioned),
+            "-i",
+            str(SRT),
+            "-map",
+            "0:v",
+            "-map",
+            "0:a",
+            "-map",
+            "1:0",
+            "-c:v",
+            "copy",
+            "-c:a",
+            "copy",
+            "-c:s",
+            "mov_text",
+            "-metadata:s:s:0",
+            "language=eng",
+            "-metadata:s:s:0",
+            "title=English narration",
+            "-disposition:s:0",
+            "0",
+            "-movflags",
+            "+faststart",
             str(OUTPUT),
         ]
     )
-    SRT.write_text("\n".join(srt_rows), encoding="utf-8")
     print(OUTPUT)
     print(f"duration={duration(OUTPUT):.3f}s")
 

@@ -77,7 +77,7 @@ try {
       const label = document.createElement("div");
       label.id = "continuous-demo-label";
       label.style.cssText =
-        "position:fixed;z-index:2147483646;left:24px;bottom:24px;" +
+        "position:fixed;z-index:2147483646;left:24px;top:86px;" +
         "max-width:520px;padding:12px 16px;color:white;background:#202224ee;" +
         "border-left:5px solid #c23a35;font:600 18px Arial;" +
         "box-shadow:0 8px 24px #0008;pointer-events:none;";
@@ -200,7 +200,8 @@ async function loadDurations() {
   try {
     const parsed = JSON.parse(await readFile(timingPath, "utf8"));
     return labels.map(
-      (_label, index) => Number(parsed[index]?.duration) || defaultDurations[index]
+      (_label, index) =>
+        (Number(parsed[index]?.duration) || defaultDurations[index]) + 1.1
     );
   } catch {
     return defaultDurations;
