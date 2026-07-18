@@ -25,6 +25,7 @@ import {
   verifySop
 } from "./api";
 import { CapturePanel } from "./components/CapturePanel";
+import { CinematicHero } from "./components/CinematicHero";
 import { ConstraintPanel } from "./components/ConstraintPanel";
 import { PerformanceStrip } from "./components/PerformanceStrip";
 import { ProofPanel } from "./components/ProofPanel";
@@ -306,10 +307,20 @@ export function App() {
     }
   };
 
+  const enterWorkbench = () => {
+    document
+      .getElementById("workbench")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <div className="app-shell">
       <TopBar runtime={runtime} status={status} />
-      <main>
+      <CinematicHero
+        runtime={runtime}
+        onEnterWorkbench={enterWorkbench}
+      />
+      <main id="workbench">
         <AnimatedContent className="context-strip">
           <div>
             <span>AMD AI DevMaster Hackathon</span>

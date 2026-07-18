@@ -37,6 +37,8 @@ Validated Radeon stack:
 
 The web UI now supports:
 
+- a Motion Sites-inspired full-bleed 3D product hero using the locally hosted
+  `public/media/radeon-foundry-hero.mp4`
 - React Bits-inspired interaction patterns adapted for this workbench:
   DecryptedText, CountUp, SpotlightCard, AnimatedContent, Magnet, and Stepper
 - microphone recording

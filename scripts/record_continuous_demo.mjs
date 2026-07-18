@@ -95,6 +95,8 @@ try {
   await runStep(page, 0, async () => {
     await page.goto(baseUrl, { waitUntil: "networkidle" });
     await page.waitForSelector(".app-shell");
+    await click(page, page.getByRole("button", { name: "Enter workbench" }));
+    await page.waitForSelector("#workbench");
     await page.mouse.move(900, 130, { steps: 18 });
   });
 
