@@ -1,0 +1,43 @@
+
+added 216 packages in 23s
+
+> radeon-voice-skill-foundry@0.1.0 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/workspace/radeon-voice-skill-foundry-v10-commit[39m
+
+ [32m✓[39m server/voice-evidence-store.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m server/compiler.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m server/proof-compatibility.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m server/verifier.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m server/storage.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32m✓[39m server/transcriber.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32m✓[39m server/runtime-store.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m server/audio-evidence.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 88[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m8 passed[39m[22m[90m (8)[39m
+[2m      Tests [22m [1m[32m33 passed[39m[22m[90m (33)[39m
+[2m   Start at [22m 07:15:31
+[2m   Duration [22m 272ms[2m (transform 604ms, setup 0ms, import 876ms, tests 295ms, environment 1ms)[22m
+
+
+> radeon-voice-skill-foundry@0.1.0 build
+> npm run typecheck && vite build
+
+
+> radeon-voice-skill-foundry@0.1.0 typecheck
+> tsc --noEmit
+
+vite v7.3.3 building client environment for production...
+transforming...
+✓ 1590 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.56 kB │ gzip:  0.34 kB
+dist/assets/index-CnJ7lK3N.css   20.81 kB │ gzip:  4.86 kB
+dist/assets/index-BrGJwYYw.js   230.32 kB │ gzip: 72.08 kB
+✓ built in 1.42s
+COMMIT=20776d980ebd4ec8daf6e6b909da4a2933a36dfa
+GPU[0]		: VRAM Total Memory (B): 51522830336
+GPU[0]		: GFX Version: 		gfx1100

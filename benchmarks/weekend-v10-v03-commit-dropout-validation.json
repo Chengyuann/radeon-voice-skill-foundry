@@ -1,0 +1,105 @@
+[
+  {
+    "condition": "clean",
+    "rtf": 0.0712,
+    "voiceEvidence": {
+      "schemaVersion": "0.3.0",
+      "status": "pass",
+      "qualityScore": 100,
+      "format": "PCM 16-bit WAV",
+      "sampleRateHz": 16000,
+      "channels": 1,
+      "durationSeconds": 20.39,
+      "rmsDbfs": -18.36,
+      "peakDbfs": -2.94,
+      "clippingRatio": 0,
+      "silenceRatio": 0.1717,
+      "noiseFloorDbfs": -40.7,
+      "speechLevelDbfs": -16.15,
+      "estimatedSnrDb": 24.54,
+      "dcOffset": -6.3e-05,
+      "crestFactorDb": 15.42,
+      "dropoutRatio": 0.0098,
+      "burstLossRatio": 0,
+      "audioSha256": "849e502d742239f5b2a8cf765fcb5a8a53294e2edcca00e8a4472f0610617877",
+      "issues": [],
+      "diagnostics": [],
+      "analyzedAt": "2026-07-18T07:17:55.668Z",
+      "asrTranscriptSha256": "be8e136ac7f32e389f0af878c10478633b6cc3b9437fa31276b4661d974fe314"
+    }
+  },
+  {
+    "condition": "dropout_120",
+    "rtf": 0.0764,
+    "voiceEvidence": {
+      "schemaVersion": "0.3.0",
+      "status": "review",
+      "qualityScore": 88,
+      "format": "PCM 16-bit WAV",
+      "sampleRateHz": 16000,
+      "channels": 1,
+      "durationSeconds": 20.39,
+      "rmsDbfs": -18.73,
+      "peakDbfs": -2.94,
+      "clippingRatio": 0,
+      "silenceRatio": 0.2333,
+      "noiseFloorDbfs": -76.44,
+      "speechLevelDbfs": -16.36,
+      "estimatedSnrDb": 60.07,
+      "dcOffset": -2.5e-05,
+      "crestFactorDb": 15.79,
+      "dropoutRatio": 0.05392,
+      "burstLossRatio": 0.05294,
+      "audioSha256": "dc17fe7f7335c738137622eb038dcae526554a57d3bcbf5f9de3417129ac64ae",
+      "issues": [
+        "5.3% of active speech is interrupted by multi-frame digital silence."
+      ],
+      "diagnostics": [
+        {
+          "code": "burst_loss",
+          "severity": "review",
+          "message": "5.3% of active speech is interrupted by multi-frame digital silence."
+        }
+      ],
+      "analyzedAt": "2026-07-18T07:17:57.176Z",
+      "asrTranscriptSha256": "53491eab489038317024d9f4921872bb592ca51f09f77034c1a79d2f01fc8bde"
+    }
+  },
+  {
+    "condition": "dropout_280",
+    "rtf": 0.0708,
+    "voiceEvidence": {
+      "schemaVersion": "0.3.0",
+      "status": "quarantine",
+      "qualityScore": 65,
+      "format": "PCM 16-bit WAV",
+      "sampleRateHz": 16000,
+      "channels": 1,
+      "durationSeconds": 20.39,
+      "rmsDbfs": -19.43,
+      "peakDbfs": -3.65,
+      "clippingRatio": 0,
+      "silenceRatio": 0.3704,
+      "noiseFloorDbfs": -120,
+      "speechLevelDbfs": -16.46,
+      "estimatedSnrDb": 80,
+      "dcOffset": -2.6e-05,
+      "crestFactorDb": 15.78,
+      "dropoutRatio": 0.0049,
+      "burstLossRatio": 0.20588,
+      "audioSha256": "209eb5741c6c5cb3395f226881a0f7933d7db215b993045bd0bb5cb999e3b4d3",
+      "issues": [
+        "20.6% of active speech is interrupted by multi-frame digital silence."
+      ],
+      "diagnostics": [
+        {
+          "code": "burst_loss",
+          "severity": "quarantine",
+          "message": "20.6% of active speech is interrupted by multi-frame digital silence."
+        }
+      ],
+      "analyzedAt": "2026-07-18T07:17:58.762Z",
+      "asrTranscriptSha256": "09f7fb39b678e9eb103edd93a245fc3e78055b6f8911cff91f53db1b8b264b81"
+    }
+  }
+]

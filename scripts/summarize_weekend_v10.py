@@ -105,7 +105,9 @@ def main() -> None:
     asr_robustness = read_json(
         "weekend-v10-asr-robustness-v02-extended.json"
     )
-    v03_dropout = read_json("weekend-v10-v03-dropout-validation.json")
+    v03_dropout = read_json(
+        "weekend-v10-v03-commit-dropout-validation.json"
+    )
 
     serving = {
         "transformersFp16": serving_summary(transformers),
@@ -208,8 +210,8 @@ def main() -> None:
         "weekend-v10-asr-batch.json",
         "weekend-v10-asr-robustness-v02-extended.json",
         "weekend-v10-asr-extended-telemetry.jsonl",
-        "weekend-v10-v03-dropout-validation.json",
-        "weekend-v10-final-validation.log",
+        "weekend-v10-v03-commit-dropout-validation.json",
+        "weekend-v10-commit-validation.log",
         "weekend-v10-vllm-eager-server.log",
         "weekend-v10-vllm-graph-server.log",
     ]

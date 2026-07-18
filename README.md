@@ -51,8 +51,9 @@ The web UI now supports:
 - multi-turn natural-language constraint refinement
 - compact model output with runtime-owned IDs and confidence metadata
 - proof-bound `pass` / `review` / `quarantine` handling for audio evidence
-- Voice Evidence v0.2 diagnostics for estimated SNR, noise floor, speech
-  level, crest factor, DC offset, short dropouts, and channel imbalance
+- Voice Evidence v0.3 diagnostics for estimated SNR, noise floor, speech
+  level, crest factor, DC offset, short dropouts, multi-frame burst loss, and
+  channel imbalance
 - atomically persisted voice evidence, trusted compile runs, and verification
   results that survive service restart
 - proof compatibility manifests that invalidate reuse when the runtime, tools,
@@ -154,9 +155,16 @@ labels, and metrics are rendered locally for exact typography. Product footage
 is explicitly labeled as a deterministic replay, while runtime screenshots and
 metrics come from the actual Radeon Cloud validation.
 
-The next isolated serving experiment is Transformers versus vLLM. It should run
-in a separate template or container so the validated Transformers environment
-remains reproducible.
+Weekend W7900 experiments now include an isolated Transformers versus vLLM
+comparison, native ASR batching, acoustic robustness, and Voice Evidence v0.3.
+At eight concurrent heterogeneous SOP requests, vLLM graph mode measured
+257.65 aggregate output tokens/s versus 20.66 for the serialized Transformers
+server, a 12.47x throughput improvement. Native Qwen3-ASR batch-eight reached
+85.35x aggregate real-time and was 6.66x faster than sequential inference.
+The experiments also found a 280 ms burst-loss blind spot in Voice Evidence
+v0.2; v0.3 now quarantines that sample and invalidates older proofs until
+revalidation. See `docs/WEEKEND_W7900_EXPERIMENTS.md` and
+`benchmarks/weekend-v10-summary.json`.
 
 Radeon Cloud local model server:
 

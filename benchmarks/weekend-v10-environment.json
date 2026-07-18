@@ -1,0 +1,27 @@
+{
+  "measuredAt": "2026-07-18T06:08:56Z",
+  "platform": "Linux-6.8.0-79-generic-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]",
+  "cwd": "/workspace",
+  "gpu": {
+    "torch": "2.9.1+gitff65f5b",
+    "hip": "7.2.53211-e1a6bc5663",
+    "device": "AMD Radeon Graphics",
+    "architecture": "gfx1100",
+    "totalVramBytes": 51522830336,
+    "allocatedVramBytes": 0,
+    "reservedVramBytes": 0
+  },
+  "rocmSmi": "============================ ROCm System Management Interface ============================\n====================================== Temperature =======================================\nGPU[0]\t\t: Temperature (Sensor edge) (C): 30.0\nGPU[0]\t\t: Temperature (Sensor junction) (C): 34.0\nGPU[0]\t\t: Temperature (Sensor memory) (C): 28.0\n==========================================================================================\n=================================== Power Consumption ====================================\nGPU[0]\t\t: Average Graphics Package Power (W): 18.0\n==========================================================================================\n=================================== % time GPU is busy ===================================\nGPU[0]\t\t: GPU use (%): 0\n==========================================================================================\n================================== Memory Usage (Bytes) ==================================\nGPU[0]\t\t: VRAM Total Memory (B): 51522830336\nGPU[0]\t\t: VRAM Total Used Memory (B): 11701657600\n==========================================================================================\n====================================== Product Info ======================================\nGPU[0]\t\t: Card Series: \t\tAMD Radeon Graphics\nGPU[0]\t\t: Card Model: \t\t0x744b\nGPU[0]\t\t: Card Vendor: \t\tAdvanced Micro Devices, Inc. [AMD/ATI]\nGPU[0]\t\t: Card SKU: \t\tD7070910\nGPU[0]\t\t: Subsystem ID: \t0x0e0c\nGPU[0]\t\t: Device Rev: \t\t0x00\nGPU[0]\t\t: Node ID: \t\t2\nGPU[0]\t\t: GUID: \t\t6853\nGPU[0]\t\t: GFX Version: \t\tgfx1100\n==========================================================================================\n================================== End of ROCm SMI Log ===================================",
+  "processes": "65  1-01:12:17  1.1  0.2 /workspace/.venv-rvsf/bin/python scripts/radeon_model_server.py\n   1317    16:22:17  0.0  0.5 /workspace/.venv-rvsf/bin/python scripts/radeon_asr_server.py",
+  "disk": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/loop39      98G  6.1G   87G   7% /workspace\noverlay         3.5T  469G  2.9T  15% /",
+  "packages": {
+    "torch": "2.9.1+gitff65f5b",
+    "transformers": "4.57.6",
+    "qwen-asr": null,
+    "vllm": "0.16.1.dev0+g89a77b108.d20260317.rocm721",
+    "flash-attn": "2.8.3",
+    "triton": "3.5.1",
+    "accelerate": "1.13.0"
+  }
+}

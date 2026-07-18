@@ -3,6 +3,7 @@ dist/
 .agent/
 .DS_Store
 *.log
+!benchmarks/weekend-v10-*.log
 .env
 .env.*
 !.env.example

@@ -130,9 +130,12 @@ subsequent use effectively immediate.
 - The `11,052x` result applies to exact retrieval of an identical Verified
   Skill. It does not apply to changed SOPs, semantic skill search, or arbitrary
   Agent replanning.
-- The serving path remains Transformers FP16. vLLM should be evaluated in an
-  isolated template or container to avoid destabilizing this reproducible
-  baseline.
+- The original Transformers FP16 serving path remains the reproducible
+  baseline. The isolated weekend study measured vLLM eager and graph modes:
+  concurrency-eight aggregate throughput increased from 20.66 to 257.65
+  tokens/s. The main gain came from continuous batching; graph mode added
+  1.51% over eager after a 35.88-second first-start compilation. See
+  `docs/WEEKEND_W7900_EXPERIMENTS.md`.
 
 ## Reproduce
 

@@ -1,0 +1,1130 @@
+{
+  "health": {
+    "ok": true,
+    "status": 200
+  },
+  "lengthRuns": [
+    {
+      "inputTargetTokens": 256,
+      "outputTargetTokens": 160,
+      "variation": 0,
+      "httpMs": 1504.46,
+      "metrics": {
+        "ttftMs": 93.61,
+        "generationMs": 1504.46,
+        "tokensPerSecond": 39.88,
+        "inputTokens": 315,
+        "outputTokens": 60,
+        "peakVramGiB": null
+      },
+      "semanticGate": {
+        "hasRedaction": true,
+        "hasNoSend": true,
+        "hasConfirmation": true,
+        "hasDueDateCondition": true
+      }
+    },
+    {
+      "inputTargetTokens": 256,
+      "outputTargetTokens": 160,
+      "variation": 0,
+      "httpMs": 1464.22,
+      "metrics": {
+        "ttftMs": 51.51,
+        "generationMs": 1464.22,
+        "tokensPerSecond": 40.98,
+        "inputTokens": 315,
+        "outputTokens": 60,
+        "peakVramGiB": null
+      },
+      "semanticGate": {
+        "hasRedaction": true,
+        "hasNoSend": true,
+        "hasConfirmation": true,
+        "hasDueDateCondition": true
+      }
+    },
+    {
+      "inputTargetTokens": 1024,
+      "outputTargetTokens": 160,
+      "variation": 0,
+      "httpMs": 1594.24,
+      "metrics": {
+        "ttftMs": 170.27,
+        "generationMs": 1594.24,
+        "tokensPerSecond": 37.64,
+        "inputTokens": 1055,
+        "outputTokens": 60,
+        "peakVramGiB": null
+      },
+      "semanticGate": {
+        "hasRedaction": true,
+        "hasNoSend": true,
+        "hasConfirmation": true,
+        "hasDueDateCondition": true
+      }
+    },
+    {
+      "inputTargetTokens": 1024,
+      "outputTargetTokens": 160,
+      "variation": 0,
+      "httpMs": 1479.24,
+      "metrics": {
+        "ttftMs": 55.14,
+        "generationMs": 1479.24,
+        "tokensPerSecond": 40.56,
+        "inputTokens": 1055,
+        "outputTokens": 60,
+        "peakVramGiB": null
+      },
+      "semanticGate": {
+        "hasRedaction": true,
+        "hasNoSend": true,
+        "hasConfirmation": true,
+        "hasDueDateCondition": true
+      }
+    },
+    {
+      "inputTargetTokens": 3072,
+      "outputTargetTokens": 160,
+      "variation": 0,
+      "httpMs": 1960.2,
+      "metrics": {
+        "ttftMs": 507.91,
+        "generationMs": 1960.2,
+        "tokensPerSecond": 30.61,
+        "inputTokens": 3053,
+        "outputTokens": 60,
+        "peakVramGiB": null
+      },
+      "semanticGate": {
+        "hasRedaction": true,
+        "hasNoSend": true,
+        "hasConfirmation": true,
+        "hasDueDateCondition": true
+      }
+    },
+    {
+      "inputTargetTokens": 3072,
+      "outputTargetTokens": 160,
+      "variation": 0,
+      "httpMs": 1517.67,
+      "metrics": {
+        "ttftMs": 63.57,
+        "generationMs": 1517.67,
+        "tokensPerSecond": 39.53,
+        "inputTokens": 3053,
+        "outputTokens": 60,
+        "peakVramGiB": null
+      },
+      "semanticGate": {
+        "hasRedaction": true,
+        "hasNoSend": true,
+        "hasConfirmation": true,
+        "hasDueDateCondition": true
+      }
+    }
+  ],
+  "concurrencyRuns": [
+    {
+      "concurrency": 1,
+      "medianWallMs": 1528.04,
+      "medianAggregateOutputTokensPerSecond": 39.27,
+      "bursts": [
+        {
+          "wallMs": 1528.96,
+          "aggregateOutputTokensPerSecond": 39.24,
+          "requests": [
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1000,
+              "httpMs": 1528.18,
+              "metrics": {
+                "ttftMs": 112.83,
+                "generationMs": 1528.18,
+                "tokensPerSecond": 39.26,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            }
+          ]
+        },
+        {
+          "wallMs": 1528.04,
+          "aggregateOutputTokensPerSecond": 39.27,
+          "requests": [
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1100,
+              "httpMs": 1527.55,
+              "metrics": {
+                "ttftMs": 112.1,
+                "generationMs": 1527.55,
+                "tokensPerSecond": 39.28,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            }
+          ]
+        },
+        {
+          "wallMs": 1527.6,
+          "aggregateOutputTokensPerSecond": 39.28,
+          "requests": [
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1200,
+              "httpMs": 1527.13,
+              "metrics": {
+                "ttftMs": 112.5,
+                "generationMs": 1527.13,
+                "tokensPerSecond": 39.29,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concurrency": 2,
+      "medianWallMs": 1535.61,
+      "medianAggregateOutputTokensPerSecond": 78.14,
+      "bursts": [
+        {
+          "wallMs": 1537.53,
+          "aggregateOutputTokensPerSecond": 78.05,
+          "requests": [
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1000,
+              "httpMs": 1536.95,
+              "metrics": {
+                "ttftMs": 115.93,
+                "generationMs": 1536.95,
+                "tokensPerSecond": 39.04,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1001,
+              "httpMs": 1536.58,
+              "metrics": {
+                "ttftMs": 115.54,
+                "generationMs": 1536.58,
+                "tokensPerSecond": 39.05,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            }
+          ]
+        },
+        {
+          "wallMs": 1533.57,
+          "aggregateOutputTokensPerSecond": 78.25,
+          "requests": [
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1100,
+              "httpMs": 1533.01,
+              "metrics": {
+                "ttftMs": 112.74,
+                "generationMs": 1533.01,
+                "tokensPerSecond": 39.14,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1101,
+              "httpMs": 1532.67,
+              "metrics": {
+                "ttftMs": 112.42,
+                "generationMs": 1532.67,
+                "tokensPerSecond": 39.15,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            }
+          ]
+        },
+        {
+          "wallMs": 1535.61,
+          "aggregateOutputTokensPerSecond": 78.14,
+          "requests": [
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1200,
+              "httpMs": 1535.0,
+              "metrics": {
+                "ttftMs": 112.52,
+                "generationMs": 1535.0,
+                "tokensPerSecond": 39.09,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1201,
+              "httpMs": 1534.67,
+              "metrics": {
+                "ttftMs": 112.19,
+                "generationMs": 1534.67,
+                "tokensPerSecond": 39.1,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concurrency": 4,
+      "medianWallMs": 1642.42,
+      "medianAggregateOutputTokensPerSecond": 146.13,
+      "bursts": [
+        {
+          "wallMs": 1641.07,
+          "aggregateOutputTokensPerSecond": 146.25,
+          "requests": [
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1000,
+              "httpMs": 1640.24,
+              "metrics": {
+                "ttftMs": 189.09,
+                "generationMs": 1640.24,
+                "tokensPerSecond": 36.58,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1001,
+              "httpMs": 1640.16,
+              "metrics": {
+                "ttftMs": 188.93,
+                "generationMs": 1640.16,
+                "tokensPerSecond": 36.58,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1002,
+              "httpMs": 1639.84,
+              "metrics": {
+                "ttftMs": 188.71,
+                "generationMs": 1639.84,
+                "tokensPerSecond": 36.59,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1003,
+              "httpMs": 1639.46,
+              "metrics": {
+                "ttftMs": 188.3,
+                "generationMs": 1639.46,
+                "tokensPerSecond": 36.6,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            }
+          ]
+        },
+        {
+          "wallMs": 1644.42,
+          "aggregateOutputTokensPerSecond": 145.95,
+          "requests": [
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1100,
+              "httpMs": 1643.5,
+              "metrics": {
+                "ttftMs": 189.43,
+                "generationMs": 1643.5,
+                "tokensPerSecond": 36.51,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1101,
+              "httpMs": 1643.36,
+              "metrics": {
+                "ttftMs": 189.32,
+                "generationMs": 1643.36,
+                "tokensPerSecond": 36.51,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1102,
+              "httpMs": 1643.11,
+              "metrics": {
+                "ttftMs": 189.07,
+                "generationMs": 1643.11,
+                "tokensPerSecond": 36.52,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1103,
+              "httpMs": 1643.0,
+              "metrics": {
+                "ttftMs": 188.88,
+                "generationMs": 1643.0,
+                "tokensPerSecond": 36.52,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            }
+          ]
+        },
+        {
+          "wallMs": 1642.42,
+          "aggregateOutputTokensPerSecond": 146.13,
+          "requests": [
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1200,
+              "httpMs": 1641.66,
+              "metrics": {
+                "ttftMs": 188.76,
+                "generationMs": 1641.66,
+                "tokensPerSecond": 36.55,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1201,
+              "httpMs": 1641.64,
+              "metrics": {
+                "ttftMs": 188.69,
+                "generationMs": 1641.64,
+                "tokensPerSecond": 36.55,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1202,
+              "httpMs": 1641.33,
+              "metrics": {
+                "ttftMs": 188.54,
+                "generationMs": 1641.33,
+                "tokensPerSecond": 36.56,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1203,
+              "httpMs": 1641.07,
+              "metrics": {
+                "ttftMs": 188.19,
+                "generationMs": 1641.07,
+                "tokensPerSecond": 36.56,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concurrency": 8,
+      "medianWallMs": 1863.02,
+      "medianAggregateOutputTokensPerSecond": 257.65,
+      "bursts": [
+        {
+          "wallMs": 1863.02,
+          "aggregateOutputTokensPerSecond": 257.65,
+          "requests": [
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1000,
+              "httpMs": 1837.91,
+              "metrics": {
+                "ttftMs": 319.53,
+                "generationMs": 1837.91,
+                "tokensPerSecond": 32.65,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1001,
+              "httpMs": 1837.34,
+              "metrics": {
+                "ttftMs": 319.23,
+                "generationMs": 1837.34,
+                "tokensPerSecond": 32.66,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1002,
+              "httpMs": 1837.51,
+              "metrics": {
+                "ttftMs": 319.23,
+                "generationMs": 1837.51,
+                "tokensPerSecond": 32.65,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1003,
+              "httpMs": 1837.37,
+              "metrics": {
+                "ttftMs": 319.0,
+                "generationMs": 1837.37,
+                "tokensPerSecond": 32.66,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1004,
+              "httpMs": 1836.57,
+              "metrics": {
+                "ttftMs": 318.61,
+                "generationMs": 1836.57,
+                "tokensPerSecond": 32.67,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1005,
+              "httpMs": 1836.36,
+              "metrics": {
+                "ttftMs": 318.3,
+                "generationMs": 1836.36,
+                "tokensPerSecond": 32.67,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1006,
+              "httpMs": 1835.95,
+              "metrics": {
+                "ttftMs": 318.07,
+                "generationMs": 1835.95,
+                "tokensPerSecond": 32.68,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1007,
+              "httpMs": 1860.4,
+              "metrics": {
+                "ttftMs": 363.36,
+                "generationMs": 1860.4,
+                "tokensPerSecond": 32.25,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            }
+          ]
+        },
+        {
+          "wallMs": 1862.82,
+          "aggregateOutputTokensPerSecond": 257.67,
+          "requests": [
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1100,
+              "httpMs": 1837.47,
+              "metrics": {
+                "ttftMs": 320.04,
+                "generationMs": 1837.47,
+                "tokensPerSecond": 32.65,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1101,
+              "httpMs": 1837.15,
+              "metrics": {
+                "ttftMs": 319.36,
+                "generationMs": 1837.15,
+                "tokensPerSecond": 32.66,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1102,
+              "httpMs": 1836.84,
+              "metrics": {
+                "ttftMs": 319.05,
+                "generationMs": 1836.84,
+                "tokensPerSecond": 32.66,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1103,
+              "httpMs": 1836.12,
+              "metrics": {
+                "ttftMs": 318.51,
+                "generationMs": 1836.12,
+                "tokensPerSecond": 32.68,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1104,
+              "httpMs": 1836.11,
+              "metrics": {
+                "ttftMs": 318.44,
+                "generationMs": 1836.11,
+                "tokensPerSecond": 32.68,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1105,
+              "httpMs": 1835.97,
+              "metrics": {
+                "ttftMs": 318.01,
+                "generationMs": 1835.97,
+                "tokensPerSecond": 32.68,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1106,
+              "httpMs": 1835.45,
+              "metrics": {
+                "ttftMs": 318.0,
+                "generationMs": 1835.45,
+                "tokensPerSecond": 32.69,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1107,
+              "httpMs": 1859.93,
+              "metrics": {
+                "ttftMs": 363.25,
+                "generationMs": 1859.93,
+                "tokensPerSecond": 32.26,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            }
+          ]
+        },
+        {
+          "wallMs": 1864.24,
+          "aggregateOutputTokensPerSecond": 257.48,
+          "requests": [
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1200,
+              "httpMs": 1839.25,
+              "metrics": {
+                "ttftMs": 320.13,
+                "generationMs": 1839.25,
+                "tokensPerSecond": 32.62,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1201,
+              "httpMs": 1838.7,
+              "metrics": {
+                "ttftMs": 319.86,
+                "generationMs": 1838.7,
+                "tokensPerSecond": 32.63,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1202,
+              "httpMs": 1838.52,
+              "metrics": {
+                "ttftMs": 319.53,
+                "generationMs": 1838.52,
+                "tokensPerSecond": 32.63,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1203,
+              "httpMs": 1838.4,
+              "metrics": {
+                "ttftMs": 319.58,
+                "generationMs": 1838.4,
+                "tokensPerSecond": 32.64,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1204,
+              "httpMs": 1838.14,
+              "metrics": {
+                "ttftMs": 319.23,
+                "generationMs": 1838.14,
+                "tokensPerSecond": 32.64,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1205,
+              "httpMs": 1837.43,
+              "metrics": {
+                "ttftMs": 318.8,
+                "generationMs": 1837.43,
+                "tokensPerSecond": 32.65,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1206,
+              "httpMs": 1837.17,
+              "metrics": {
+                "ttftMs": 318.08,
+                "generationMs": 1837.17,
+                "tokensPerSecond": 32.66,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            },
+            {
+              "inputTargetTokens": 512,
+              "outputTargetTokens": 128,
+              "variation": 1207,
+              "httpMs": 1861.3,
+              "metrics": {
+                "ttftMs": 363.64,
+                "generationMs": 1861.3,
+                "tokensPerSecond": 32.24,
+                "inputTokens": 577,
+                "outputTokens": 60,
+                "peakVramGiB": null
+              },
+              "semanticGate": {
+                "hasRedaction": true,
+                "hasNoSend": true,
+                "hasConfirmation": true,
+                "hasDueDateCondition": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
