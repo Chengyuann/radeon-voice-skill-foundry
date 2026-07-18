@@ -5,6 +5,7 @@ import {
   FileCode2,
   Gauge,
   ReceiptText,
+  Save,
   ShieldAlert
 } from "lucide-react";
 import type {
@@ -19,12 +20,18 @@ type ProofPanelProps = {
   runtime?: RuntimeInfo;
   compilation?: CompileResult;
   verification?: VerifyResult;
+  isSaving?: boolean;
+  savedSkillId?: string;
+  onSaveSkill?: () => Promise<void>;
 };
 
 export function ProofPanel({
   runtime,
   compilation,
-  verification
+  verification,
+  isSaving = false,
+  savedSkillId,
+  onSaveSkill
 }: ProofPanelProps) {
   const proxyPrefix =
     typeof window === "undefined"
@@ -200,6 +207,20 @@ the GAIA-compatible skill artifact.`}
         <Download size={17} />
         Download proof package
       </a>
+      {verification?.status === "verified" && onSaveSkill ? (
+        <button
+          className="secondary-button save-skill-button proof-save-button"
+          disabled={isSaving || Boolean(savedSkillId)}
+          onClick={onSaveSkill}
+        >
+          <Save size={17} />
+          {savedSkillId
+            ? "Saved to skill memory"
+            : isSaving
+              ? "Saving"
+              : "Save verified skill"}
+        </button>
+      ) : null}
     </SpotlightCard>
   );
 }

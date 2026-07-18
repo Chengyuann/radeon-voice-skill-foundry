@@ -1,32 +1,16 @@
 import {
-  ArrowDown,
   AudioWaveform,
-  Braces,
-  Cpu,
-  ShieldCheck,
-  Zap
+  Cpu
 } from "lucide-react";
-import type { RuntimeInfo } from "../../shared/types";
 import { AnimatedContent } from "../react-bits/AnimatedContent";
-import { CountUp } from "../react-bits/CountUp";
 import { DecryptedText } from "../react-bits/DecryptedText";
-import { Magnet } from "../react-bits/Magnet";
+import { ModuleDock, type WorkbenchModule } from "./ModuleDock";
 
 type CinematicHeroProps = {
-  runtime?: RuntimeInfo;
-  onEnterWorkbench: () => void;
+  onOpenModule: (module: WorkbenchModule) => void;
 };
 
-const heroMetrics = [
-  { label: "vLLM C8", value: 257.65, decimals: 2, suffix: " tok/s" },
-  { label: "Serving uplift", value: 12.47, decimals: 2, suffix: "x" },
-  { label: "ASR batch", value: 85.35, decimals: 2, suffix: "x RT" }
-];
-
-export function CinematicHero({
-  runtime,
-  onEnterWorkbench
-}: CinematicHeroProps) {
+export function CinematicHero({ onOpenModule }: CinematicHeroProps) {
   return (
     <section className="cinematic-hero" aria-labelledby="hero-title">
       <video
@@ -56,9 +40,9 @@ export function CinematicHero({
         <div className="hero-title-stage">
           <AnimatedContent delay={0.08} distance={32}>
             <h1 id="hero-title">
-              <span>Radeon Voice</span>
+              <span>Radeon</span>
               <strong>
-                <DecryptedText text="Skill Foundry" speed={16} />
+                <DecryptedText text="Voice Foundry" speed={16} />
               </strong>
             </h1>
           </AnimatedContent>
@@ -75,49 +59,10 @@ export function CinematicHero({
             </p>
           </div>
 
-          <div className="hero-metrics">
-            {heroMetrics.map((metric, index) => (
-              <div key={metric.label}>
-                <small>{metric.label}</small>
-                <strong>
-                  <CountUp
-                    to={metric.value}
-                    decimals={metric.decimals}
-                    suffix={metric.suffix}
-                    delay={0.22 + index * 0.06}
-                    duration={0.9}
-                  />
-                </strong>
-              </div>
-            ))}
+          <div className="hero-dock-wrap">
+            <ModuleDock onSelect={onOpenModule} />
           </div>
-
-          <Magnet className="hero-enter-magnet" strength={12}>
-            <button
-              className="hero-enter"
-              type="button"
-              onClick={onEnterWorkbench}
-            >
-              <span>
-                <Braces size={17} />
-                Enter workbench
-              </span>
-              <ArrowDown size={18} />
-            </button>
-          </Magnet>
         </AnimatedContent>
-
-        <div className="hero-proof-rail">
-          <span>
-            <ShieldCheck size={14} />
-            Voice Evidence v0.3
-          </span>
-          <span>
-            <Zap size={14} />
-            33/33 proof suite
-          </span>
-          <span>{runtime?.gpu || "gfx1100 · 48 GB VRAM"}</span>
-        </div>
       </div>
     </section>
   );

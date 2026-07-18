@@ -95,7 +95,10 @@ try {
   await runStep(page, 0, async () => {
     await page.goto(baseUrl, { waitUntil: "networkidle" });
     await page.waitForSelector(".app-shell");
-    await click(page, page.getByRole("button", { name: "Enter workbench" }));
+    await click(
+      page,
+      page.getByRole("button", { name: "Voice", exact: true })
+    );
     await page.waitForSelector("#workbench");
     await page.mouse.move(900, 130, { steps: 18 });
   });
@@ -129,7 +132,7 @@ try {
       page,
       page.getByRole("button", { name: "Save verified skill" })
     );
-    await page.getByText("Saved to skill memory").waitFor();
+    await page.waitForSelector(".memory-panel");
     await show(page, page.locator(".memory-panel"));
     await click(page, page.getByRole("button", { name: "Reuse" }));
     await page.getByText(/ms/).waitFor();
@@ -139,6 +142,10 @@ try {
     await stopServer();
     server = await startServer("Qwen3 local adapter pending");
     await page.reload({ waitUntil: "networkidle" });
+    await click(
+      page,
+      page.getByRole("button", { name: "Memory", exact: true })
+    );
     await page.getByText("proof compatible").waitFor();
     await show(page, page.locator(".memory-panel"));
     await click(page, page.getByRole("button", { name: "Reuse" }));
@@ -148,6 +155,10 @@ try {
     await stopServer();
     server = await startServer("Changed runtime model");
     await page.reload({ waitUntil: "networkidle" });
+    await click(
+      page,
+      page.getByRole("button", { name: "Memory", exact: true })
+    );
     await page.getByText("revalidation required").waitFor();
     await show(page, page.locator(".memory-panel"));
   });
@@ -155,7 +166,15 @@ try {
   await runStep(page, 7, async () => {
     await click(page, page.getByRole("button", { name: "Revalidate" }));
     await page.getByText("Proof verified").waitFor();
+    await click(
+      page,
+      page.getByRole("button", { name: "Memory", exact: true })
+    );
     await page.getByText("proof compatible").waitFor();
+    await click(
+      page,
+      page.getByRole("button", { name: "Proof", exact: true })
+    );
     await show(page, page.locator(".proof-panel"));
     const downloadPromise = page.waitForEvent("download");
     await click(

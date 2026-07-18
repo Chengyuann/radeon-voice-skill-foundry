@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { AlertCircle, ChevronRight } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { reviewFollowupDemo } from "../shared/demo";
 import type {
   ActionEvent,
   CompileResult,
   KnowledgeDocument,
-    RuntimeInfo,
-    SkillReuseResult,
-    StoredSkill,
+  RuntimeInfo,
+  SkillReuseResult,
+  StoredSkill,
   TranscribeResult,
   VerifyResult
 } from "../shared/types";
@@ -27,14 +27,19 @@ import {
 import { CapturePanel } from "./components/CapturePanel";
 import { CinematicHero } from "./components/CinematicHero";
 import { ConstraintPanel } from "./components/ConstraintPanel";
-import { PerformanceStrip } from "./components/PerformanceStrip";
+import {
+  type WorkbenchModule
+} from "./components/ModuleDock";
+import { ModuleWorkspace } from "./components/ModuleWorkspace";
 import { ProofPanel } from "./components/ProofPanel";
-import { StepRail } from "./components/StepRail";
 import { TopBar } from "./components/TopBar";
 import { MemoryPanel } from "./components/MemoryPanel";
-import { AnimatedContent } from "./react-bits/AnimatedContent";
 
 export function App() {
+  const reduceMotion = useReducedMotion();
+  const [activeModule, setActiveModule] = useState<
+    "cover" | WorkbenchModule
+  >("cover");
   const [projectName, setProjectName] = useState(reviewFollowupDemo.projectName);
   const [scenario, setScenario] = useState(reviewFollowupDemo.scenario);
   const [transcript, setTranscript] = useState(reviewFollowupDemo.transcript);
@@ -86,16 +91,6 @@ export function App() {
     if (compilation) return "compiled" as const;
     return "draft" as const;
   }, [compilation, verification]);
-
-  const activeStep = verification
-    ? 4
-    : compilation
-      ? busy === "verify"
-        ? 3
-        : 2
-      : busy === "compile"
-        ? 1
-        : 0;
 
   const reset = () => {
     setProjectName(reviewFollowupDemo.projectName);
@@ -157,6 +152,7 @@ export function App() {
       setCompilation(result);
       setSavedSkillId(undefined);
       await refreshRuntime();
+      setActiveModule("policy");
     } catch (requestError) {
       setError(
         requestError instanceof Error ? requestError.message : "Compilation failed"
@@ -207,6 +203,7 @@ export function App() {
       setLastReuse(undefined);
       setSkills(await listSkills());
       await refreshRuntime();
+      setActiveModule("memory");
     } catch (requestError) {
       setError(
         requestError instanceof Error ? requestError.message : "Skill save failed"
@@ -279,6 +276,7 @@ export function App() {
       setSavedSkillId(result.skill.id);
       setLastReuse(undefined);
       await refreshRuntime();
+      setActiveModule("proof");
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -298,6 +296,7 @@ export function App() {
       const result = await verifySop(compilation, actions);
       setVerification(result);
       await refreshRuntime();
+      setActiveModule("proof");
     } catch (requestError) {
       setError(
         requestError instanceof Error ? requestError.message : "Verification failed"
@@ -307,101 +306,105 @@ export function App() {
     }
   };
 
-  const enterWorkbench = () => {
-    document
-      .getElementById("workbench")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const openModule = (module: WorkbenchModule) => {
+    setActiveModule(module);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  return (
-    <div className="app-shell">
-      <TopBar runtime={runtime} status={status} />
-      <CinematicHero
-        runtime={runtime}
-        onEnterWorkbench={enterWorkbench}
+  const activePanel =
+    activeModule === "voice" ? (
+      <CapturePanel
+        projectName={projectName}
+        scenario={scenario}
+        transcript={transcript}
+        actions={actions}
+        useModel={useModel}
+        isBusy={busy === "compile" || busy === "transcribe"}
+        isTranscribing={busy === "transcribe"}
+        audioResult={audioResult}
+        voiceEvidenceReviewed={voiceEvidenceReviewed}
+        transcriptEdited={Boolean(
+          audioResult && transcript !== audioResult.transcript
+        )}
+        onProjectName={setProjectName}
+        onScenario={setScenario}
+        onTranscript={handleTranscript}
+        onUseModel={setUseModel}
+        onVoiceEvidenceReviewed={setVoiceEvidenceReviewed}
+        onTranscribe={handleTranscribe}
+        onReset={reset}
+        onCompile={handleCompile}
       />
-      <main id="workbench">
-        <AnimatedContent className="context-strip">
-          <div>
-            <span>AMD AI DevMaster Hackathon</span>
-            <ChevronRight size={14} />
-            <strong>Track 2: Localized AI Agents Deployment</strong>
-          </div>
-          <p>
-            One spoken SOP becomes an experimental GAIA skill, a capability
-            manifest, adversarial fixtures, and a local proof package.
-          </p>
-        </AnimatedContent>
-        <PerformanceStrip runtime={runtime} />
-        <StepRail active={activeStep} />
+    ) : activeModule === "policy" ? (
+      <ConstraintPanel
+        compilation={compilation}
+        verification={verification}
+        isBusy={busy === "verify"}
+        onVerify={handleVerify}
+        onRefine={handleRefine}
+        onSaveSkill={handleSaveSkill}
+        isRefining={busy === "refine"}
+        isSaving={busy === "memory"}
+        savedSkillId={savedSkillId}
+      />
+    ) : activeModule === "proof" ? (
+      <ProofPanel
+        runtime={runtime}
+        compilation={compilation}
+        verification={verification}
+        onSaveSkill={handleSaveSkill}
+        isSaving={busy === "memory"}
+        savedSkillId={savedSkillId}
+      />
+    ) : activeModule === "memory" ? (
+      <MemoryPanel
+        documents={knowledge}
+        matches={compilation?.ragMatches || []}
+        skills={skills}
+        lastReuse={lastReuse}
+        isBusy={busy === "memory"}
+        onAddKnowledge={handleAddKnowledge}
+        onReuseSkill={handleReuseSkill}
+        onRevalidateSkill={handleRevalidateSkill}
+      />
+    ) : null;
 
-        {error ? (
-          <AnimatedContent className="error-banner" distance={8}>
-            <AlertCircle size={17} />
-            <span>{error}</span>
-            <button onClick={() => setError(undefined)}>Dismiss</button>
-          </AnimatedContent>
-        ) : null}
-
-        <div className="workspace-grid">
-          <AnimatedContent className="workspace-motion capture-motion" delay={0.1}>
-            <CapturePanel
-              projectName={projectName}
-              scenario={scenario}
-              transcript={transcript}
-              actions={actions}
-              useModel={useModel}
-              isBusy={busy === "compile" || busy === "transcribe"}
-              isTranscribing={busy === "transcribe"}
-              audioResult={audioResult}
-              voiceEvidenceReviewed={voiceEvidenceReviewed}
-              transcriptEdited={Boolean(
-                audioResult && transcript !== audioResult.transcript
-              )}
-              onProjectName={setProjectName}
-              onScenario={setScenario}
-              onTranscript={handleTranscript}
-              onUseModel={setUseModel}
-              onVoiceEvidenceReviewed={setVoiceEvidenceReviewed}
-              onTranscribe={handleTranscribe}
-              onReset={reset}
-              onCompile={handleCompile}
-            />
-          </AnimatedContent>
-          <AnimatedContent className="workspace-motion constraint-motion" delay={0.16}>
-            <ConstraintPanel
-              compilation={compilation}
-              verification={verification}
-              isBusy={busy === "verify"}
-              onVerify={handleVerify}
-              onRefine={handleRefine}
-              onSaveSkill={handleSaveSkill}
-              isRefining={busy === "refine"}
-              isSaving={busy === "memory"}
-              savedSkillId={savedSkillId}
-            />
-          </AnimatedContent>
-          <AnimatedContent className="workspace-motion proof-motion" delay={0.22}>
-            <ProofPanel
+  return (
+    <div className={`app-shell app-scene-${activeModule}`}>
+      <TopBar runtime={runtime} status={status} />
+      <AnimatePresence mode="wait" initial={false}>
+        {activeModule === "cover" ? (
+          <motion.div
+            key="cover"
+            initial={reduceMotion ? false : { opacity: 0, scale: 1.01 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={reduceMotion ? undefined : { opacity: 0, scale: 0.985 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <CinematicHero onOpenModule={openModule} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="workspace"
+            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? undefined : { opacity: 0, y: 12 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <ModuleWorkspace
+              active={activeModule}
               runtime={runtime}
-              compilation={compilation}
-              verification={verification}
-            />
-          </AnimatedContent>
-        </div>
-        <AnimatedContent delay={0.26}>
-          <MemoryPanel
-            documents={knowledge}
-            matches={compilation?.ragMatches || []}
-            skills={skills}
-            lastReuse={lastReuse}
-            isBusy={busy === "memory"}
-            onAddKnowledge={handleAddKnowledge}
-            onReuseSkill={handleReuseSkill}
-            onRevalidateSkill={handleRevalidateSkill}
-          />
-        </AnimatedContent>
-      </main>
+              status={status}
+              error={error}
+              onDismissError={() => setError(undefined)}
+              onBack={() => setActiveModule("cover")}
+              onSelect={openModule}
+            >
+              {activePanel}
+            </ModuleWorkspace>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
