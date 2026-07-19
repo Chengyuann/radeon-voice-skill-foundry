@@ -11,7 +11,16 @@ Demo V2 captions:
 Original 3-minute 49-second overview:
 `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
 
-Continuous 3-minute 10-second operation demo:
+Continuous 4-minute 20-second lifecycle Demo V2:
+`https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/CONTINUOUS_OPERATION_DEMO_V2.mp4`
+
+Continuous Demo V2 captions:
+`https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/CONTINUOUS_OPERATION_DEMO_V2.srt`
+
+Continuous Demo V2 child proof:
+`https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/continuous-demo-v2-proof.zip`
+
+Original continuous operation demo:
 `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/CONTINUOUS_OPERATION_DEMO.mp4`
 
 Official AMD hackathon submission:
@@ -166,6 +175,18 @@ AIDP_TTS_AK=... AIDP_TTS_VOICE=Charon \
   python3 scripts/generate_demo_v2_tts.py
 node scripts/record_demo_v2.mjs
 python3 scripts/build_demo_v2_video.py
+```
+
+The companion continuous lifecycle Demo V2 uses deterministic ASR and compiler
+fixtures so service restarts are reproducible in one take. It performs two
+real Node API process restarts, durable recovery, runtime drift, proof
+invalidation, child-run revalidation, and proof download:
+
+```bash
+AIDP_TTS_AK=... AIDP_TTS_VOICE=Charon \
+  python3 scripts/generate_continuous_demo_v2_tts.py
+CONTINUOUS_V2_MODE=local node scripts/record_continuous_demo_v2.mjs
+python3 scripts/build_continuous_demo_v2_video.py
 ```
 
 ## Radeon integration

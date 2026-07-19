@@ -22,10 +22,14 @@ to perform risky actions.
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
 - Official submission PR:
   `https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07/pull/7`
-- Continuous operation demo:
+- Continuous lifecycle Demo V2:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/CONTINUOUS_OPERATION_DEMO_V2.mp4`
+- Continuous Demo V2 captions:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/CONTINUOUS_OPERATION_DEMO_V2.srt`
+- Continuous Demo V2 child proof:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/continuous-demo-v2-proof.zip`
+- Original continuous operation demo:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/CONTINUOUS_OPERATION_DEMO.mp4`
-- Continuous lifecycle proof:
-  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/continuous-demo-proof.zip`
 
 ## Why It Matters
 
@@ -59,6 +63,8 @@ The system compiles both signals into:
 - `RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt` - final captions
 - `CONTINUOUS_OPERATION_DEMO.srt` - continuous workflow captions
 - `CONTINUOUS_DEMO_NARRATION.md` - continuous workflow narration source
+- `CONTINUOUS_OPERATION_DEMO_V2.srt` - lifecycle Demo V2 captions
+- `CONTINUOUS_DEMO_V2_NARRATION.md` - lifecycle Demo V2 narration source
 - `FINAL_SUBMISSION_CHECKLIST.md` - completion and evidence ledger
 
 ## Measured Radeon Evidence
@@ -112,6 +118,11 @@ Demo V2 records the current cinematic module UI from the public Cloudflare
 deployment. It executes the real Voice -> Policy -> Proof -> Memory workflow
 against W7900 Qwen3-ASR and Qwen3-4B, then shows the measured vLLM and ASR
 batching evidence.
+
+Continuous Demo V2 isolates lifecycle control from the performance claim. It
+uses deterministic ASR and compiler fixtures, while executing real Node API
+process restarts, durable recovery, runtime drift, proof invalidation,
+revalidation, and child-proof download in one continuous browser session.
 
 ## Post-Submission Engineering Upgrade
 
