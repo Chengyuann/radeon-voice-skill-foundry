@@ -133,6 +133,7 @@ export async function compileSop(
   const startedAt = performance.now();
   let constraints: Constraint[] | null = null;
   let modelMetrics: CompileResult["modelMetrics"];
+  let modelRoute: CompileResult["modelRoute"];
   const ragMatches = await searchKnowledge(
     `${input.scenario}\n${input.transcript}`,
     4
@@ -140,24 +141,27 @@ export async function compileSop(
   const ragContext = ragMatches
     .map((match) => `${match.title}: ${match.excerpt}`)
     .join("\n");
+  const deterministicConstraints = extractConstraintsDeterministically(
+    input.transcript,
+    input.actions
+  );
 
   if (input.useModel) {
     const extraction = await extractConstraintsWithModel({
       ...input,
-      ragContext
+      ragContext,
+      requiredGuardrails: deterministicConstraints
     });
     constraints = extraction
       ? mergeModelConstraintsWithGuardrails(
           extraction.constraints,
-          extractConstraintsDeterministically(input.transcript, input.actions)
+          deterministicConstraints
         )
       : null;
     modelMetrics = extraction?.metrics;
+    modelRoute = extraction?.route;
   }
-  constraints ??= extractConstraintsDeterministically(
-    input.transcript,
-    input.actions
-  );
+  constraints ??= deterministicConstraints;
 
   const permissions = inferPermissions(
     input.actions,
@@ -198,7 +202,8 @@ export async function compileSop(
       ? { voiceTranscriptModified: input.voiceTranscriptModified }
       : {}),
     revision: 1,
-    ...(modelMetrics ? { modelMetrics } : {})
+    ...(modelMetrics ? { modelMetrics } : {}),
+    ...(modelRoute ? { modelRoute } : {})
   };
 }
 

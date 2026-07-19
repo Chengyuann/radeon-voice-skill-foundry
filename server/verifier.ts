@@ -150,6 +150,7 @@ export async function verifyCompilation(
     projectName: compilation.projectName,
     status,
     runtime: compilation.runtime,
+    modelRoute: compilation.modelRoute,
     voiceEvidence: compilation.voiceEvidence,
     voiceEvidenceId: compilation.voiceEvidenceId,
     voiceEvidenceReviewed: compilation.voiceEvidenceReviewed || false,

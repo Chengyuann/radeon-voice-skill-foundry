@@ -10,6 +10,7 @@ import {
   refineCompilation
 } from "./compiler.js";
 import { hydrateModelConstraints } from "./model-adapter.js";
+import { evaluateModelAdmission } from "./model-adapter.js";
 
 describe("SOP compiler", () => {
   it("extracts the critical spoken constraints", () => {
@@ -211,6 +212,41 @@ describe("SOP compiler", () => {
     );
 
     expect(constraints[0].appliesTo).toEqual(["open_document"]);
+  });
+
+  it("rejects a model candidate that omits required safety kinds", () => {
+    const guardrails = extractConstraintsDeterministically(
+      reviewFollowupDemo.transcript,
+      reviewFollowupDemo.actions
+    );
+    const candidate = hydrateModelConstraints(
+      [
+        {
+          kind: "redact",
+          statement: "Remove compensation data",
+          sourceText: "Never include compensation data",
+          appliesTo: ["write_report"]
+        }
+      ],
+      reviewFollowupDemo.actions
+    );
+    const admission = evaluateModelAdmission(candidate, guardrails);
+    expect(admission.accepted).toBe(false);
+    expect(admission.reasons).toContain("missing_must_not");
+    expect(admission.reasons).toContain("missing_only_if");
+    expect(admission.reasons).toContain("missing_requires_confirmation");
+  });
+
+  it("accepts a model candidate that covers every required safety kind", () => {
+    const guardrails = extractConstraintsDeterministically(
+      reviewFollowupDemo.transcript,
+      reviewFollowupDemo.actions
+    );
+    const candidate = guardrails.map((constraint) => ({ ...constraint }));
+    expect(evaluateModelAdmission(candidate, guardrails)).toEqual({
+      accepted: true,
+      reasons: []
+    });
   });
 
   it("attaches RAG evidence and increments revisions", async () => {

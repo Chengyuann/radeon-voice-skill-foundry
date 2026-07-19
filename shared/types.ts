@@ -74,6 +74,12 @@ export type ModelMetrics = {
   peakVramGiB?: number;
 };
 
+export type ModelRoute = {
+  selected: "primary" | "fallback";
+  primaryAccepted: boolean;
+  primaryReasons: string[];
+};
+
 export type KnowledgeDocument = {
   id: string;
   title: string;
@@ -166,6 +172,7 @@ export type CompileResult = {
   compileDurationMs: number;
   runtime: RuntimeInfo;
   modelMetrics?: ModelMetrics;
+  modelRoute?: ModelRoute;
   ragMatches?: KnowledgeMatch[];
   voiceEvidence?: VoiceEvidence;
   voiceEvidenceId?: string;
