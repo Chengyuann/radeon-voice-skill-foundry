@@ -173,13 +173,14 @@ try {
     await page.getByText("No acoustic diagnostics triggered.", {
       exact: true
     }).waitFor({ state: "visible", timeout: 30_000 });
+    await completeDemonstration(page);
     await show(page, page.locator(".voice-evidence"));
   });
 
   await runStep(page, 2, async () => {
     await click(
       page,
-      page.getByRole("button", { name: "Compile spoken SOP", exact: true })
+      page.getByRole("button", { name: "Compile voice + actions", exact: true })
     );
     await waitForPanel(page, ".constraint-panel", "Policy");
     await show(page, page.locator(".constraint-panel"));
@@ -374,6 +375,22 @@ try {
       console.error(`Remote cleanup warning: ${error.message}`);
     });
   }
+}
+
+async function completeDemonstration(page) {
+  for (const name of [
+    "Open review",
+    "P0/P1 only",
+    "Review owner",
+    "Draft email",
+    "Draft holds",
+    "Export report"
+  ]) {
+    await click(page, page.getByRole("button", { name, exact: true }));
+  }
+  await page.getByText("Demonstration contract captured", {
+    exact: true
+  }).waitFor({ state: "visible", timeout: 30_000 });
 }
 
 async function createTerminal() {

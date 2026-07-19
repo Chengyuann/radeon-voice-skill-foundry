@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { reviewFollowupDemo } from "../shared/demo";
 import type {
-  ActionEvent,
   CompileResult,
   KnowledgeDocument,
   RuntimeInfo,
@@ -11,6 +10,10 @@ import type {
   TranscribeResult,
   VerifyResult
 } from "../shared/types";
+import {
+  createDemonstrationState,
+  type DemonstrationState
+} from "./demonstration";
 import {
   addKnowledge,
   compileSop,
@@ -43,9 +46,10 @@ export function App() {
   const [projectName, setProjectName] = useState(reviewFollowupDemo.projectName);
   const [scenario, setScenario] = useState(reviewFollowupDemo.scenario);
   const [transcript, setTranscript] = useState(reviewFollowupDemo.transcript);
-  const [actions, setActions] = useState<ActionEvent[]>(
-    reviewFollowupDemo.actions
+  const [demonstration, setDemonstration] = useState<DemonstrationState>(
+    createDemonstrationState
   );
+  const actions = demonstration.events;
   const [useModel, setUseModel] = useState(false);
   const [runtime, setRuntime] = useState<RuntimeInfo>();
   const [compilation, setCompilation] = useState<CompileResult>();
@@ -96,7 +100,7 @@ export function App() {
     setProjectName(reviewFollowupDemo.projectName);
     setScenario(reviewFollowupDemo.scenario);
     setTranscript(reviewFollowupDemo.transcript);
-    setActions(reviewFollowupDemo.actions);
+    setDemonstration(createDemonstrationState());
     setUseModel(false);
     setCompilation(undefined);
     setVerification(undefined);
@@ -136,6 +140,10 @@ export function App() {
   };
 
   const handleCompile = async () => {
+    if (actions.length < 6) {
+      setError("Complete the six-step demonstration before compiling.");
+      return;
+    }
     setBusy("compile");
     setError(undefined);
     setVerification(undefined);
@@ -248,6 +256,11 @@ export function App() {
           .join(" ")
       );
       setCompilation(stored.compilation);
+      setDemonstration({
+        events: stored.actions || [],
+        startedAtMs: undefined,
+        nextSequence: (stored.actions?.length || 0) + 1
+      });
       setAudioResult(undefined);
       setVoiceEvidenceReviewed(
         stored.compilation.voiceEvidenceReviewed || false
@@ -272,6 +285,11 @@ export function App() {
       const result = await revalidateSkill(skillId);
       setSkills(await listSkills());
       setCompilation(result.skill.compilation);
+      setDemonstration({
+        events: result.skill.actions || [],
+        startedAtMs: undefined,
+        nextSequence: (result.skill.actions?.length || 0) + 1
+      });
       setVerification(result.verification);
       setSavedSkillId(result.skill.id);
       setLastReuse(undefined);
@@ -306,6 +324,15 @@ export function App() {
     }
   };
 
+  const handleDemonstration = (state: DemonstrationState) => {
+    setDemonstration(state);
+    setCompilation(undefined);
+    setVerification(undefined);
+    setSavedSkillId(undefined);
+    setLastReuse(undefined);
+    setError(undefined);
+  };
+
   const openModule = (module: WorkbenchModule) => {
     setActiveModule(module);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -317,7 +344,7 @@ export function App() {
         projectName={projectName}
         scenario={scenario}
         transcript={transcript}
-        actions={actions}
+        demonstration={demonstration}
         useModel={useModel}
         isBusy={busy === "compile" || busy === "transcribe"}
         isTranscribing={busy === "transcribe"}
@@ -332,6 +359,7 @@ export function App() {
         onUseModel={setUseModel}
         onVoiceEvidenceReviewed={setVoiceEvidenceReviewed}
         onTranscribe={handleTranscribe}
+        onDemonstration={handleDemonstration}
         onReset={reset}
         onCompile={handleCompile}
       />

@@ -108,14 +108,29 @@ try {
     await input.setInputFiles(audioPath);
     await page.getByText("Voice Evidence Gate").waitFor();
     await page.getByText("No acoustic diagnostics triggered.").waitFor();
+    await completeDemonstration(page);
     await show(page, page.locator(".voice-evidence"));
   });
 
   await runStep(page, 2, async () => {
-    await click(page, page.getByRole("button", { name: "Compile spoken SOP" }));
+    await click(page, page.getByRole("button", { name: "Compile voice + actions" }));
     await page.getByText("mail:send", { exact: true }).waitFor();
     await show(page, page.locator(".constraint-panel"));
-  });
+});
+
+async function completeDemonstration(page) {
+  for (const name of [
+    "Open review",
+    "P0/P1 only",
+    "Review owner",
+    "Draft email",
+    "Draft holds",
+    "Export report"
+  ]) {
+    await click(page, page.getByRole("button", { name }));
+  }
+  await page.getByText("Demonstration contract captured").waitFor();
+}
 
   await runStep(page, 3, async () => {
     await click(

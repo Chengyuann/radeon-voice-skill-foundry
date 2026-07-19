@@ -123,13 +123,14 @@ try {
     await page.getByText("No acoustic diagnostics triggered.", {
       exact: true
     }).waitFor({ state: "visible", timeout: 30_000 });
+    await completeDemonstration(page);
     await show(page, page.locator(".voice-evidence"));
   });
 
   await runStep(page, 2, async () => {
     await click(
       page,
-      page.getByRole("button", { name: "Compile spoken SOP", exact: true })
+      page.getByRole("button", { name: "Compile voice + actions", exact: true })
     );
     await waitForPolicy(page);
     await show(page, page.locator(".constraint-panel"));
@@ -343,7 +344,7 @@ async function waitForPolicy(page) {
       await click(
         page,
         page.getByRole("button", {
-          name: "Compile spoken SOP",
+          name: "Compile voice + actions",
           exact: true
         })
       );
@@ -353,6 +354,22 @@ async function waitForPolicy(page) {
     await page.waitForTimeout(1_000);
   }
   throw new Error("Policy module did not appear after public compilation");
+}
+
+async function completeDemonstration(page) {
+  for (const name of [
+    "Open review",
+    "P0/P1 only",
+    "Review owner",
+    "Draft email",
+    "Draft holds",
+    "Export report"
+  ]) {
+    await click(page, page.getByRole("button", { name, exact: true }));
+  }
+  await page.getByText("Demonstration contract captured", {
+    exact: true
+  }).waitFor({ state: "visible", timeout: 30_000 });
 }
 
 async function waitForProof(page) {

@@ -80,7 +80,9 @@ score.
 - Voice Evidence v0.3 clean sample: `pass / 100`
 - server-authoritative policy: `mail.send = deny`
 - deterministic verification: `7/7`
-- current local regression suite: `36/36`, typecheck, production build
+- current local regression suite: `42/42`, typecheck, production build
+- real demonstration workspace captures six ordered user operations into the
+  action contract; irreversible email/calendar side effects remain simulated
 - clean W7900 weekend experiment commit: `33/33`, production build
 - vLLM graph concurrency-eight throughput: `257.65 tokens/s`
 - serialized Transformers concurrency-eight throughput: `20.66 tokens/s`

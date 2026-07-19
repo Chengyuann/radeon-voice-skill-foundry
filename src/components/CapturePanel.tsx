@@ -11,17 +11,19 @@ import {
   WandSparkles
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { ActionEvent, TranscribeResult } from "../../shared/types";
+import type { TranscribeResult } from "../../shared/types";
+import type { DemonstrationState } from "../demonstration";
 import { convertBlobToWav } from "../audio";
 import { Magnet } from "../react-bits/Magnet";
 import { SpotlightCard } from "../react-bits/SpotlightCard";
+import { DemonstrationWorkspace } from "./DemonstrationWorkspace";
 import { IconButton } from "./IconButton";
 
 type CapturePanelProps = {
   projectName: string;
   scenario: string;
   transcript: string;
-  actions: ActionEvent[];
+  demonstration: DemonstrationState;
   useModel: boolean;
   isBusy: boolean;
   isTranscribing: boolean;
@@ -34,6 +36,7 @@ type CapturePanelProps = {
   onUseModel: (value: boolean) => void;
   onVoiceEvidenceReviewed: (value: boolean) => void;
   onTranscribe: (audio: Blob) => Promise<void>;
+  onDemonstration: (state: DemonstrationState) => void;
   onReset: () => void;
   onCompile: () => void;
 };
@@ -42,7 +45,7 @@ export function CapturePanel({
   projectName,
   scenario,
   transcript,
-  actions,
+  demonstration,
   useModel,
   isBusy,
   isTranscribing,
@@ -55,6 +58,7 @@ export function CapturePanel({
   onUseModel,
   onVoiceEvidenceReviewed,
   onTranscribe,
+  onDemonstration,
   onReset,
   onCompile
 }: CapturePanelProps) {
@@ -345,22 +349,36 @@ export function CapturePanel({
         </div>
       </div>
 
+      <DemonstrationWorkspace
+        state={demonstration}
+        onState={onDemonstration}
+      />
+
       <div className="trace-section">
         <div className="subheading-row">
-          <h3>Aligned action trace</h3>
-          <span>{actions.length} events</span>
+          <h3>Captured action contract</h3>
+          <span>{demonstration.events.length} events</span>
         </div>
-        <ol className="action-trace">
-          {actions.map((action, index) => (
-            <li key={action.id}>
-              <span className="trace-index">{String(index + 1).padStart(2, "0")}</span>
-              <div>
-                <strong>{action.label}</strong>
-                <span>{(action.timestampMs / 1000).toFixed(1)}s</span>
-              </div>
-            </li>
-          ))}
-        </ol>
+        {demonstration.events.length ? (
+          <ol className="action-trace">
+            {demonstration.events.map((action, index) => (
+              <li key={action.id}>
+                <span className="trace-index">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <strong>{action.label}</strong>
+                  <span>{(action.timestampMs / 1000).toFixed(1)}s</span>
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="trace-empty">
+            Run the workspace commands to produce a trusted demonstration
+            contract.
+          </p>
+        )}
       </div>
 
       <div className="capture-footer">
@@ -385,7 +403,7 @@ export function CapturePanel({
         >
           <button
             className="primary-button"
-            disabled={isBusy}
+            disabled={isBusy || demonstration.events.length < 6}
             onClick={onCompile}
           >
             {isBusy ? <Sparkles size={17} /> : <WandSparkles size={17} />}
@@ -393,7 +411,9 @@ export function CapturePanel({
               ? "Transcribing on Radeon"
               : isBusy
                 ? "Compiling"
-                : "Compile spoken SOP"}
+                : demonstration.events.length < 6
+                  ? "Complete the demonstration"
+                  : "Compile voice + actions"}
           </button>
         </Magnet>
       </div>

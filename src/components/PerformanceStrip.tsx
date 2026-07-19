@@ -39,9 +39,9 @@ const metrics = [
   },
   {
     label: "Proof suite",
-    value: 33,
+    value: 42,
     decimals: 0,
-    suffix: "/33",
+    suffix: "/42",
     icon: ShieldCheck
   }
 ];
@@ -58,7 +58,7 @@ export function PerformanceStrip({ runtime }: PerformanceStripProps) {
           <Microchip size={16} />
           {runtime?.gpu || "gfx1100 · ROCm 7.2.1"}
         </strong>
-        <small>Measured evidence · commit 20776d9</small>
+        <small>Measured W7900 evidence · current product suite 42/42</small>
       </div>
       <div className="performance-metrics">
         {metrics.map((metric, index) => {
