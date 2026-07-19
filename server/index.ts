@@ -7,6 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   compileRequestSchema,
+  demonstrationCommandSchema,
   knowledgeDocumentInputSchema,
   knowledgeSearchSchema,
   refineRequestSchema
@@ -18,6 +19,12 @@ import type {
   VerifyResult
 } from "../shared/types.js";
 import { compileSop, refineCompilation } from "./compiler.js";
+import {
+  applyDemonstrationCommand,
+  createDemonstrationSession,
+  demonstrationSessionCount,
+  resolveDemonstrationSession
+} from "./demonstration-store.js";
 import { id } from "./hash.js";
 import { buildSubmissionPackage } from "./package.js";
 import { getRuntimeInfo } from "./runtime.js";
@@ -78,7 +85,8 @@ app.get("/api/health", async (_request, response) => {
     runtime: getRuntimeInfo(),
     persisted: {
       ...(await runtimeRecordCounts()),
-      voiceEvidenceRecords: await voiceEvidenceRecordCount()
+      voiceEvidenceRecords: await voiceEvidenceRecordCount(),
+      demonstrationSessions: await demonstrationSessionCount()
     }
   });
 });
@@ -147,20 +155,71 @@ app.post("/api/knowledge/search", async (request, response) => {
   }
 });
 
+app.post("/api/demonstrations", async (_request, response) => {
+  response.status(201).json(await createDemonstrationSession());
+});
+
+app.get("/api/demonstrations/:sessionId", async (request, response) => {
+  try {
+    response.json(
+      await resolveDemonstrationSession(request.params.sessionId)
+    );
+  } catch (error) {
+    response.status(404).json({
+      error:
+        error instanceof Error
+          ? error.message
+          : "Demonstration session lookup failed"
+    });
+  }
+});
+
+app.post(
+  "/api/demonstrations/:sessionId/commands",
+  async (request, response) => {
+    try {
+      const command = demonstrationCommandSchema.parse(request.body);
+      response.json(
+        await applyDemonstrationCommand(
+          request.params.sessionId,
+          command.type
+        )
+      );
+    } catch (error) {
+      response.status(400).json({
+        error:
+          error instanceof Error
+            ? error.message
+            : "Demonstration command failed"
+      });
+    }
+  }
+);
+
 app.post("/api/compile", async (request, response) => {
   try {
     const input = compileRequestSchema.parse(request.body);
+    const demonstration = input.demonstrationSessionId
+      ? await resolveDemonstrationSession(
+          input.demonstrationSessionId,
+          true
+        )
+      : undefined;
     const voiceRecord = input.voiceEvidenceId
       ? await resolveVoiceEvidence(input.voiceEvidenceId)
       : undefined;
     const compilation = await compileSop({
       ...input,
+      actions: demonstration?.state.events || input.actions,
       ...(voiceRecord ? { voiceEvidence: voiceRecord.evidence } : {}),
       voiceTranscriptModified: voiceRecord
         ? !transcriptMatchesVoiceEvidence(voiceRecord.evidence, input.transcript)
         : false
     });
-    await storeCompileRun(compilation, input.actions);
+    await storeCompileRun(
+      compilation,
+      demonstration?.state.events || input.actions
+    );
     response.json(compilation);
   } catch (error) {
     response.status(400).json({

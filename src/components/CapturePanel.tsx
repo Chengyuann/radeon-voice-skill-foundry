@@ -11,8 +11,12 @@ import {
   WandSparkles
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { TranscribeResult } from "../../shared/types";
+import type {
+  DemonstrationSession,
+  TranscribeResult
+} from "../../shared/types";
 import type { DemonstrationState } from "../demonstration";
+import type { DemonstrationCommandType } from "../demonstration";
 import { convertBlobToWav } from "../audio";
 import { Magnet } from "../react-bits/Magnet";
 import { SpotlightCard } from "../react-bits/SpotlightCard";
@@ -24,9 +28,12 @@ type CapturePanelProps = {
   scenario: string;
   transcript: string;
   demonstration: DemonstrationState;
+  demonstrationSession?: DemonstrationSession;
   useModel: boolean;
   isBusy: boolean;
   isTranscribing: boolean;
+  isDemonstrating: boolean;
+  hasTrustedDemonstration: boolean;
   audioResult?: TranscribeResult;
   voiceEvidenceReviewed: boolean;
   transcriptEdited: boolean;
@@ -36,7 +43,7 @@ type CapturePanelProps = {
   onUseModel: (value: boolean) => void;
   onVoiceEvidenceReviewed: (value: boolean) => void;
   onTranscribe: (audio: Blob) => Promise<void>;
-  onDemonstration: (state: DemonstrationState) => void;
+  onDemonstrationCommand: (type: DemonstrationCommandType) => void;
   onReset: () => void;
   onCompile: () => void;
 };
@@ -46,9 +53,12 @@ export function CapturePanel({
   scenario,
   transcript,
   demonstration,
+  demonstrationSession,
   useModel,
   isBusy,
   isTranscribing,
+  isDemonstrating,
+  hasTrustedDemonstration,
   audioResult,
   voiceEvidenceReviewed,
   transcriptEdited,
@@ -58,7 +68,7 @@ export function CapturePanel({
   onUseModel,
   onVoiceEvidenceReviewed,
   onTranscribe,
-  onDemonstration,
+  onDemonstrationCommand,
   onReset,
   onCompile
 }: CapturePanelProps) {
@@ -351,13 +361,22 @@ export function CapturePanel({
 
       <DemonstrationWorkspace
         state={demonstration}
-        onState={onDemonstration}
+        isBusy={isDemonstrating}
+        hasTrustedSession={hasTrustedDemonstration}
+        onCommand={onDemonstrationCommand}
       />
 
       <div className="trace-section">
         <div className="subheading-row">
           <h3>Captured action contract</h3>
-          <span>{demonstration.events.length} events</span>
+          <span>
+            {demonstrationSession
+              ? `server-bound · ${demonstrationSession.actionContractHash.slice(
+                  0,
+                  10
+                )}`
+              : "read-only history"}
+          </span>
         </div>
         {demonstration.events.length ? (
           <ol className="action-trace">
@@ -375,8 +394,9 @@ export function CapturePanel({
           </ol>
         ) : (
           <p className="trace-empty">
-            Run the workspace commands to produce a trusted demonstration
-            contract.
+            {hasTrustedDemonstration
+              ? "Run the workspace commands to produce a trusted demonstration contract."
+              : "Starting a new trusted demonstration session."}
           </p>
         )}
       </div>
@@ -403,7 +423,11 @@ export function CapturePanel({
         >
           <button
             className="primary-button"
-            disabled={isBusy || demonstration.events.length < 6}
+            disabled={
+              isBusy ||
+              !hasTrustedDemonstration ||
+              demonstration.events.length < 6
+            }
             onClick={onCompile}
           >
             {isBusy ? <Sparkles size={17} /> : <WandSparkles size={17} />}
@@ -411,7 +435,8 @@ export function CapturePanel({
               ? "Transcribing on Radeon"
               : isBusy
                 ? "Compiling"
-                : demonstration.events.length < 6
+                : !hasTrustedDemonstration ||
+                    demonstration.events.length < 6
                   ? "Complete the demonstration"
                   : "Compile voice + actions"}
           </button>

@@ -1,9 +1,28 @@
 import { describe, expect, it } from "vitest";
 import { reviewFollowupDemo } from "../shared/demo.js";
 import { compileSop } from "./compiler.js";
+import { stableHash } from "./hash.js";
 import { verifyCompilation } from "./verifier.js";
 
 describe("proof verifier", () => {
+  it("binds the complete action contract into the proof core", async () => {
+    const compilation = await compileSop({
+      ...reviewFollowupDemo,
+      demonstrationSessionId: "demo_123456789abc"
+    });
+    const result = await verifyCompilation(
+      compilation,
+      reviewFollowupDemo.actions
+    );
+
+    expect(result.proofBundle.actionContract).toEqual({
+      sessionId: "demo_123456789abc",
+      hash: stableHash(reviewFollowupDemo.actions),
+      eventCount: reviewFollowupDemo.actions.length,
+      events: reviewFollowupDemo.actions
+    });
+  });
+
   it("verifies the complete demo and issues governance receipts", async () => {
     const compilation = await compileSop(reviewFollowupDemo);
     const result = await verifyCompilation(

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { demonstrationCommandTypes } from "./demonstration.js";
 
 export const actionEventSchema = z.object({
   id: z.string().min(1),
@@ -64,9 +65,15 @@ export const compileRequestSchema = z.object({
   scenario: z.string().min(10).max(1000),
   transcript: z.string().min(20).max(12000),
   actions: z.array(actionEventSchema).min(1).max(50),
+  demonstrationSessionId: z.string().regex(/^demo_[a-f0-9]{12}$/).optional(),
   useModel: z.boolean().optional(),
   voiceEvidenceId: z.string().regex(/^voice_[a-f0-9]{12}$/).optional(),
   voiceEvidenceReviewed: z.boolean().optional()
+});
+
+export const demonstrationCommandSchema = z.object({
+  type: z.enum(demonstrationCommandTypes),
+  nowMs: z.number().nonnegative().optional()
 });
 
 export const constraintSchema = z.object({

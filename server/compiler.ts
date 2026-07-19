@@ -201,6 +201,9 @@ export async function compileSop(
     ...(input.voiceTranscriptModified
       ? { voiceTranscriptModified: input.voiceTranscriptModified }
       : {}),
+    ...(input.demonstrationSessionId
+      ? { demonstrationSessionId: input.demonstrationSessionId }
+      : {}),
     revision: 1,
     ...(modelMetrics ? { modelMetrics } : {}),
     ...(modelRoute ? { modelRoute } : {})
@@ -234,7 +237,8 @@ export async function refineCompilation(
     voiceEvidenceId: prior.voiceEvidenceId,
     voiceEvidence: prior.voiceEvidence,
     voiceEvidenceReviewed: prior.voiceEvidenceReviewed,
-    voiceTranscriptModified: prior.voiceTranscriptModified
+    voiceTranscriptModified: prior.voiceTranscriptModified,
+    demonstrationSessionId: prior.demonstrationSessionId
   });
   return {
     ...refined,

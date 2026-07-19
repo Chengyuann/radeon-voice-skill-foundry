@@ -63,6 +63,8 @@ The web UI now supports:
 - local audio upload
 - a deterministic project-review workspace whose real user commands generate
   the aligned action trace instead of loading a preset trace
+- server-authoritative demonstration sessions that reject out-of-order
+  commands and ignore browser-supplied action tampering during compilation
 - six ordered teaching actions: open review, filter P0/P1, review missing
   ownership, draft email, draft calendar holds, and export a redacted report
 - safe simulated outputs that never send email or commit calendar invitations
@@ -165,15 +167,15 @@ bash scripts/update_cloudflare_origin.sh https://<new-origin>
 ## Demo workflow
 
 1. Record or upload the spoken SOP.
-2. Perform the six commands in the project-review workspace. The browser emits
-   the timestamped action contract from those real operations.
+2. Perform the six commands in the project-review workspace. Each command is
+   accepted and persisted by the server before the UI advances.
 3. Review the transcript. Editing the ASR transcript requires explicit
    acknowledgement before skill promotion.
 4. Select `Compile voice + actions`.
 5. Inspect generated constraints, capabilities, tests, and `SKILL.md`.
 6. Select `Run local verification`.
 7. Inspect governance receipts and measured telemetry.
-8. Download the proof ZIP.
+8. Download the proof ZIP, including `action_contract.json`.
 
 ## Reproduce Demo V2
 
@@ -265,7 +267,7 @@ v0.2; v0.3 now quarantines that sample and invalidates older proofs until
 revalidation. See `docs/WEEKEND_W7900_EXPERIMENTS.md` and
 `benchmarks/weekend-v10-summary.json`.
 
-The current local suite has since grown to `42/42` and passes typecheck and the
+The current local suite has since grown to `46/46` and passes typecheck and the
 production build. The main Demo V2 is the real Cloudflare-to-W7900 inference
 evidence. Continuous Demo V2 uses deterministic ASR/compiler fixtures with real
 Node process restarts and is used only for durability, invalidation, and proof

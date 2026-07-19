@@ -10,29 +10,26 @@ import {
   Undo2
 } from "lucide-react";
 import {
-  createDemonstrationState,
-  demonstrationReducer,
   deriveDemonstration,
-  type DemonstrationCommand,
+  type DemonstrationCommandType,
   type DemonstrationState
 } from "../demonstration";
 import { Badge } from "./Badge";
 
 type DemonstrationWorkspaceProps = {
   state: DemonstrationState;
-  onState: (state: DemonstrationState) => void;
+  isBusy: boolean;
+  hasTrustedSession: boolean;
+  onCommand: (type: DemonstrationCommandType) => void;
 };
 
 export function DemonstrationWorkspace({
   state,
-  onState
+  isBusy,
+  hasTrustedSession,
+  onCommand
 }: DemonstrationWorkspaceProps) {
   const view = deriveDemonstration(state.events);
-  const run = (
-    type: Exclude<DemonstrationCommand["type"], "undo" | "reset">
-  ) => onState(demonstrationReducer(state, { type, nowMs: performance.now() }));
-  const dispatch = (type: "undo" | "reset") =>
-    onState(demonstrationReducer(state, { type }));
 
   return (
     <section className="demo-workspace" aria-label="Project review demonstration">
@@ -52,48 +49,48 @@ export function DemonstrationWorkspace({
       <div className="demo-toolbar">
         <button
           type="button"
-          disabled={view.opened}
-          onClick={() => run("open")}
+          disabled={isBusy || !hasTrustedSession || view.opened}
+          onClick={() => onCommand("open")}
         >
           <FileText size={15} />
           Open review
         </button>
         <button
           type="button"
-          disabled={!view.opened || view.filtered}
-          onClick={() => run("filter")}
+          disabled={isBusy || !view.opened || view.filtered}
+          onClick={() => onCommand("filter")}
         >
           <Filter size={15} />
           P0/P1 only
         </button>
         <button
           type="button"
-          disabled={!view.filtered || view.ownerReviewed}
-          onClick={() => run("confirm_missing_owner")}
+          disabled={isBusy || !view.filtered || view.ownerReviewed}
+          onClick={() => onCommand("confirm_missing_owner")}
         >
           <ShieldQuestion size={15} />
           Review owner
         </button>
         <button
           type="button"
-          disabled={!view.ownerReviewed || view.emailsDrafted}
-          onClick={() => run("draft_emails")}
+          disabled={isBusy || !view.ownerReviewed || view.emailsDrafted}
+          onClick={() => onCommand("draft_emails")}
         >
           <Mail size={15} />
           Draft email
         </button>
         <button
           type="button"
-          disabled={!view.emailsDrafted || view.holdsCreated}
-          onClick={() => run("create_holds")}
+          disabled={isBusy || !view.emailsDrafted || view.holdsCreated}
+          onClick={() => onCommand("create_holds")}
         >
           <CalendarClock size={15} />
           Draft holds
         </button>
         <button
           type="button"
-          disabled={!view.holdsCreated || view.reportExported}
-          onClick={() => run("export_report")}
+          disabled={isBusy || !view.holdsCreated || view.reportExported}
+          onClick={() => onCommand("export_report")}
         >
           <FileDown size={15} />
           Export report
@@ -205,8 +202,8 @@ export function DemonstrationWorkspace({
           <button
             type="button"
             className="demo-icon-command"
-            disabled={!state.events.length}
-            onClick={() => dispatch("undo")}
+            disabled={isBusy || !hasTrustedSession || !state.events.length}
+            onClick={() => onCommand("undo")}
             aria-label="Undo last demonstration action"
             title="Undo last action"
           >
@@ -215,8 +212,8 @@ export function DemonstrationWorkspace({
           <button
             type="button"
             className="demo-icon-command"
-            disabled={!state.events.length}
-            onClick={() => dispatch("reset")}
+            disabled={isBusy || !state.events.length}
+            onClick={() => onCommand("reset")}
             aria-label="Reset demonstration workspace"
             title="Reset workspace"
           >
@@ -244,5 +241,3 @@ function OutputState({
     </div>
   );
 }
-
-export { createDemonstrationState };

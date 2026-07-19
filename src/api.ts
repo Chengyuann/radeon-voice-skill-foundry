@@ -1,6 +1,7 @@
 import type {
   CompileRequest,
   CompileResult,
+  DemonstrationSession,
   KnowledgeDocument,
   KnowledgeMatch,
   RuntimeInfo,
@@ -10,6 +11,7 @@ import type {
   TranscribeResult,
   VerifyResult
 } from "../shared/types";
+import type { DemonstrationCommandType } from "../shared/demonstration";
 
 function apiUrl(path: string): string {
   const proxyPrefix =
@@ -57,6 +59,26 @@ export function compileSop(input: CompileRequest): Promise<CompileResult> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input)
   });
+}
+
+export function createDemonstration(): Promise<DemonstrationSession> {
+  return requestJson(apiUrl("/api/demonstrations"), {
+    method: "POST"
+  });
+}
+
+export function runDemonstrationCommand(
+  sessionId: string,
+  type: DemonstrationCommandType
+): Promise<DemonstrationSession> {
+  return requestJson(
+    apiUrl(`/api/demonstrations/${sessionId}/commands`),
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type })
+    }
+  );
 }
 
 export function verifySop(

@@ -62,6 +62,7 @@ export type RuntimeInfo = {
     compileRuns: number;
     verificationRuns: number;
     voiceEvidenceRecords: number;
+    demonstrationSessions: number;
   };
 };
 
@@ -100,6 +101,7 @@ export type CompileRequest = {
   scenario: string;
   transcript: string;
   actions: ActionEvent[];
+  demonstrationSessionId?: string;
   useModel?: boolean;
   voiceEvidenceId?: string;
   voiceEvidenceReviewed?: boolean;
@@ -180,6 +182,7 @@ export type CompileResult = {
   voiceTranscriptModified?: boolean;
   revision?: number;
   parentRunId?: string;
+  demonstrationSessionId?: string;
 };
 
 export type Receipt = {
@@ -243,6 +246,16 @@ export type StoredSkill = {
   verification: VerifyResult;
   actions?: ActionEvent[];
   compatibility?: ProofCompatibility;
+};
+
+export type DemonstrationSession = {
+  id: string;
+  state: import("./demonstration.js").DemonstrationState;
+  complete: boolean;
+  actionContractHash: string;
+  createdAt: string;
+  updatedAt: string;
+  completedAt?: string;
 };
 
 export type SkillReuseResult = {

@@ -163,6 +163,12 @@ export async function verifyCompilation(
     skillHash: stableHash(compilation.skillMarkdown),
     policyHash: stableHash(compilation.policyYaml),
     toolSchemaHash: stableHash(actions.map(({ type, label }) => ({ type, label }))),
+    actionContract: {
+      sessionId: compilation.demonstrationSessionId,
+      hash: stableHash(actions),
+      eventCount: actions.length,
+      events: actions
+    },
     compatibility: createProofCompatibilityManifest(compilation, actions)
   };
 

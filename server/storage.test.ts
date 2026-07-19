@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createProofCompatibilityManifest } from "./proof-compatibility.js";
+import { buildSubmissionPackage } from "./package.js";
 import { getRuntimeInfo } from "./runtime.js";
 
 describe("local RAG and skill memory", () => {
@@ -150,5 +151,59 @@ describe("local RAG and skill memory", () => {
     expect(revalidated.skill.status).toBe("verified");
     expect(revalidated.skill.actions).toEqual(actions);
     expect((await markSkillReused(second.id)).skill.reuseCount).toBe(2);
+  });
+
+  it("packages the server-authoritative action contract", async () => {
+    const JSZip = (await import("jszip")).default;
+    const actions = [
+      {
+        id: "action-1",
+        type: "open_document" as const,
+        label: "Open document",
+        timestampMs: 0
+      }
+    ];
+    const compilation = {
+      runId: "run-package",
+      createdAt: new Date().toISOString(),
+      projectName: "action-contract-package",
+      scenario: "A sufficiently long package scenario.",
+      constraints: [],
+      permissions: [],
+      fixtures: [],
+      skillMarkdown: "# Skill",
+      policyYaml: "version: 1",
+      compileDurationMs: 1,
+      runtime: getRuntimeInfo(),
+      demonstrationSessionId: "demo_123456789abc"
+    };
+    const verification = {
+      runId: compilation.runId,
+      status: "verified" as const,
+      fixtures: [],
+      receipts: [],
+      metrics: [],
+      proofBundle: {
+        actionContract: {
+          sessionId: compilation.demonstrationSessionId,
+          hash: "a".repeat(64),
+          eventCount: actions.length,
+          events: actions
+        }
+      },
+      verificationDurationMs: 1
+    };
+    const archive = await buildSubmissionPackage(compilation, verification);
+    const zip = await JSZip.loadAsync(archive);
+    const contractFile = zip.file(
+      "action-contract-package/action_contract.json"
+    );
+
+    expect(contractFile).not.toBeNull();
+    expect(JSON.parse(await contractFile!.async("string"))).toMatchObject({
+      sessionId: "demo_123456789abc",
+      eventCount: 1,
+      events: actions
+    });
   });
 });

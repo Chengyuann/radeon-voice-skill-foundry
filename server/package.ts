@@ -29,6 +29,13 @@ export async function buildSubmissionPackage(
     "rag_evidence.json",
     JSON.stringify(compilation.ragMatches || [], null, 2)
   );
+  const actionContract = verification.proofBundle.actionContract;
+  if (actionContract) {
+    root.file(
+      "action_contract.json",
+      JSON.stringify(actionContract, null, 2)
+    );
+  }
   if (compilation.voiceEvidence) {
     root.file(
       "voice_evidence.json",
@@ -59,6 +66,7 @@ Status: ${verification.status}
 - \`fixtures.json\`: positive and negative verification fixtures
 - \`receipts.jsonl\`: append-only governance decisions
 - \`proof_bundle.json\`: hashes, runtime metadata, and verification evidence
+- \`action_contract.json\`: server-authoritative demonstration events and hash
 ${compilation.voiceEvidence ? "- `voice_evidence.json`: derived audio-quality evidence and source hash" : ""}
 - \`proof_bundle.json.compatibility\`: verifier, runtime, tool, policy, and skill compatibility manifest
 `

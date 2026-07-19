@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { reviewFollowupDemo } from "../shared/demo";
 import type {
   CompileResult,
+  DemonstrationSession,
   KnowledgeDocument,
   RuntimeInfo,
   SkillReuseResult,
@@ -12,16 +13,19 @@ import type {
 } from "../shared/types";
 import {
   createDemonstrationState,
+  type DemonstrationCommandType,
   type DemonstrationState
 } from "./demonstration";
 import {
   addKnowledge,
   compileSop,
+  createDemonstration,
   getRuntime,
   listKnowledge,
   listSkills,
   refineSop,
   revalidateSkill,
+  runDemonstrationCommand,
   reuseSkill,
   saveSkill,
   transcribeAudio,
@@ -49,6 +53,9 @@ export function App() {
   const [demonstration, setDemonstration] = useState<DemonstrationState>(
     createDemonstrationState
   );
+  const [demonstrationSession, setDemonstrationSession] =
+    useState<DemonstrationSession>();
+  const [isDemonstrating, setIsDemonstrating] = useState(false);
   const actions = demonstration.events;
   const [useModel, setUseModel] = useState(false);
   const [runtime, setRuntime] = useState<RuntimeInfo>();
@@ -81,10 +88,16 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    void Promise.all([listKnowledge(), listSkills()])
-      .then(([documents, storedSkills]) => {
+    void Promise.all([
+      listKnowledge(),
+      listSkills(),
+      createDemonstration()
+    ])
+      .then(([documents, storedSkills, session]) => {
         setKnowledge(documents);
         setSkills(storedSkills);
+        setDemonstrationSession(session);
+        setDemonstration(session.state);
       })
       .catch((requestError: Error) => setError(requestError.message));
   }, []);
@@ -96,11 +109,12 @@ export function App() {
     return "draft" as const;
   }, [compilation, verification]);
 
-  const reset = () => {
+  const reset = async () => {
     setProjectName(reviewFollowupDemo.projectName);
     setScenario(reviewFollowupDemo.scenario);
     setTranscript(reviewFollowupDemo.transcript);
     setDemonstration(createDemonstrationState());
+    setDemonstrationSession(undefined);
     setUseModel(false);
     setCompilation(undefined);
     setVerification(undefined);
@@ -109,6 +123,18 @@ export function App() {
     setSavedSkillId(undefined);
     setLastReuse(undefined);
     setError(undefined);
+    try {
+      const session = await createDemonstration();
+      setDemonstrationSession(session);
+      setDemonstration(session.state);
+      await refreshRuntime();
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "Unable to start a trusted demonstration"
+      );
+    }
   };
 
   const handleTranscribe = async (audio: Blob) => {
@@ -153,6 +179,7 @@ export function App() {
         scenario,
         transcript,
         actions,
+        demonstrationSessionId: demonstrationSession?.id,
         useModel,
         voiceEvidenceId: audioResult?.voiceEvidenceId,
         voiceEvidenceReviewed
@@ -256,6 +283,7 @@ export function App() {
           .join(" ")
       );
       setCompilation(stored.compilation);
+      setDemonstrationSession(undefined);
       setDemonstration({
         events: stored.actions || [],
         startedAtMs: undefined,
@@ -285,6 +313,7 @@ export function App() {
       const result = await revalidateSkill(skillId);
       setSkills(await listSkills());
       setCompilation(result.skill.compilation);
+      setDemonstrationSession(undefined);
       setDemonstration({
         events: result.skill.actions || [],
         startedAtMs: undefined,
@@ -324,8 +353,39 @@ export function App() {
     }
   };
 
-  const handleDemonstration = (state: DemonstrationState) => {
-    setDemonstration(state);
+  const handleDemonstrationCommand = async (
+    type: DemonstrationCommandType
+  ) => {
+    setIsDemonstrating(true);
+    setError(undefined);
+    try {
+      let session = demonstrationSession;
+      if (!session || type === "reset") {
+        session = await createDemonstration();
+        if (type === "reset") {
+          setDemonstrationSession(session);
+          setDemonstration(session.state);
+          setCompilation(undefined);
+          setVerification(undefined);
+          setSavedSkillId(undefined);
+          setLastReuse(undefined);
+          await refreshRuntime();
+          return;
+        }
+      }
+      const updated = await runDemonstrationCommand(session.id, type);
+      setDemonstrationSession(updated);
+      setDemonstration(updated.state);
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "Demonstration command failed"
+      );
+      return;
+    } finally {
+      setIsDemonstrating(false);
+    }
     setCompilation(undefined);
     setVerification(undefined);
     setSavedSkillId(undefined);
@@ -345,9 +405,12 @@ export function App() {
         scenario={scenario}
         transcript={transcript}
         demonstration={demonstration}
+        demonstrationSession={demonstrationSession}
         useModel={useModel}
         isBusy={busy === "compile" || busy === "transcribe"}
         isTranscribing={busy === "transcribe"}
+        isDemonstrating={isDemonstrating}
+        hasTrustedDemonstration={Boolean(demonstrationSession)}
         audioResult={audioResult}
         voiceEvidenceReviewed={voiceEvidenceReviewed}
         transcriptEdited={Boolean(
@@ -359,8 +422,8 @@ export function App() {
         onUseModel={setUseModel}
         onVoiceEvidenceReviewed={setVoiceEvidenceReviewed}
         onTranscribe={handleTranscribe}
-        onDemonstration={handleDemonstration}
-        onReset={reset}
+        onDemonstrationCommand={handleDemonstrationCommand}
+        onReset={() => void reset()}
         onCompile={handleCompile}
       />
     ) : activeModule === "policy" ? (
