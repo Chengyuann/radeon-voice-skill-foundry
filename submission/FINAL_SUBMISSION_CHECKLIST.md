@@ -125,7 +125,7 @@ Official PR:
 - Weekend v10 evidence ZIP:
   `1189e0e47c14ba18784f5be82aa5c68366946c0d6378d6a8d26adef61dfd3e9b`
 - Refreshed Project Specification PDF:
-  `0028924196c925c8e185ccfe8e1840f16dfc11d7f11bee229bae2f860b8170f6`
+  `528f1d94283cca0f0fd7c07a5892b228916dbf95fbd7c6ac42bc3c6c92ed0736`
 - Refreshed architecture PNG:
   `1feec7ef529232b12c4f4d9bfca6d59f05685bc7253b9aab35efe90688b37fce`
 - Refreshed poster PDF:
