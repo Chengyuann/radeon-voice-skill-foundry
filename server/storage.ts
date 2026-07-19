@@ -100,7 +100,7 @@ export async function searchKnowledge(
 export async function listSkills(): Promise<StoredSkill[]> {
   return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
     for (let index = 0; index < skills.length; index += 1) {
-      const actions = skills[index].actions || inferLegacyActions(skills[index]);
+      const actions = resolveStoredSkillActions(skills[index]);
       const compatibility = assessProofCompatibility({
         compilation: skills[index].compilation,
         actions,
@@ -170,7 +170,7 @@ export async function markSkillReused(
   return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
     const index = skills.findIndex((skill) => skill.id === idValue);
     if (index < 0) throw new Error("Stored skill not found");
-    const actions = skills[index].actions || inferLegacyActions(skills[index]);
+    const actions = resolveStoredSkillActions(skills[index]);
     const compatibility = assessProofCompatibility({
       compilation: skills[index].compilation,
       actions,
@@ -223,7 +223,7 @@ export async function revalidateStoredSkill(
   return updateStoredJson(skillsPath(), [], async (skills: StoredSkill[]) => {
     const index = skills.findIndex((skill) => skill.id === idValue);
     if (index < 0) throw new Error("Stored skill not found");
-    const actions = skills[index].actions || inferLegacyActions(skills[index]);
+    const actions = resolveStoredSkillActions(skills[index]);
     const now = new Date().toISOString();
     const compilation: CompileResult = {
       ...skills[index].compilation,
@@ -264,8 +264,14 @@ export async function revalidateStoredSkill(
   });
 }
 
-function inferLegacyActions(skill: StoredSkill): ActionEvent[] {
-  return skill.compilation.permissions
+export function resolveStoredSkillActions(
+  skill: Pick<StoredSkill, "actions" | "compilation">
+): ActionEvent[] {
+  return skill.actions || inferLegacyActions(skill.compilation);
+}
+
+function inferLegacyActions(compilation: CompileResult): ActionEvent[] {
+  return compilation.permissions
     .map((permission, index): ActionEvent | undefined => {
       const type = permissionToAction(permission.permission);
       return type

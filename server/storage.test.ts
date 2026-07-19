@@ -54,6 +54,44 @@ describe("local RAG and skill memory", () => {
         type: "open_document" as const,
         label: "Open document",
         timestampMs: 0
+      },
+      {
+        id: "action-2",
+        type: "filter_findings" as const,
+        label: "Keep P0 and P1 findings",
+        timestampMs: 1250,
+        payload: { severities: ["P0", "P1"], excluded: ["P2"] }
+      },
+      {
+        id: "action-3",
+        type: "select_commitment" as const,
+        label: "Mark missing owner for confirmation",
+        timestampMs: 2500,
+        payload: { ownerState: "needs_confirmation", guessedOwner: false }
+      },
+      {
+        id: "action-4",
+        type: "draft_email" as const,
+        label: "Create email drafts",
+        timestampMs: 3750,
+        payload: { state: "draft", send: false }
+      },
+      {
+        id: "action-5",
+        type: "create_calendar_hold" as const,
+        label: "Create tentative calendar holds",
+        timestampMs: 5000,
+        payload: { tentative: true, committed: false }
+      },
+      {
+        id: "action-6",
+        type: "write_report" as const,
+        label: "Write redacted report",
+        timestampMs: 6250,
+        payload: {
+          redactedFields: ["compensation", "customerName"],
+          customer: "Account N7"
+        }
       }
     ];
     const verification = {
@@ -90,6 +128,7 @@ describe("local RAG and skill memory", () => {
     expect(reused.originalCompileDurationMs).toBe(1);
     expect(reused.speedup).toBeGreaterThan(0);
     expect(reused.compatibility.status).toBe("compatible");
+    expect(reused.skill.actions).toEqual(actions);
     expect(await listSkills()).toHaveLength(2);
 
     const storedFile = path.join(directory, "skills.json");
@@ -109,6 +148,7 @@ describe("local RAG and skill memory", () => {
     const revalidated = await revalidateStoredSkill(second.id);
     expect(revalidated.compatibility.status).toBe("compatible");
     expect(revalidated.skill.status).toBe("verified");
+    expect(revalidated.skill.actions).toEqual(actions);
     expect((await markSkillReused(second.id)).skill.reuseCount).toBe(2);
   });
 });

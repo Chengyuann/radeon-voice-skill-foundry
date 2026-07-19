@@ -41,6 +41,7 @@ import {
   listSkills,
   markSkillReused,
   revalidateStoredSkill,
+  resolveStoredSkillActions,
   saveVerifiedSkill,
   searchKnowledge
 } from "./storage.js";
@@ -283,9 +284,10 @@ app.post("/api/skills/:skillId/reuse", async (request, response) => {
     };
     const skill = {
       ...reuse.skill,
-      compilation
+      compilation,
+      actions: resolveStoredSkillActions(reuse.skill)
     };
-    await storeCompileRun(compilation, inferActionsForStoredSkill(compilation));
+    await storeCompileRun(compilation, skill.actions);
     response.json({
       ...reuse,
       skill
@@ -302,12 +304,11 @@ app.post("/api/skills/:skillId/revalidate", async (request, response) => {
     const result = await revalidateStoredSkill(request.params.skillId);
     await storeCompileRun(
       result.skill.compilation,
-      result.skill.actions || inferActionsForStoredSkill(result.skill.compilation)
+      resolveStoredSkillActions(result.skill)
     );
     await storeVerificationRun({
       compilation: result.skill.compilation,
-      actions:
-        result.skill.actions || inferActionsForStoredSkill(result.skill.compilation),
+      actions: resolveStoredSkillActions(result.skill),
       verification: result.verification
     });
     response.json(result);
@@ -436,46 +437,4 @@ function readAudioUpload(request: express.Request): Promise<UploadedAudio> {
     });
     request.pipe(busboy);
   });
-}
-
-function inferActionsForStoredSkill(
-  compilation: CompileResult
-): CompileRequest["actions"] {
-  const actions = new Map<
-    CompileRequest["actions"][number]["type"],
-    CompileRequest["actions"][number]
-  >();
-  let timestampMs = 0;
-  for (const permission of compilation.permissions) {
-    const type = permissionToAction(permission.permission);
-    if (!type || actions.has(type)) continue;
-    actions.set(type, {
-      id: id("action"),
-      type,
-      label: `Stored skill action: ${type}`,
-      timestampMs
-    });
-    timestampMs += 1_000;
-  }
-  return actions.size
-    ? [...actions.values()]
-    : [
-        {
-          id: id("action"),
-          type: "open_document",
-          label: "Stored skill inspection",
-          timestampMs: 0
-        }
-      ];
-}
-
-function permissionToAction(
-  permission: string
-): CompileRequest["actions"][number]["type"] | undefined {
-  if (permission.startsWith("filesystem:read")) return "open_document";
-  if (permission === "mail:draft") return "draft_email";
-  if (permission === "mail:send") return "send_email";
-  if (permission === "calendar:draft") return "create_calendar_hold";
-  if (permission.startsWith("filesystem:write")) return "write_report";
-  return undefined;
 }
