@@ -2,7 +2,13 @@
 
 **Speak the SOP. Prove the Skill.**
 
-Final 3-minute 49-second demo:
+Recommended 4-minute 49-second live Cloudflare + W7900 Demo V2:
+`https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO_V2.mp4`
+
+Demo V2 captions:
+`https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO_V2.srt`
+
+Original 3-minute 49-second overview:
 `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
 
 Continuous 3-minute 10-second operation demo:
@@ -148,6 +154,19 @@ bash scripts/update_cloudflare_origin.sh https://<new-origin>
 4. Select `Run local verification`.
 5. Inspect governance receipts and measured telemetry.
 6. Download the proof ZIP.
+
+## Reproduce Demo V2
+
+Demo V2 records the public Cloudflare deployment and real W7900 workflow. It
+uses AIDP `gemini-3.1-flash-tts-preview`, male voice `Charon`, with burned-in
+English captions and an embedded English subtitle track.
+
+```bash
+AIDP_TTS_AK=... AIDP_TTS_VOICE=Charon \
+  python3 scripts/generate_demo_v2_tts.py
+node scripts/record_demo_v2.mjs
+python3 scripts/build_demo_v2_video.py
+```
 
 ## Radeon integration
 

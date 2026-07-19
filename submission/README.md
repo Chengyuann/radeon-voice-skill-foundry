@@ -14,10 +14,12 @@ to perform risky actions.
 - Project repository:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry`
 - License: MIT
-- Demo video:
+- Recommended live Demo V2:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO_V2.mp4`
+- Demo V2 captions:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO_V2.srt`
+- Original overview video:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
-- Demo captions:
-  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt`
 - Official submission PR:
   `https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07/pull/7`
 - Continuous operation demo:
@@ -52,6 +54,8 @@ The system compiles both signals into:
 - `SOCIAL_CARD_V2.png` - square social campaign card
 - `DEMO_SCRIPT.md` - 3-5 minute English demo narration and shot list
 - `DEMO_NARRATION.md` - final AI-generated English voiceover text
+- `DEMO_V2_NARRATION.md` - live Cloudflare + W7900 Demo V2 narration
+- `RADEON_VOICE_SKILL_FOUNDRY_DEMO_V2.srt` - Demo V2 captions
 - `RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt` - final captions
 - `CONTINUOUS_OPERATION_DEMO.srt` - continuous workflow captions
 - `CONTINUOUS_DEMO_NARRATION.md` - continuous workflow narration source
@@ -103,6 +107,11 @@ The final narration uses AIDP `gemini-3.1-flash-tts-preview`, male voice
 an embedded English subtitle track; matching SRT files are also published.
 Visual campaign backgrounds were generated with AIDP GPT Image 2; all visible
 project typography and measured values were composed locally.
+
+Demo V2 records the current cinematic module UI from the public Cloudflare
+deployment. It executes the real Voice -> Policy -> Proof -> Memory workflow
+against W7900 Qwen3-ASR and Qwen3-4B, then shows the measured vLLM and ASR
+batching evidence.
 
 ## Post-Submission Engineering Upgrade
 
