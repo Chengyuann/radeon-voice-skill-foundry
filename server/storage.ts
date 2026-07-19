@@ -4,6 +4,7 @@ import type {
   KnowledgeDocument,
   KnowledgeMatch,
   SkillGovernanceReceipt,
+  SkillPromotionReview,
   SkillReuseResult,
   SkillRevalidationResult,
   StoredSkill
@@ -13,6 +14,7 @@ import { id } from "./hash.js";
 import { assessProofCompatibility } from "./proof-compatibility.js";
 import { getRuntimeInfo } from "./runtime.js";
 import { verifyCompilation } from "./verifier.js";
+import { buildPromotionReview } from "./promotion-review.js";
 
 const knowledgePath = () => dataFile("knowledge.json");
 const skillsPath = () => dataFile("skills.json");
@@ -295,13 +297,52 @@ export async function revalidateStoredSkill(
   });
 }
 
-export async function promoteStoredSkill(
+export async function getSkillPromotionReview(
   idValue: string
+): Promise<SkillPromotionReview> {
+  return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
+    for (let index = 0; index < skills.length; index += 1) {
+      skills[index] = normalizeStoredSkill(skills[index]);
+    }
+    const candidate = skills.find((skill) => skill.id === idValue);
+    if (!candidate) throw new Error("Stored skill not found");
+    if (candidate.lifecycle !== "candidate") {
+      throw new Error(
+        `Promotion review requires a candidate; current state is ${candidate.lifecycle}`
+      );
+    }
+    const baseline = skills
+      .filter(
+        (skill) =>
+          skill.name === candidate.name &&
+          skill.lifecycle === "promoted" &&
+          skill.id !== candidate.id
+      )
+      .sort((a, b) => b.version - a.version)[0];
+    return buildPromotionReview({
+      candidate,
+      baseline,
+      candidateActions: resolveStoredSkillActions(candidate),
+      baselineActions: baseline
+        ? resolveStoredSkillActions(baseline)
+        : undefined
+    });
+  });
+}
+
+export async function promoteStoredSkill(
+  idValue: string,
+  approval: {
+    reviewHash: string;
+    acknowledgeRisk: boolean;
+  }
 ): Promise<StoredSkill> {
   return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
+    for (let skillIndex = 0; skillIndex < skills.length; skillIndex += 1) {
+      skills[skillIndex] = normalizeStoredSkill(skills[skillIndex]);
+    }
     const index = skills.findIndex((skill) => skill.id === idValue);
     if (index < 0) throw new Error("Stored skill not found");
-    skills[index] = normalizeStoredSkill(skills[index]);
     const actions = resolveStoredSkillActions(skills[index]);
     const compatibility = assessProofCompatibility({
       compilation: skills[index].compilation,
@@ -318,6 +359,35 @@ export async function promoteStoredSkill(
     if (skills[index].lifecycle !== "candidate") {
       throw new Error(
         `Only a candidate skill can be promoted; current state is ${skills[index].lifecycle}`
+      );
+    }
+    const baseline = skills
+      .filter(
+        (skill) =>
+          skill.name === skills[index].name &&
+          skill.lifecycle === "promoted" &&
+          skill.id !== idValue
+      )
+      .sort((a, b) => b.version - a.version)[0];
+    const review = buildPromotionReview({
+      candidate: skills[index],
+      baseline,
+      candidateActions: actions,
+      baselineActions: baseline
+        ? resolveStoredSkillActions(baseline)
+        : undefined
+    });
+    if (approval.reviewHash !== review.reviewHash) {
+      throw new Error(
+        "Promotion review is stale; refresh the impact analysis"
+      );
+    }
+    if (
+      review.requiresRiskAcknowledgement &&
+      !approval.acknowledgeRisk
+    ) {
+      throw new Error(
+        `Promotion has ${review.riskLevel} risk; explicit acknowledgement is required`
       );
     }
     const now = new Date().toISOString();
@@ -365,7 +435,12 @@ export async function promoteStoredSkill(
           action: "PROMOTE",
           skillId: idValue,
           proofHash,
-          reason: "Human promotion gate approved"
+          reason: "Human promotion gate approved",
+          reviewHash: review.reviewHash,
+          riskLevel: review.riskLevel,
+          riskAcknowledged:
+            !review.requiresRiskAcknowledgement ||
+            approval.acknowledgeRisk
         })
       ]
     };

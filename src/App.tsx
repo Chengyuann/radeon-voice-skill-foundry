@@ -21,9 +21,10 @@ import {
   compileSop,
   createDemonstration,
   getRuntime,
+  approvePromotion,
+  getPromotionReview,
   listKnowledge,
   listSkills,
-  promoteSkill,
   refineSop,
   revalidateSkill,
   revokeSkill,
@@ -338,11 +339,22 @@ export function App() {
     }
   };
 
-  const handlePromoteSkill = async (skillId: string) => {
+  const handleGetPromotionReview = async (skillId: string) => {
+    return getPromotionReview(skillId);
+  };
+
+  const handlePromoteSkill = async (
+    skillId: string,
+    reviewHash: string,
+    acknowledgeRisk: boolean
+  ) => {
     setBusy("memory");
     setError(undefined);
     try {
-      await promoteSkill(skillId);
+      await approvePromotion(skillId, {
+        reviewHash,
+        acknowledgeRisk
+      });
       setSkills(await listSkills());
       await refreshRuntime();
     } catch (requestError) {
@@ -526,6 +538,7 @@ export function App() {
         onReuseSkill={handleReuseSkill}
         onRevalidateSkill={handleRevalidateSkill}
         onPromoteSkill={handlePromoteSkill}
+        onGetPromotionReview={handleGetPromotionReview}
         onRevokeSkill={handleRevokeSkill}
         onRollbackSkill={handleRollbackSkill}
       />

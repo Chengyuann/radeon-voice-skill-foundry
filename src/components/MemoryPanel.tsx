@@ -9,6 +9,9 @@ import {
   Search,
   ShieldCheck,
   ShieldX,
+  Square,
+  SquareCheckBig,
+  TriangleAlert,
   Zap
 } from "lucide-react";
 import { useState } from "react";
@@ -16,6 +19,7 @@ import type {
   KnowledgeDocument,
   KnowledgeMatch,
   SkillReuseResult,
+  SkillPromotionReview,
   StoredSkill
 } from "../../shared/types";
 import { Badge } from "./Badge";
@@ -29,7 +33,14 @@ type MemoryPanelProps = {
   onAddKnowledge: (input: { title: string; content: string }) => Promise<void>;
   onReuseSkill: (skillId: string) => Promise<void>;
   onRevalidateSkill: (skillId: string) => Promise<void>;
-  onPromoteSkill: (skillId: string) => Promise<void>;
+  onGetPromotionReview: (
+    skillId: string
+  ) => Promise<SkillPromotionReview>;
+  onPromoteSkill: (
+    skillId: string,
+    reviewHash: string,
+    acknowledgeRisk: boolean
+  ) => Promise<void>;
   onRevokeSkill: (skillId: string, reason: string) => Promise<void>;
   onRollbackSkill: (skillId: string, reason: string) => Promise<void>;
 };
@@ -43,6 +54,7 @@ export function MemoryPanel({
   onAddKnowledge,
   onReuseSkill,
   onRevalidateSkill,
+  onGetPromotionReview,
   onPromoteSkill,
   onRevokeSkill,
   onRollbackSkill
@@ -55,6 +67,11 @@ export function MemoryPanel({
     "revoke" | "rollback"
   >();
   const [governanceReason, setGovernanceReason] = useState("");
+  const [promotionReview, setPromotionReview] =
+    useState<SkillPromotionReview>();
+  const [promotionReviewLoading, setPromotionReviewLoading] =
+    useState(false);
+  const [riskAcknowledged, setRiskAcknowledged] = useState(false);
 
   const submit = async () => {
     await onAddKnowledge({ title, content });
@@ -73,6 +90,27 @@ export function MemoryPanel({
     setGovernanceSkillId(undefined);
     setGovernanceAction(undefined);
     setGovernanceReason("");
+  };
+
+  const openPromotionReview = async (skillId: string) => {
+    setPromotionReviewLoading(true);
+    setRiskAcknowledged(false);
+    try {
+      setPromotionReview(await onGetPromotionReview(skillId));
+    } finally {
+      setPromotionReviewLoading(false);
+    }
+  };
+
+  const submitPromotion = async () => {
+    if (!promotionReview) return;
+    await onPromoteSkill(
+      promotionReview.skillId,
+      promotionReview.reviewHash,
+      riskAcknowledged
+    );
+    setPromotionReview(undefined);
+    setRiskAcknowledged(false);
   };
 
   return (
@@ -279,6 +317,100 @@ export function MemoryPanel({
                         </button>
                       </div>
                     </div>
+                  ) : promotionReview?.skillId === skill.id ? (
+                    <div className="promotion-review">
+                      <div className="promotion-review-head">
+                        <span>
+                          <strong>Promotion impact review</strong>
+                          <small>
+                            {promotionReview.baseline
+                              ? `v${promotionReview.baseline.version} → v${promotionReview.candidateVersion}`
+                              : `initial promotion · v${promotionReview.candidateVersion}`}
+                          </small>
+                        </span>
+                        <Badge
+                          tone={
+                            promotionReview.riskLevel === "critical" ||
+                            promotionReview.riskLevel === "high"
+                              ? "red"
+                              : promotionReview.riskLevel === "medium"
+                                ? "amber"
+                                : "green"
+                          }
+                        >
+                          {promotionReview.riskLevel} risk
+                        </Badge>
+                      </div>
+                      <div className="promotion-review-hash">
+                        <span>review hash</span>
+                        <code>
+                          {promotionReview.reviewHash.slice(0, 16)}
+                        </code>
+                      </div>
+                      <PromotionChanges review={promotionReview} />
+                      {promotionReview.risks.length ? (
+                        <div className="promotion-risk-list">
+                          {promotionReview.risks.map((risk) => (
+                            <div key={risk.id}>
+                              <TriangleAlert size={13} />
+                              <span>
+                                <strong>{risk.severity}</strong>
+                                <small>{risk.message}</small>
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="promotion-no-risk">
+                          <ShieldCheck size={13} />
+                          No capability or guardrail regression detected.
+                        </div>
+                      )}
+                      {promotionReview.requiresRiskAcknowledgement ? (
+                        <button
+                          type="button"
+                          role="checkbox"
+                          aria-checked={riskAcknowledged}
+                          className="promotion-risk-ack"
+                          onClick={() =>
+                            setRiskAcknowledged((value) => !value)
+                          }
+                        >
+                          {riskAcknowledged ? (
+                            <SquareCheckBig size={14} />
+                          ) : (
+                            <Square size={14} />
+                          )}
+                          <span>
+                            I reviewed and accept the listed risk changes.
+                          </span>
+                        </button>
+                      ) : null}
+                      <div className="skill-governance-actions">
+                        <button
+                          className="memory-reuse governance-promote"
+                          disabled={
+                            isBusy ||
+                            (promotionReview.requiresRiskAcknowledgement &&
+                              !riskAcknowledged)
+                          }
+                          onClick={submitPromotion}
+                        >
+                          <CircleCheckBig size={13} />
+                          Approve promotion
+                        </button>
+                        <button
+                          className="memory-reuse"
+                          disabled={isBusy}
+                          onClick={() => {
+                            setPromotionReview(undefined);
+                            setRiskAcknowledged(false);
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
                   ) : (
                     <div className="skill-governance-actions">
                       {skill.status === "revalidation_required" &&
@@ -295,11 +427,13 @@ export function MemoryPanel({
                       ) : skill.lifecycle === "candidate" ? (
                         <button
                           className="memory-reuse governance-promote"
-                          disabled={isBusy}
-                          onClick={() => onPromoteSkill(skill.id)}
+                          disabled={isBusy || promotionReviewLoading}
+                          onClick={() => openPromotionReview(skill.id)}
                         >
                           <CircleCheckBig size={13} />
-                          Promote
+                          {promotionReviewLoading
+                            ? "Reviewing"
+                            : "Review & promote"}
                         </button>
                       ) : skill.lifecycle === "promoted" ? (
                         <button
@@ -350,5 +484,51 @@ export function MemoryPanel({
         </div>
       </div>
     </section>
+  );
+}
+
+function PromotionChanges({
+  review
+}: {
+  review: SkillPromotionReview;
+}) {
+  const changes = [
+    ...review.changes.permissions.map((item) => ({
+      label: item.permission,
+      detail: `${item.before || "none"} → ${item.after || "removed"}`
+    })),
+    ...review.changes.constraints.map((item) => ({
+      label: `${item.change} ${item.kind}`,
+      detail: item.statement
+    })),
+    ...review.changes.actions.map((item) => ({
+      label: `${item.change} action`,
+      detail: item.type
+    }))
+  ];
+  return (
+    <div className="promotion-change-list">
+      {changes.length ? (
+        changes.map((change, index) => (
+          <div key={`${change.label}-${index}`}>
+            <strong>{change.label}</strong>
+            <span>{change.detail}</span>
+          </div>
+        ))
+      ) : (
+        <div>
+          <strong>No semantic changes</strong>
+          <span>
+            Policy, tools, and constraints match the promoted baseline.
+          </span>
+        </div>
+      )}
+      {review.changes.runtimeChanged ? (
+        <div>
+          <strong>Runtime changed</strong>
+          <span>Model or Radeon runtime identity differs from baseline.</span>
+        </div>
+      ) : null}
+    </div>
   );
 }

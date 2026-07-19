@@ -11,6 +11,7 @@ import {
   knowledgeDocumentInputSchema,
   knowledgeSearchSchema,
   refineRequestSchema,
+  skillPromotionApprovalSchema,
   skillGovernanceReasonSchema
 } from "../shared/schema.js";
 import type {
@@ -45,6 +46,7 @@ import {
 } from "./voice-evidence-store.js";
 import {
   addKnowledge,
+  getSkillPromotionReview,
   listKnowledge,
   listSkills,
   markSkillReused,
@@ -385,13 +387,34 @@ app.post("/api/skills/:skillId/revalidate", async (request, response) => {
 
 app.post("/api/skills/:skillId/promote", async (request, response) => {
   try {
-    response.json(await promoteStoredSkill(request.params.skillId));
+    const input = skillPromotionApprovalSchema.parse(request.body);
+    response.json(
+      await promoteStoredSkill(request.params.skillId, input)
+    );
   } catch (error) {
     response.status(400).json({
       error: error instanceof Error ? error.message : "Skill promotion failed"
     });
   }
 });
+
+app.get(
+  "/api/skills/:skillId/promotion-review",
+  async (request, response) => {
+    try {
+      response.json(
+        await getSkillPromotionReview(request.params.skillId)
+      );
+    } catch (error) {
+      response.status(400).json({
+        error:
+          error instanceof Error
+            ? error.message
+            : "Promotion review failed"
+      });
+    }
+  }
+);
 
 app.post("/api/skills/:skillId/revoke", async (request, response) => {
   try {

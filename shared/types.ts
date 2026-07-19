@@ -321,6 +321,49 @@ export type SkillGovernanceReceipt = {
   reason?: string;
   sourceSkillId?: string;
   replacementSkillId?: string;
+  reviewHash?: string;
+  riskLevel?: "low" | "medium" | "high" | "critical";
+  riskAcknowledged?: boolean;
+};
+
+export type SkillPromotionReview = {
+  schemaVersion: "0.1.0";
+  skillId: string;
+  name: string;
+  candidateVersion: number;
+  candidateProofHash: string;
+  baseline?: {
+    skillId: string;
+    version: number;
+    proofHash: string;
+  };
+  changes: {
+    permissions: Array<{
+      permission: string;
+      change: "added" | "removed" | "changed";
+      before?: Permission["state"];
+      after?: Permission["state"];
+    }>;
+    constraints: Array<{
+      kind: ConstraintKind;
+      statement: string;
+      change: "added" | "removed";
+    }>;
+    actions: Array<{
+      type: ActionEvent["type"];
+      change: "added" | "removed";
+    }>;
+    runtimeChanged: boolean;
+  };
+  risks: Array<{
+    id: string;
+    severity: "medium" | "high" | "critical";
+    category: "permission" | "constraint" | "action";
+    message: string;
+  }>;
+  riskLevel: "low" | "medium" | "high" | "critical";
+  requiresRiskAcknowledgement: boolean;
+  reviewHash: string;
 };
 
 export type StoredSkill = {

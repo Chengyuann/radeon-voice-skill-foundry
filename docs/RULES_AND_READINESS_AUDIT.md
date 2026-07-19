@@ -80,7 +80,7 @@ score.
 - Voice Evidence v0.3 clean sample: `pass / 100`
 - server-authoritative policy: `mail.send = deny`
 - deterministic verification: `7/7`
-- current local regression suite: `50/50`, typecheck, production build
+- current local regression suite: `53/53`, typecheck, production build
 - server-authoritative demonstration workspace captures six ordered user
   operations, rejects browser action tampering, and exports
   `action_contract.json`; irreversible email/calendar side effects remain
@@ -90,6 +90,8 @@ score.
 - procedural memory uses an explicit candidate/promoted/superseded/revoked
   lifecycle; reuse requires promotion, revocation requires a reason, and
   rollback creates a newly verified version instead of mutating history
+- Promotion Impact Review diffs permissions, constraints, actions, and runtime;
+  stale hashes fail closed and risk escalation requires explicit acceptance
 - clean W7900 weekend experiment commit: `33/33`, production build
 - vLLM graph concurrency-eight throughput: `257.65 tokens/s`
 - serialized Transformers concurrency-eight throughput: `20.66 tokens/s`

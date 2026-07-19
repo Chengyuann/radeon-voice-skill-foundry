@@ -7,6 +7,7 @@ import type {
   RuntimeInfo,
   SkillReuseResult,
   SkillRevalidationResult,
+  SkillPromotionReview,
   StoredSkill,
   TranscribeResult,
   VerifyResult
@@ -171,9 +172,25 @@ export function revalidateSkill(
   });
 }
 
-export function promoteSkill(skillId: string): Promise<StoredSkill> {
+export function getPromotionReview(
+  skillId: string
+): Promise<SkillPromotionReview> {
+  return requestJson(
+    apiUrl(`/api/skills/${skillId}/promotion-review`)
+  );
+}
+
+export function approvePromotion(
+  skillId: string,
+  input: {
+    reviewHash: string;
+    acknowledgeRisk: boolean;
+  }
+): Promise<StoredSkill> {
   return requestJson(apiUrl(`/api/skills/${skillId}/promote`), {
-    method: "POST"
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input)
   });
 }
 

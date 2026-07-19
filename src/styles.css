@@ -2069,7 +2069,8 @@ h3 {
 .evidence-list,
 .skill-memory-list {
   max-height: 280px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .memory-list article {
@@ -2123,6 +2124,7 @@ h3 {
 
 .evidence-list article,
 .skill-memory-list article {
+  min-width: 0;
   padding: 11px 15px;
   border-bottom: 1px solid var(--line);
 }
@@ -2257,6 +2259,171 @@ h3 {
 
 .skill-governance-form .memory-reuse {
   margin-top: 0;
+}
+
+.promotion-review {
+  margin-top: 8px;
+  padding: 9px;
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--line-strong);
+  background: #f8f9f9;
+}
+
+.skill-memory-list article > .promotion-review {
+  display: grid;
+}
+
+.promotion-review > * {
+  min-width: 0;
+}
+
+.promotion-review-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.promotion-review-head > span {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.promotion-review-head strong {
+  font-size: 10px;
+}
+
+.promotion-review-head small {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8px;
+}
+
+.promotion-review-hash {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 7px;
+  border: 1px solid var(--line);
+  background: white;
+}
+
+.promotion-review-hash span {
+  color: var(--muted);
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+.promotion-review-hash code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--blue);
+  font-family: var(--mono);
+  font-size: 8px;
+}
+
+.promotion-change-list,
+.promotion-risk-list {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+
+.promotion-change-list > div {
+  min-height: 37px;
+  padding: 6px 0;
+  display: grid;
+  gap: 2px;
+  border-bottom: 1px solid var(--line);
+}
+
+.promotion-change-list strong {
+  font-size: 9px;
+}
+
+.promotion-change-list span {
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.promotion-risk-list > div {
+  min-height: 42px;
+  padding: 6px 0;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: start;
+  gap: 6px;
+  color: var(--red);
+  border-bottom: 1px solid var(--line);
+}
+
+.promotion-risk-list span {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.promotion-risk-list strong {
+  font-family: var(--mono);
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+.promotion-risk-list small {
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.promotion-no-risk {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--green);
+  font-size: 9px;
+}
+
+.promotion-risk-ack {
+  width: 100%;
+  min-height: 34px;
+  padding: 5px 0;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 9px;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.promotion-risk-ack[aria-checked="true"] {
+  color: var(--accent-dark);
+}
+
+.promotion-risk-ack span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.promotion-review > .skill-governance-actions {
+  width: 100%;
+  min-width: 0;
+  justify-content: flex-start;
+}
+
+.promotion-review > .skill-governance-actions .memory-reuse {
+  max-width: 100%;
+  white-space: normal;
 }
 
 .memory-reuse {

@@ -33,6 +33,7 @@ describe("local RAG and skill memory", () => {
     const {
       listSkills,
       markSkillReused,
+      getSkillPromotionReview,
       promoteStoredSkill,
       revalidateStoredSkill,
       revokeStoredSkill,
@@ -177,9 +178,32 @@ describe("local RAG and skill memory", () => {
     await expect(markSkillReused(second.id)).rejects.toThrow(
       "promote it before reuse"
     );
-    const promotedFirst = await promoteStoredSkill(first.id);
+    const firstReview = await getSkillPromotionReview(first.id);
+    await expect(
+      promoteStoredSkill(first.id, {
+        reviewHash: "0".repeat(64),
+        acknowledgeRisk: true
+      })
+    ).rejects.toThrow("stale");
+    if (firstReview.requiresRiskAcknowledgement) {
+      await expect(
+        promoteStoredSkill(first.id, {
+          reviewHash: firstReview.reviewHash,
+          acknowledgeRisk: false
+        })
+      ).rejects.toThrow("acknowledgement");
+    }
+    const promotedFirst = await promoteStoredSkill(first.id, {
+      reviewHash: firstReview.reviewHash,
+      acknowledgeRisk: true
+    });
     const reusedFirst = await markSkillReused(first.id);
-    const promotedSecond = await promoteStoredSkill(second.id);
+    const secondReview = await getSkillPromotionReview(second.id);
+    expect(secondReview.baseline?.skillId).toBe(first.id);
+    const promotedSecond = await promoteStoredSkill(second.id, {
+      reviewHash: secondReview.reviewHash,
+      acknowledgeRisk: true
+    });
     const skillsAfterPromotion = await listSkills();
     const supersededFirst = skillsAfterPromotion.find(
       (skill) => skill.id === first.id
@@ -190,6 +214,15 @@ describe("local RAG and skill memory", () => {
     expect(promotedFirst.promotedProofHash).toBe(
       verification.proofBundle.proofHash
     );
+    expect(
+      promotedFirst.governanceReceipts.find(
+        (receipt) => receipt.action === "PROMOTE"
+      )
+    ).toMatchObject({
+      reviewHash: firstReview.reviewHash,
+      riskLevel: firstReview.riskLevel,
+      riskAcknowledged: true
+    });
     expect(reusedFirst.skill.reuseCount).toBe(1);
     expect(promotedSecond.lifecycle).toBe("promoted");
     expect(supersededFirst?.lifecycle).toBe("superseded");
@@ -228,7 +261,11 @@ describe("local RAG and skill memory", () => {
     await expect(markSkillReused(second.id)).rejects.toThrow(
       "promote it before reuse"
     );
-    const repromoted = await promoteStoredSkill(second.id);
+    const repromotionReview = await getSkillPromotionReview(second.id);
+    const repromoted = await promoteStoredSkill(second.id, {
+      reviewHash: repromotionReview.reviewHash,
+      acknowledgeRisk: true
+    });
     expect(repromoted.lifecycle).toBe("promoted");
 
     const revoked = await revokeStoredSkill(

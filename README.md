@@ -83,6 +83,10 @@ The web UI now supports:
   revoked
 - human promotion gate bound to the current proof hash, reasoned revocation,
   immutable history, and verified rollback into a new version
+- server-generated Promotion Impact Review comparing permissions, constraints,
+  actions, and runtime with the current promoted baseline
+- hash-bound approval that rejects stale reviews and requires explicit
+  acknowledgement for risk escalation
 - measured full-compilation versus verified-skill reuse speedup
 - multi-turn natural-language constraint refinement
 - compact model output with runtime-owned IDs and confidence metadata
@@ -274,7 +278,7 @@ v0.2; v0.3 now quarantines that sample and invalidates older proofs until
 revalidation. See `docs/WEEKEND_W7900_EXPERIMENTS.md` and
 `benchmarks/weekend-v10-summary.json`.
 
-The current local suite has since grown to `50/50` and passes typecheck and the
+The current local suite has since grown to `53/53` and passes typecheck and the
 production build. The main Demo V2 is the real Cloudflare-to-W7900 inference
 evidence. Continuous Demo V2 uses deterministic ASR/compiler fixtures with real
 Node process restarts and is used only for durability, invalidation, and proof
@@ -293,6 +297,12 @@ version supersedes the previous promoted version. Revocation requires a reason,
 and rollback never mutates history: it revalidates the selected historical
 version under the current runtime and creates a new promoted version with a
 governance receipt.
+
+Before promotion, the Memory module displays a server-generated impact diff and
+risk rating. Approval submits the review hash back to the server; if the
+candidate proof or promoted baseline changed, the approval is rejected as
+stale. Permission escalation, removed `must_not`/`redact` guardrails, and a new
+`send_email` action require explicit risk acknowledgement.
 
 Quark quantization v11 tested INT4 W4A16 export and INT8 W8A8 serving on the
 same W7900. INT8 reduced model-load VRAM by 44.07% and increased KV-cache

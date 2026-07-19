@@ -80,6 +80,11 @@ export const skillGovernanceReasonSchema = z.object({
   reason: z.string().trim().min(4).max(500)
 });
 
+export const skillPromotionApprovalSchema = z.object({
+  reviewHash: z.string().regex(/^[a-f0-9]{64}$/),
+  acknowledgeRisk: z.boolean().default(false)
+});
+
 export const constraintSchema = z.object({
   id: z.string(),
   kind: z.enum([
