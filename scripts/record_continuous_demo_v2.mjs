@@ -19,15 +19,19 @@ const jupyterBase =
 const jupyterToken = "amd-oneclick";
 const remoteRepo = "/workspace/radeon-voice-skill-foundry-live";
 const remotePort = Number(process.env.CONTINUOUS_V2_PORT || 8793);
+const localApiPort = Number(process.env.CONTINUOUS_V2_API_PORT || 8798);
 const localPort = Number(process.env.CONTINUOUS_V2_WEB_PORT || 5181);
 const baseUrl = `http://127.0.0.1:${localPort}`;
 const runId = randomBytes(6).toString("hex");
 const suppliedUrl = process.env.CONTINUOUS_V2_URL || "";
 const suppliedToken = process.env.CONTINUOUS_V2_API_TOKEN || "";
-const manageRemoteStack = !suppliedUrl;
+const mode = process.env.CONTINUOUS_V2_MODE || "local";
+const manageLocalStack = mode === "local";
+const manageRemoteStack = mode === "remote" && !suppliedUrl;
 const apiToken = suppliedToken || randomBytes(32).toString("hex");
 const remotePrefix = `/workspace/rvsf-continuous-v2-${runId}`;
 const remoteDataDir = `${remotePrefix}-data`;
+const localDataDir = path.join(root, "tmp", "continuous-demo-v2", "data");
 const apiPidFile = `${remotePrefix}-api.pid`;
 const apiLog = `${remotePrefix}-api.log`;
 const tunnelPidFile = `${remotePrefix}-tunnel.pid`;
@@ -46,7 +50,7 @@ const timingPath = path.join(
 );
 const projectName = "review-followup-lifecycle-v2";
 const labels = [
-  "Open the isolated W7900 session",
+  "Open the isolated lifecycle session",
   "Upload the spoken SOP",
   "Compile voice into policy",
   "Verify the unsafe paths",
@@ -55,7 +59,7 @@ const labels = [
   "Drift the runtime and invalidate proof",
   "Revalidate and download the child proof"
 ];
-const defaultDurations = [30, 32, 48, 34, 28, 30, 30, 42];
+const defaultDurations = [30, 32, 27, 34, 21, 30, 24, 42];
 const nodeModules =
   process.env.CODEX_NODE_MODULES ||
   "/Users/bytedance/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules";
@@ -70,12 +74,17 @@ let context;
 let tunnelUrl = "";
 let terminalCreated = false;
 let viteProcess;
+let localApiProcess;
 
 await rm(outputDir, { recursive: true, force: true });
 await mkdir(rawDir, { recursive: true });
 
 try {
-  if (manageRemoteStack) {
+  if (manageLocalStack) {
+    await rm(localDataDir, { recursive: true, force: true });
+    localApiProcess = await startLocalLifecycleApi();
+    tunnelUrl = `http://127.0.0.1:${localApiPort}`;
+  } else if (manageRemoteStack) {
     await createTerminal();
     terminalCreated = true;
     tunnelUrl = await setupRemoteStack();
@@ -116,7 +125,7 @@ try {
         "background:#202224e8;border-left:4px solid #c23a35;" +
         "font:600 16px 'Geist Mono',monospace;" +
         "box-shadow:0 12px 32px #0007;pointer-events:none;";
-      label.textContent = "ISOLATED W7900 LIFECYCLE";
+      label.textContent = "ISOLATED LIFECYCLE CONTROL";
 
       const cursor = document.createElement("div");
       cursor.id = "continuous-v2-cursor";
@@ -214,15 +223,22 @@ try {
   await runStep(page, 5, async () => {
     await setLabel(
       page,
-      "REAL W7900 API RESTART · SAME RUNTIME IDENTITY"
+      "REAL NODE API RESTART · SAME RUNTIME IDENTITY"
     );
-    await restartRemoteApi("Qwen/Qwen3-4B-Instruct-2507");
+    await restartRemoteApi(
+      manageLocalStack
+        ? "Lifecycle deterministic compiler"
+        : "Qwen/Qwen3-4B-Instruct-2507"
+    );
+    await waitForPersistedSkill("verified");
+    await page.waitForTimeout(750);
     await page.reload({ waitUntil: "domcontentloaded" });
+    await page.waitForSelector(".app-shell", { timeout: 20_000 });
     await click(
       page,
       page.getByRole("button", { name: "Memory", exact: true })
     );
-    const article = skillArticle(page);
+    const article = await waitForSkillArticle(page);
     await article.getByText("proof compatible", { exact: false }).waitFor({
       state: "visible",
       timeout: 30_000
@@ -233,15 +249,22 @@ try {
   await runStep(page, 6, async () => {
     await setLabel(
       page,
-      "REAL W7900 API RESTART · RUNTIME IDENTITY DRIFT"
+      "REAL NODE API RESTART · RUNTIME IDENTITY DRIFT"
     );
-    await restartRemoteApi("Qwen/Qwen3-4B-Instruct-2507-runtime-drift");
+    await restartRemoteApi(
+      manageLocalStack
+        ? "Lifecycle deterministic compiler runtime drift"
+        : "Qwen/Qwen3-4B-Instruct-2507-runtime-drift"
+    );
+    await waitForPersistedSkill("revalidation_required");
+    await page.waitForTimeout(750);
     await page.reload({ waitUntil: "domcontentloaded" });
+    await page.waitForSelector(".app-shell", { timeout: 20_000 });
     await click(
       page,
       page.getByRole("button", { name: "Memory", exact: true })
     );
-    const article = skillArticle(page);
+    const article = await waitForSkillArticle(page);
     await article.getByText("revalidation required", { exact: false }).waitFor({
       state: "visible",
       timeout: 30_000
@@ -308,11 +331,15 @@ try {
     path.join(outputDir, "runtime.json"),
     JSON.stringify(
       {
-        instanceId,
-        remotePort,
-        dataDir: remoteDataDir,
-        initialModel: "Qwen/Qwen3-4B-Instruct-2507",
-        driftedModel: "Qwen/Qwen3-4B-Instruct-2507-runtime-drift"
+        mode,
+        ...(manageRemoteStack ? { instanceId, remotePort } : {}),
+        dataDir: manageLocalStack ? localDataDir : remoteDataDir,
+        initialModel: manageLocalStack
+          ? "Lifecycle deterministic compiler"
+          : "Qwen/Qwen3-4B-Instruct-2507",
+        driftedModel: manageLocalStack
+          ? "Lifecycle deterministic compiler runtime drift"
+          : "Qwen/Qwen3-4B-Instruct-2507-runtime-drift"
       },
       null,
       2
@@ -333,7 +360,12 @@ try {
   if (context) await context.close().catch(() => undefined);
   if (browser) await browser.close().catch(() => undefined);
   if (viteProcess) viteProcess.kill("SIGTERM");
-  if (!manageRemoteStack && tunnelUrl) {
+  if (manageLocalStack && tunnelUrl) {
+    await shutdownExternalStack().catch((error) => {
+      console.error(`Local cleanup warning: ${error.message}`);
+    });
+    localApiProcess?.kill("SIGTERM");
+  } else if (!manageRemoteStack && tunnelUrl) {
     await shutdownExternalStack().catch((error) => {
       console.error(`External cleanup warning: ${error.message}`);
     });
@@ -424,6 +456,45 @@ async function startLocalFrontend(apiOrigin) {
   throw new Error(
     stderr.trim() || "Local continuous Demo V2 frontend did not start"
   );
+}
+
+async function startLocalLifecycleApi() {
+  const child = spawn("./node_modules/.bin/tsx", ["server/index.ts"], {
+    cwd: root,
+    env: {
+      ...process.env,
+      PORT: String(localApiPort),
+      HOST: "127.0.0.1",
+      RVSF_API_TOKEN: apiToken,
+      RVSF_DEMO_CONTROL: "1",
+      RVSF_DATA_DIR: localDataDir,
+      RADEON_MODEL: "Lifecycle deterministic compiler",
+      RADEON_ASR_COMMAND: "node scripts/demo_asr_fixture.mjs",
+      RADEON_ASR_MODEL: "Deterministic lifecycle ASR fixture"
+    },
+    stdio: ["ignore", "ignore", "pipe"]
+  });
+  let stderr = "";
+  child.stderr.on("data", (chunk) => {
+    stderr += chunk.toString();
+  });
+  for (let attempt = 0; attempt < 80; attempt += 1) {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:${localApiPort}/api/health`,
+        {
+          headers: { "x-rvsf-api-token": apiToken },
+          signal: AbortSignal.timeout(3_000)
+        }
+      );
+      if (response.ok) return child;
+    } catch {
+      // Local lifecycle API is still starting.
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  child.kill("SIGTERM");
+  throw new Error(stderr.trim() || "Local lifecycle API did not start");
 }
 
 function apiStartCommand(model) {
@@ -598,7 +669,7 @@ async function runStep(page, index, action) {
   const started = elapsed();
   await setLabel(
     page,
-    `ISOLATED W7900 LIFECYCLE · ${index + 1}/${labels.length} · ${labels[index]}`
+    `ISOLATED LIFECYCLE CONTROL · ${index + 1}/${labels.length} · ${labels[index]}`
   );
   await action();
   const usedMs = elapsed() - started;
@@ -648,6 +719,58 @@ function skillArticle(page) {
     .locator(".skill-memory-list article")
     .filter({ hasText: projectName })
     .first();
+}
+
+async function waitForPersistedSkill(expectedStatus) {
+  for (let attempt = 0; attempt < 80; attempt += 1) {
+    try {
+      const [healthResponse, skillsResponse] = await Promise.all([
+        fetch(`${baseUrl}/api/health`, {
+          signal: AbortSignal.timeout(5_000)
+        }),
+        fetch(`${baseUrl}/api/skills`, {
+          signal: AbortSignal.timeout(5_000)
+        })
+      ]);
+      if (healthResponse.ok && skillsResponse.ok) {
+        const health = await healthResponse.json();
+        const skills = await skillsResponse.json();
+        const stored = Array.isArray(skills)
+          ? skills.find((skill) => skill.name === projectName)
+          : undefined;
+        if (
+          health.persisted?.compileRuns >= 1 &&
+          health.persisted?.verificationRuns >= 1 &&
+          stored?.status === expectedStatus
+        ) {
+          return;
+        }
+      }
+    } catch {
+      // Vite proxy or restarted API is still converging.
+    }
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+  throw new Error(
+    `Persisted lifecycle skill did not recover as ${expectedStatus}`
+  );
+}
+
+async function waitForSkillArticle(page) {
+  const deadline = Date.now() + 30_000;
+  const article = skillArticle(page);
+  while (Date.now() < deadline) {
+    if (await article.isVisible()) return article;
+    const memory = page.getByRole("button", {
+      name: "Memory",
+      exact: true
+    });
+    if ((await memory.count()) === 1) {
+      await memory.click();
+    }
+    await page.waitForTimeout(500);
+  }
+  throw new Error("Saved lifecycle skill did not reappear after restart");
 }
 
 async function setLabel(page, text) {

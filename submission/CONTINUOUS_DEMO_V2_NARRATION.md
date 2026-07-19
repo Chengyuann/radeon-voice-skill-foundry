@@ -2,35 +2,36 @@
 
 The narration is AI-generated with AIDP
 `gemini-3.1-flash-tts-preview`, male voice `Charon`. The video is one
-continuous browser recording against an isolated W7900 lifecycle backend.
+continuous browser recording against an isolated deterministic lifecycle
+backend. The companion main Demo V2 independently records the real public
+W7900 inference path.
 
-## Open the Isolated W7900 Session
+## Open the Isolated Lifecycle Session
 
 This is one continuous lifecycle session of Radeon Voice Skill Foundry. The
-cinematic interface is served by an isolated W7900 API through a temporary,
-authenticated Cloudflare Tunnel. The browser UI remains stable while its API
-calls cross that isolated tunnel. The Qwen three A-S-R and Qwen three four-B
-services are the same live Radeon services used by the public demo. The
-lifecycle data directory starts empty, so every durable record shown next is
-created during this recording.
+cinematic interface runs against an isolated Node API with a clean lifecycle
+data directory. This recording focuses on durability, compatibility, and
+recovery rather than repeating the GPU benchmark. Speech and compile results
+use the repository's deterministic fixtures, while the main Demo V2 shows the
+real Cloudflare-to-W7900 Qwen three A-S-R and four-B path. Every durable record
+shown next is created during this session.
 
 ## Upload the Spoken SOP
 
 I open the Voice module and upload the twenty-point-three-nine second Chinese
-procedure. Qwen three A-S-R transcribes it on the W7900. Voice Evidence version
-zero point three measures level, clipping, silence, estimated signal-to-noise
-ratio, short dropout, multi-frame burst loss, and source integrity. The source
-passes at one hundred out of one hundred, and its transcript hash is stored
-server-side.
+procedure. The deterministic A-S-R fixture returns the same transcript used by
+the real Radeon validation. Voice Evidence version zero point three measures
+level, clipping, silence, estimated signal-to-noise ratio, short dropout,
+multi-frame burst loss, and source integrity. The source passes at one hundred
+out of one hundred, and its transcript hash is stored server-side.
 
 ## Compile Voice into Policy
 
-The Radeon model adapter now performs a real Qwen three four-B compilation.
-The interface keeps the waiting state visible while the model combines the
-spoken constraints, aligned action trace, and local policy retrieval. No
-cached policy or accelerated footage is substituted. The compiled run is
-written to the isolated durable store and the interface advances into the
-Policy module.
+The deterministic compiler now combines the spoken constraints, aligned action
+trace, and local policy retrieval. It generates the same typed policy surface
+used by the live product, including runtime-owned identifiers and safety
+guardrails. The trusted compile run is written to the isolated durable store
+and the interface advances into the Policy module.
 
 ## Verify the Unsafe Paths
 
@@ -50,12 +51,12 @@ inside the same browser session.
 
 ## Restart and Recover Durable State
 
-Now the recording controller terminates the isolated Node API process on the
-W7900 and starts a fresh process with the same runtime identity. The browser
-reloads through the existing Tunnel. The saved skill, trusted compile run,
-verification result, Voice Evidence, and proof compatibility all survive the
-real process restart because they were atomically persisted rather than held
-only in memory.
+Now the recording controller terminates the isolated Node API process and
+starts a fresh process with the same runtime identity. The browser UI remains
+open and reconnects to the recovered API. The saved skill, trusted compile
+run, verification result, Voice Evidence, and proof compatibility all survive
+the real process restart because they were atomically persisted rather than
+held only in memory.
 
 ## Drift the Runtime and Invalidate Proof
 

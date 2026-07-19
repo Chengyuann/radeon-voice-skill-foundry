@@ -119,4 +119,24 @@ describe("proof verifier", () => {
       voiceEvidenceReviewed: true
     });
   });
+
+  it("binds parent-child lineage into the proof bundle", async () => {
+    const parent = await compileSop(reviewFollowupDemo);
+    const child = {
+      ...parent,
+      runId: "revalidate_lineage_test",
+      parentRunId: parent.runId,
+      revision: 2
+    };
+    const result = await verifyCompilation(
+      child,
+      reviewFollowupDemo.actions
+    );
+
+    expect(result.proofBundle).toMatchObject({
+      runId: "revalidate_lineage_test",
+      parentRunId: parent.runId,
+      revision: 2
+    });
+  });
 });

@@ -20,7 +20,7 @@ SRT = ROOT / "submission" / "CONTINUOUS_OPERATION_DEMO_V2.srt"
 SOURCE = ROOT / "submission" / "CONTINUOUS_DEMO_V2_NARRATION.md"
 FONT_BOLD = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
 TITLES = [
-    "Open the Isolated W7900 Session",
+    "Open the Isolated Lifecycle Session",
     "Upload the Spoken SOP",
     "Compile Voice into Policy",
     "Verify the Unsafe Paths",

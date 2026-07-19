@@ -145,6 +145,8 @@ export async function verifyCompilation(
   const proofCore = {
     schemaVersion: "0.3.0",
     runId: compilation.runId,
+    parentRunId: compilation.parentRunId,
+    revision: compilation.revision || 1,
     projectName: compilation.projectName,
     status,
     runtime: compilation.runtime,

@@ -20,7 +20,7 @@ MODEL = "gemini-3.1-flash-tts-preview"
 VOICE = os.environ.get("AIDP_TTS_VOICE", "Charon")
 ENDPOINT = "https://aidp.bytedance.net/api/modelhub/online/multimodal/crawl"
 TITLES = [
-    "Open the Isolated W7900 Session",
+    "Open the Isolated Lifecycle Session",
     "Upload the Spoken SOP",
     "Compile Voice into Policy",
     "Verify the Unsafe Paths",
