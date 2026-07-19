@@ -41,8 +41,54 @@ describe("local RAG and skill memory", () => {
       createdAt: new Date().toISOString(),
       projectName: "review-followup",
       scenario: "A sufficiently long review scenario.",
-      constraints: [],
-      permissions: [],
+      constraints: [
+        {
+          id: "rule-no-send",
+          kind: "must_not" as const,
+          statement: "Prohibit automatic sending",
+          sourceText: "Do not send automatically",
+          confidence: 1,
+          appliesTo: ["draft_email"]
+        },
+        {
+          id: "rule-redact",
+          kind: "redact" as const,
+          statement: "Redact compensation and customer names",
+          sourceText: "Never include compensation or customer names",
+          confidence: 1,
+          appliesTo: ["write_report"]
+        },
+        {
+          id: "rule-scope",
+          kind: "only_if" as const,
+          statement: "Only include P0 and P1",
+          sourceText: "Only include P0 and P1",
+          confidence: 1,
+          appliesTo: ["filter_findings"]
+        },
+        {
+          id: "rule-owner",
+          kind: "requires_confirmation" as const,
+          statement: "Require confirmation when owner is missing",
+          sourceText: "Do not guess missing owners",
+          confidence: 1,
+          appliesTo: ["select_commitment"]
+        }
+      ],
+      permissions: [
+        {
+          id: "perm-mail-send",
+          permission: "mail:send",
+          state: "deny" as const,
+          reason: "Automatic sending is prohibited"
+        },
+        {
+          id: "perm-network",
+          permission: "network:write",
+          state: "deny" as const,
+          reason: "Local-only verification"
+        }
+      ],
       fixtures: [],
       skillMarkdown: "# Skill",
       policyYaml: "version: 1",
@@ -189,6 +235,32 @@ describe("local RAG and skill memory", () => {
           hash: "a".repeat(64),
           eventCount: actions.length,
           events: actions
+        },
+        sandboxReplay: {
+          schemaVersion: "0.1.0",
+          status: "passed",
+          initialHash: "b".repeat(64),
+          finalHash: "c".repeat(64),
+          steps: [],
+          probes: [],
+          finalState: {
+            documentOpen: false,
+            visibleFindingIds: [],
+            ownerStates: {},
+            emailDrafts: [],
+            calendarHolds: [],
+            externalEffects: {
+              emailsSent: 0,
+              calendarCommitted: 0,
+              networkWrites: 0
+            }
+          },
+          summary: {
+            drafts: 0,
+            tentativeHolds: 0,
+            reportRecords: 0,
+            externalSideEffects: 0
+          }
         }
       },
       verificationDurationMs: 1
@@ -198,12 +270,20 @@ describe("local RAG and skill memory", () => {
     const contractFile = zip.file(
       "action-contract-package/action_contract.json"
     );
+    const replayFile = zip.file(
+      "action-contract-package/sandbox_replay.json"
+    );
 
     expect(contractFile).not.toBeNull();
+    expect(replayFile).not.toBeNull();
     expect(JSON.parse(await contractFile!.async("string"))).toMatchObject({
       sessionId: "demo_123456789abc",
       eventCount: 1,
       events: actions
+    });
+    expect(JSON.parse(await replayFile!.async("string"))).toMatchObject({
+      schemaVersion: "0.1.0",
+      status: "passed"
     });
   });
 });

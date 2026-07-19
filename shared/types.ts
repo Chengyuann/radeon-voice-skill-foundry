@@ -194,6 +194,78 @@ export type Receipt = {
   createdAt: string;
 };
 
+export type SandboxState = {
+  documentOpen: boolean;
+  visibleFindingIds: string[];
+  ownerStates: Record<string, "needs_confirmation">;
+  emailDrafts: Array<{
+    findingId: string;
+    state: "draft";
+  }>;
+  calendarHolds: Array<{
+    findingId: string;
+    dueDate: string;
+    state: "tentative";
+  }>;
+  report?: {
+    path: string;
+    redactedFields: string[];
+    records: Array<{
+      id: string;
+      customer: string;
+      owner: string;
+      dueDate?: string;
+    }>;
+  };
+  externalEffects: {
+    emailsSent: number;
+    calendarCommitted: number;
+    networkWrites: number;
+  };
+};
+
+export type SandboxStep = {
+  sequence: number;
+  actionId: string;
+  actionType: ActionEvent["type"];
+  label: string;
+  decision: "ALLOW" | "REVIEW" | "BLOCK";
+  status: "passed" | "failed";
+  beforeHash: string;
+  afterHash: string;
+  changes: string[];
+  output: string;
+  durationMs: number;
+};
+
+export type SandboxProbe = {
+  id: string;
+  name: string;
+  decision: "ALLOW" | "REVIEW" | "BLOCK";
+  expected: string;
+  passed: boolean;
+  beforeHash: string;
+  afterHash: string;
+  stateUnchanged: boolean;
+  detail: string;
+};
+
+export type SandboxReplay = {
+  schemaVersion: "0.1.0";
+  status: "passed" | "failed";
+  initialHash: string;
+  finalHash: string;
+  steps: SandboxStep[];
+  probes: SandboxProbe[];
+  finalState: SandboxState;
+  summary: {
+    drafts: number;
+    tentativeHolds: number;
+    reportRecords: number;
+    externalSideEffects: number;
+  };
+};
+
 export type VerificationMetric = {
   label: string;
   value: number | string;
@@ -217,7 +289,7 @@ export type VerifyResult = {
 };
 
 export type ProofCompatibilityManifest = {
-  schemaVersion: "0.2.0" | "0.3.0";
+  schemaVersion: "0.2.0" | "0.3.0" | "0.4.0";
   verifierVersion: string;
   runtimeHash: string;
   toolContractHash: string;

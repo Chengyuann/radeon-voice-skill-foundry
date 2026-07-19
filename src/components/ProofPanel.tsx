@@ -4,13 +4,16 @@ import {
   Download,
   FileCode2,
   Gauge,
+  ListChecks,
   ReceiptText,
   Save,
-  ShieldAlert
+  ShieldAlert,
+  ShieldCheck
 } from "lucide-react";
 import type {
   CompileResult,
   RuntimeInfo,
+  SandboxReplay,
   VerifyResult
 } from "../../shared/types";
 import { SpotlightCard } from "../react-bits/SpotlightCard";
@@ -33,6 +36,8 @@ export function ProofPanel({
   savedSkillId,
   onSaveSkill
 }: ProofPanelProps) {
+  const sandboxReplay = verification?.proofBundle
+    .sandboxReplay as SandboxReplay | undefined;
   const proxyPrefix =
     typeof window === "undefined"
       ? ""
@@ -167,6 +172,118 @@ the GAIA-compatible skill artifact.`}
               </strong>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="sandbox-section">
+        <div className="subheading-row">
+          <h3>Execution replay</h3>
+          <span>
+            {sandboxReplay
+              ? `${sandboxReplay.steps.length} steps · ${sandboxReplay.probes.length} probes`
+              : "awaiting verification"}
+          </span>
+        </div>
+        {sandboxReplay ? (
+          <>
+            <div className="sandbox-summary">
+              <div>
+                <ListChecks size={15} />
+                <span>
+                  <strong>
+                    {sandboxReplay.status === "passed"
+                      ? "Replay complete"
+                      : "Replay failed"}
+                  </strong>
+                  <small>
+                    {sandboxReplay.summary.drafts} drafts ·{" "}
+                    {sandboxReplay.summary.tentativeHolds} tentative ·{" "}
+                    {sandboxReplay.summary.externalSideEffects} external
+                  </small>
+                </span>
+              </div>
+              <code>{sandboxReplay.finalHash.slice(0, 12)}</code>
+            </div>
+            <div className="sandbox-step-list">
+              {sandboxReplay.steps.map((step) => (
+                <div className="sandbox-step" key={step.actionId}>
+                  <span className="sandbox-sequence">
+                    {String(step.sequence).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <strong>{step.label}</strong>
+                    <small>{step.output}</small>
+                    <code>
+                      {step.beforeHash.slice(0, 7)} →{" "}
+                      {step.afterHash.slice(0, 7)}
+                    </code>
+                  </div>
+                  <Badge
+                    tone={
+                      step.status === "failed"
+                        ? "red"
+                        : step.decision === "REVIEW"
+                          ? "amber"
+                          : step.decision === "BLOCK"
+                            ? "red"
+                            : "green"
+                    }
+                  >
+                    {step.decision}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="receipt-empty">
+            Sandbox steps appear after verification.
+          </div>
+        )}
+      </div>
+
+      <div className="probe-section">
+        <div className="subheading-row">
+          <h3>Adversarial probes</h3>
+          <span>
+            {sandboxReplay
+              ? `${
+                  sandboxReplay.probes.filter((probe) => probe.passed).length
+                }/${sandboxReplay.probes.length} passed`
+              : "fail closed"}
+          </span>
+        </div>
+        <div className="probe-list">
+          {sandboxReplay ? (
+            sandboxReplay.probes.map((probe) => (
+              <div className="probe-row" key={probe.id}>
+                {probe.passed ? (
+                  <ShieldCheck size={14} />
+                ) : (
+                  <ShieldAlert size={14} />
+                )}
+                <span>
+                  <strong>{probe.name}</strong>
+                  <small>{probe.detail}</small>
+                </span>
+                <Badge
+                  tone={
+                    probe.passed
+                      ? probe.decision === "REVIEW"
+                        ? "amber"
+                        : "green"
+                      : "red"
+                  }
+                >
+                  {probe.decision}
+                </Badge>
+              </div>
+            ))
+          ) : (
+            <div className="receipt-empty">
+              Adversarial probes appear after verification.
+            </div>
+          )}
         </div>
       </div>
 

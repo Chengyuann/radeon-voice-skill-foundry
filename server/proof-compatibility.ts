@@ -8,7 +8,7 @@ import type {
 } from "../shared/types.js";
 import { stableHash } from "./hash.js";
 
-export const VERIFIER_VERSION = "rvsf-verifier-0.3.0";
+export const VERIFIER_VERSION = "rvsf-verifier-0.4.0";
 
 export function createProofCompatibilityManifest(
   compilation: CompileResult,
@@ -16,7 +16,7 @@ export function createProofCompatibilityManifest(
   runtime: RuntimeInfo = compilation.runtime
 ): ProofCompatibilityManifest {
   return {
-    schemaVersion: "0.3.0",
+    schemaVersion: "0.4.0",
     verifierVersion: VERIFIER_VERSION,
     runtimeHash: runtimeCompatibilityHash(runtime),
     toolContractHash: toolContractHash(actions),

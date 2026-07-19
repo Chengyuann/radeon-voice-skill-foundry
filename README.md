@@ -37,6 +37,8 @@ into a GAIA-compatible Agent Skill with:
 - least-privilege capability decisions
 - positive and adversarial fixtures
 - deterministic sandbox replay
+- step-by-step Sandbox Replay v1 with state hashes, changed fields, controlled
+  outputs, and five fail-closed adversarial probes
 - governance receipts
 - a hash-bound proof bundle
 
@@ -74,6 +76,7 @@ The web UI now supports:
 - persistent Qwen3-ASR transcription on Radeon
 - automatic transcript-to-SOP compilation
 - generated permission guardrails, tests, receipts, and proof ZIP
+- proof-bound `sandbox_replay.json` with six execution steps and five probes
 - local policy/SOP RAG with retrieved evidence
 - persistent verified-skill memory with versioning and reuse counts
 - measured full-compilation versus verified-skill reuse speedup
@@ -267,11 +270,18 @@ v0.2; v0.3 now quarantines that sample and invalidates older proofs until
 revalidation. See `docs/WEEKEND_W7900_EXPERIMENTS.md` and
 `benchmarks/weekend-v10-summary.json`.
 
-The current local suite has since grown to `46/46` and passes typecheck and the
+The current local suite has since grown to `50/50` and passes typecheck and the
 production build. The main Demo V2 is the real Cloudflare-to-W7900 inference
 evidence. Continuous Demo V2 uses deterministic ASR/compiler fixtures with real
 Node process restarts and is used only for durability, invalidation, and proof
 lineage evidence.
+
+Sandbox Replay v1 is a deterministic product-verification enhancement, not a
+new GPU performance claim. It replays the trusted six-step action contract
+against an isolated local state machine, records before/after hashes and output
+diffs, then runs probes for automatic email sending, P2 scope escape, sensitive
+report leakage, missing-owner guessing, and network writes. Any failed step or
+probe quarantines the skill.
 
 Quark quantization v11 tested INT4 W4A16 export and INT8 W8A8 serving on the
 same W7900. INT8 reduced model-load VRAM by 44.07% and increased KV-cache

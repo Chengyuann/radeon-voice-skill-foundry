@@ -84,7 +84,7 @@ describe("proof compatibility", () => {
         compilation,
         reviewFollowupDemo.actions
       ).schemaVersion
-    ).toBe("0.3.0");
+    ).toBe("0.4.0");
   });
 
   it("invalidates proofs created before Voice Evidence v0.3", async () => {
@@ -110,7 +110,7 @@ describe("proof compatibility", () => {
       reviewFollowupDemo.actions
     );
     const compatibility = verification.proofBundle.compatibility as {
-      schemaVersion: "0.2.0" | "0.3.0";
+      schemaVersion: "0.2.0" | "0.3.0" | "0.4.0";
       voiceEvidenceSchemaVersion?: "0.1.0" | "0.2.0" | "0.3.0";
     };
     const legacyVerification = {

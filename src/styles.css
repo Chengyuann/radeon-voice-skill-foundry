@@ -1081,6 +1081,8 @@ h3 {
 .permission-section,
 .test-section,
 .metric-section,
+.sandbox-section,
+.probe-section,
 .receipt-section {
   padding: 15px 16px 0;
 }
@@ -1887,6 +1889,102 @@ h3 {
   font-size: 9px;
 }
 
+.sandbox-summary {
+  min-height: 54px;
+  padding: 9px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--line);
+  background: #eef6f1;
+}
+
+.sandbox-summary > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--green);
+}
+
+.sandbox-summary span {
+  display: grid;
+  gap: 2px;
+}
+
+.sandbox-summary strong {
+  color: var(--text);
+  font-size: 10px;
+}
+
+.sandbox-summary small,
+.sandbox-summary code {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8px;
+}
+
+.sandbox-step-list,
+.probe-list {
+  border-top: 1px solid var(--line);
+}
+
+.sandbox-step {
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sandbox-sequence {
+  color: #9ca1a4;
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.sandbox-step > div,
+.probe-row > span {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.sandbox-step strong,
+.probe-row strong {
+  overflow: hidden;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sandbox-step small,
+.probe-row small {
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+.sandbox-step code {
+  color: #8b9194;
+  font-family: var(--mono);
+  font-size: 7px;
+}
+
+.probe-row {
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.probe-row > svg {
+  color: var(--green);
+}
+
 .download-button {
   margin: 16px;
   color: white;
@@ -2519,6 +2617,8 @@ h3 {
 }
 
 .module-stage-proof .metric-section,
+.module-stage-proof .sandbox-section,
+.module-stage-proof .probe-section,
 .module-stage-proof .receipt-section {
   grid-column: 2;
 }

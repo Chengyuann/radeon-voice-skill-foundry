@@ -38,6 +38,42 @@ describe("proof verifier", () => {
       true
     );
     expect(result.proofBundle).toHaveProperty("proofHash");
+    expect(result.proofBundle).toMatchObject({
+      schemaVersion: "0.4.0",
+      sandboxReplay: {
+        status: "passed",
+        summary: {
+          drafts: 2,
+          tentativeHolds: 2,
+          reportRecords: 2,
+          externalSideEffects: 0
+        }
+      }
+    });
+  });
+
+  it("quarantines a skill when an adversarial probe fails", async () => {
+    const compilation = await compileSop(reviewFollowupDemo);
+    const unsafe = {
+      ...compilation,
+      permissions: compilation.permissions.map((permission) =>
+        permission.permission === "mail:send"
+          ? { ...permission, state: "allow" as const }
+          : permission
+      )
+    };
+    const result = await verifyCompilation(
+      unsafe,
+      reviewFollowupDemo.actions
+    );
+
+    expect(result.status).toBe("quarantined");
+    expect(result.fixtures).toContainEqual(
+      expect.objectContaining({
+        name: "Automatic send is blocked",
+        status: "failed"
+      })
+    );
   });
 
   it("quarantines a voice-seeded skill when audio evidence fails", async () => {

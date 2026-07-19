@@ -36,6 +36,13 @@ export async function buildSubmissionPackage(
       JSON.stringify(actionContract, null, 2)
     );
   }
+  const sandboxReplay = verification.proofBundle.sandboxReplay;
+  if (sandboxReplay) {
+    root.file(
+      "sandbox_replay.json",
+      JSON.stringify(sandboxReplay, null, 2)
+    );
+  }
   if (compilation.voiceEvidence) {
     root.file(
       "voice_evidence.json",
@@ -67,6 +74,7 @@ Status: ${verification.status}
 - \`receipts.jsonl\`: append-only governance decisions
 - \`proof_bundle.json\`: hashes, runtime metadata, and verification evidence
 - \`action_contract.json\`: server-authoritative demonstration events and hash
+- \`sandbox_replay.json\`: step-by-step state hashes, diffs, and adversarial probes
 ${compilation.voiceEvidence ? "- `voice_evidence.json`: derived audio-quality evidence and source hash" : ""}
 - \`proof_bundle.json.compatibility\`: verifier, runtime, tool, policy, and skill compatibility manifest
 `
