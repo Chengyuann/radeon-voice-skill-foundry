@@ -171,6 +171,34 @@ export function revalidateSkill(
   });
 }
 
+export function promoteSkill(skillId: string): Promise<StoredSkill> {
+  return requestJson(apiUrl(`/api/skills/${skillId}/promote`), {
+    method: "POST"
+  });
+}
+
+export function revokeSkill(
+  skillId: string,
+  reason: string
+): Promise<StoredSkill> {
+  return requestJson(apiUrl(`/api/skills/${skillId}/revoke`), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reason })
+  });
+}
+
+export function rollbackSkill(
+  skillId: string,
+  reason: string
+): Promise<StoredSkill> {
+  return requestJson(apiUrl(`/api/skills/${skillId}/rollback`), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reason })
+  });
+}
+
 export async function transcribeAudio(file: Blob): Promise<TranscribeResult> {
   const form = new FormData();
   form.append("audio", file, file instanceof File ? file.name : "recording.webm");

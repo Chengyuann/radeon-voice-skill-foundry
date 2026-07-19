@@ -2188,6 +2188,77 @@ h3 {
   line-height: 1.4;
 }
 
+.skill-governance-meta {
+  min-height: 28px;
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+  margin-top: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  background: #f4f6f6;
+}
+
+.skill-governance-meta code {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8px;
+}
+
+.skill-governance-meta > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skill-governance-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.governance-promote {
+  color: var(--green);
+  border-color: #b9d0c2;
+  background: var(--green-bg);
+}
+
+.governance-revoke {
+  color: var(--red);
+  border-color: #ddb8b5;
+  background: var(--red-bg);
+}
+
+.skill-governance-form {
+  margin-top: 8px;
+  display: grid;
+  gap: 6px;
+}
+
+.skill-governance-form textarea {
+  width: 100%;
+  min-height: 62px;
+  padding: 8px 9px;
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: white;
+  font-size: 9px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.skill-governance-form > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.skill-governance-form .memory-reuse {
+  margin-top: 0;
+}
+
 .memory-reuse {
   min-height: 29px;
   display: inline-flex;

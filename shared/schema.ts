@@ -76,6 +76,10 @@ export const demonstrationCommandSchema = z.object({
   nowMs: z.number().nonnegative().optional()
 });
 
+export const skillGovernanceReasonSchema = z.object({
+  reason: z.string().trim().min(4).max(500)
+});
+
 export const constraintSchema = z.object({
   id: z.string(),
   kind: z.enum([

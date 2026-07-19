@@ -306,11 +306,29 @@ export type ProofCompatibility = {
   actual: ProofCompatibilityManifest;
 };
 
+export type SkillLifecycle =
+  | "candidate"
+  | "promoted"
+  | "superseded"
+  | "revoked";
+
+export type SkillGovernanceReceipt = {
+  receiptId: string;
+  action: "PROMOTE" | "SUPERSEDE" | "REVOKE" | "ROLLBACK";
+  skillId: string;
+  proofHash: string;
+  createdAt: string;
+  reason?: string;
+  sourceSkillId?: string;
+  replacementSkillId?: string;
+};
+
 export type StoredSkill = {
   id: string;
   name: string;
   version: number;
   status: "verified" | "revalidation_required";
+  lifecycle: SkillLifecycle;
   createdAt: string;
   updatedAt: string;
   reuseCount: number;
@@ -318,6 +336,14 @@ export type StoredSkill = {
   verification: VerifyResult;
   actions?: ActionEvent[];
   compatibility?: ProofCompatibility;
+  governanceReceipts: SkillGovernanceReceipt[];
+  promotedAt?: string;
+  promotedProofHash?: string;
+  revokedAt?: string;
+  revocationReason?: string;
+  supersededAt?: string;
+  supersededBySkillId?: string;
+  rollbackFromSkillId?: string;
 };
 
 export type DemonstrationSession = {

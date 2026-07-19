@@ -10,7 +10,8 @@ import {
   demonstrationCommandSchema,
   knowledgeDocumentInputSchema,
   knowledgeSearchSchema,
-  refineRequestSchema
+  refineRequestSchema,
+  skillGovernanceReasonSchema
 } from "../shared/schema.js";
 import type {
   CompileRequest,
@@ -47,7 +48,10 @@ import {
   listKnowledge,
   listSkills,
   markSkillReused,
+  promoteStoredSkill,
   revalidateStoredSkill,
+  revokeStoredSkill,
+  rollbackStoredSkill,
   resolveStoredSkillActions,
   saveVerifiedSkill,
   searchKnowledge
@@ -375,6 +379,53 @@ app.post("/api/skills/:skillId/revalidate", async (request, response) => {
     response.status(400).json({
       error:
         error instanceof Error ? error.message : "Skill revalidation failed"
+    });
+  }
+});
+
+app.post("/api/skills/:skillId/promote", async (request, response) => {
+  try {
+    response.json(await promoteStoredSkill(request.params.skillId));
+  } catch (error) {
+    response.status(400).json({
+      error: error instanceof Error ? error.message : "Skill promotion failed"
+    });
+  }
+});
+
+app.post("/api/skills/:skillId/revoke", async (request, response) => {
+  try {
+    const input = skillGovernanceReasonSchema.parse(request.body);
+    response.json(
+      await revokeStoredSkill(request.params.skillId, input.reason)
+    );
+  } catch (error) {
+    response.status(400).json({
+      error: error instanceof Error ? error.message : "Skill revocation failed"
+    });
+  }
+});
+
+app.post("/api/skills/:skillId/rollback", async (request, response) => {
+  try {
+    const input = skillGovernanceReasonSchema.parse(request.body);
+    const skill = await rollbackStoredSkill(
+      request.params.skillId,
+      input.reason
+    );
+    await storeCompileRun(
+      skill.compilation,
+      resolveStoredSkillActions(skill)
+    );
+    await storeVerificationRun({
+      compilation: skill.compilation,
+      actions: resolveStoredSkillActions(skill),
+      verification: skill.verification
+    });
+    response.json(skill);
+  } catch (error) {
+    response.status(400).json({
+      error: error instanceof Error ? error.message : "Skill rollback failed"
     });
   }
 });

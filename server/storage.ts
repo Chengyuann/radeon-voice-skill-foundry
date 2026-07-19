@@ -3,6 +3,7 @@ import type {
   CompileResult,
   KnowledgeDocument,
   KnowledgeMatch,
+  SkillGovernanceReceipt,
   SkillReuseResult,
   SkillRevalidationResult,
   StoredSkill
@@ -100,15 +101,16 @@ export async function searchKnowledge(
 export async function listSkills(): Promise<StoredSkill[]> {
   return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
     for (let index = 0; index < skills.length; index += 1) {
-      const actions = resolveStoredSkillActions(skills[index]);
+      const normalized = normalizeStoredSkill(skills[index]);
+      const actions = resolveStoredSkillActions(normalized);
       const compatibility = assessProofCompatibility({
-        compilation: skills[index].compilation,
+        compilation: normalized.compilation,
         actions,
-        verification: skills[index].verification,
+        verification: normalized.verification,
         runtime: getRuntimeInfo()
       });
       skills[index] = {
-        ...skills[index],
+        ...normalized,
         actions,
         compatibility,
         status:
@@ -130,6 +132,15 @@ export async function saveVerifiedSkill(
     | "updatedAt"
     | "reuseCount"
     | "compatibility"
+    | "lifecycle"
+    | "governanceReceipts"
+    | "promotedAt"
+    | "promotedProofHash"
+    | "revokedAt"
+    | "revocationReason"
+    | "supersededAt"
+    | "supersededBySkillId"
+    | "rollbackFromSkillId"
   > & { actions: ActionEvent[] }
 ): Promise<StoredSkill> {
   return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
@@ -151,6 +162,8 @@ export async function saveVerifiedSkill(
       createdAt: now,
       updatedAt: now,
       reuseCount: 0,
+      lifecycle: "candidate",
+      governanceReceipts: [],
       actions,
       compatibility
     };
@@ -170,6 +183,12 @@ export async function markSkillReused(
   return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
     const index = skills.findIndex((skill) => skill.id === idValue);
     if (index < 0) throw new Error("Stored skill not found");
+    skills[index] = normalizeStoredSkill(skills[index]);
+    if (skills[index].lifecycle !== "promoted") {
+      throw new Error(
+        `Skill is ${skills[index].lifecycle}; promote it before reuse`
+      );
+    }
     const actions = resolveStoredSkillActions(skills[index]);
     const compatibility = assessProofCompatibility({
       compilation: skills[index].compilation,
@@ -223,6 +242,15 @@ export async function revalidateStoredSkill(
   return updateStoredJson(skillsPath(), [], async (skills: StoredSkill[]) => {
     const index = skills.findIndex((skill) => skill.id === idValue);
     if (index < 0) throw new Error("Stored skill not found");
+    skills[index] = normalizeStoredSkill(skills[index]);
+    if (
+      skills[index].lifecycle === "revoked" ||
+      skills[index].lifecycle === "superseded"
+    ) {
+      throw new Error(
+        `Cannot revalidate a ${skills[index].lifecycle} skill; roll it back instead`
+      );
+    }
     const actions = resolveStoredSkillActions(skills[index]);
     const now = new Date().toISOString();
     const compilation: CompileResult = {
@@ -254,6 +282,9 @@ export async function revalidateStoredSkill(
       compilation,
       actions,
       compatibility,
+      lifecycle: "candidate",
+      promotedAt: undefined,
+      promotedProofHash: undefined,
       updatedAt: now
     };
     return {
@@ -261,6 +292,228 @@ export async function revalidateStoredSkill(
       verification: structuredClone(verification),
       compatibility
     };
+  });
+}
+
+export async function promoteStoredSkill(
+  idValue: string
+): Promise<StoredSkill> {
+  return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
+    const index = skills.findIndex((skill) => skill.id === idValue);
+    if (index < 0) throw new Error("Stored skill not found");
+    skills[index] = normalizeStoredSkill(skills[index]);
+    const actions = resolveStoredSkillActions(skills[index]);
+    const compatibility = assessProofCompatibility({
+      compilation: skills[index].compilation,
+      actions,
+      verification: skills[index].verification,
+      runtime: getRuntimeInfo()
+    });
+    if (
+      skills[index].verification.status !== "verified" ||
+      compatibility.status !== "compatible"
+    ) {
+      throw new Error("Only a verified, proof-compatible skill can be promoted");
+    }
+    if (skills[index].lifecycle !== "candidate") {
+      throw new Error(
+        `Only a candidate skill can be promoted; current state is ${skills[index].lifecycle}`
+      );
+    }
+    const now = new Date().toISOString();
+    const proofHash = proofHashFor(skills[index]);
+    for (let otherIndex = 0; otherIndex < skills.length; otherIndex += 1) {
+      if (otherIndex === index) continue;
+      const other = normalizeStoredSkill(skills[otherIndex]);
+      if (
+        other.name !== skills[index].name ||
+        other.lifecycle !== "promoted"
+      ) {
+        skills[otherIndex] = other;
+        continue;
+      }
+      skills[otherIndex] = {
+        ...other,
+        lifecycle: "superseded",
+        supersededAt: now,
+        supersededBySkillId: idValue,
+        updatedAt: now,
+        governanceReceipts: [
+          ...other.governanceReceipts,
+          governanceReceipt({
+            action: "SUPERSEDE",
+            skillId: other.id,
+            proofHash: proofHashFor(other),
+            replacementSkillId: idValue,
+            reason: `Promoted ${skills[index].name} v${skills[index].version}`
+          })
+        ]
+      };
+    }
+    skills[index] = {
+      ...skills[index],
+      lifecycle: "promoted",
+      status: "verified",
+      actions,
+      compatibility,
+      promotedAt: now,
+      promotedProofHash: proofHash,
+      updatedAt: now,
+      governanceReceipts: [
+        ...skills[index].governanceReceipts,
+        governanceReceipt({
+          action: "PROMOTE",
+          skillId: idValue,
+          proofHash,
+          reason: "Human promotion gate approved"
+        })
+      ]
+    };
+    return structuredClone(skills[index]);
+  });
+}
+
+export async function revokeStoredSkill(
+  idValue: string,
+  reason: string
+): Promise<StoredSkill> {
+  return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
+    const index = skills.findIndex((skill) => skill.id === idValue);
+    if (index < 0) throw new Error("Stored skill not found");
+    const skill = normalizeStoredSkill(skills[index]);
+    if (skill.lifecycle === "revoked") {
+      throw new Error("Skill is already revoked");
+    }
+    if (skill.lifecycle === "superseded") {
+      throw new Error("Superseded skills are immutable; use rollback");
+    }
+    const now = new Date().toISOString();
+    skills[index] = {
+      ...skill,
+      lifecycle: "revoked",
+      revokedAt: now,
+      revocationReason: reason,
+      updatedAt: now,
+      governanceReceipts: [
+        ...skill.governanceReceipts,
+        governanceReceipt({
+          action: "REVOKE",
+          skillId: skill.id,
+          proofHash: proofHashFor(skill),
+          reason
+        })
+      ]
+    };
+    return structuredClone(skills[index]);
+  });
+}
+
+export async function rollbackStoredSkill(
+  idValue: string,
+  reason: string
+): Promise<StoredSkill> {
+  return updateStoredJson(skillsPath(), [], async (skills: StoredSkill[]) => {
+    const sourceIndex = skills.findIndex((skill) => skill.id === idValue);
+    if (sourceIndex < 0) throw new Error("Stored skill not found");
+    skills[sourceIndex] = normalizeStoredSkill(skills[sourceIndex]);
+    const source = skills[sourceIndex];
+    if (
+      source.lifecycle !== "superseded" &&
+      source.lifecycle !== "revoked"
+    ) {
+      throw new Error("Only a superseded or revoked skill can be rolled back");
+    }
+    const actions = resolveStoredSkillActions(source);
+    const now = new Date().toISOString();
+    const compilation: CompileResult = {
+      ...source.compilation,
+      runId: id("rollback"),
+      createdAt: now,
+      runtime: getRuntimeInfo(),
+      parentRunId: source.compilation.runId,
+      revision: (source.compilation.revision || 1) + 1
+    };
+    const verification = await verifyCompilation(compilation, actions);
+    const compatibility = assessProofCompatibility({
+      compilation,
+      actions,
+      verification,
+      runtime: getRuntimeInfo()
+    });
+    if (
+      verification.status !== "verified" ||
+      compatibility.status !== "compatible"
+    ) {
+      throw new Error("Rollback verification failed");
+    }
+    const nextVersion =
+      Math.max(
+        0,
+        ...skills
+          .filter((skill) => skill.name === source.name)
+          .map((skill) => skill.version)
+      ) + 1;
+    const replacementId = id("skill");
+    for (let index = 0; index < skills.length; index += 1) {
+      const current = normalizeStoredSkill(skills[index]);
+      if (
+        current.name === source.name &&
+        current.lifecycle === "promoted"
+      ) {
+        skills[index] = {
+          ...current,
+          lifecycle: "superseded",
+          supersededAt: now,
+          supersededBySkillId: replacementId,
+          updatedAt: now,
+          governanceReceipts: [
+            ...current.governanceReceipts,
+            governanceReceipt({
+              action: "SUPERSEDE",
+              skillId: current.id,
+              proofHash: proofHashFor(current),
+              replacementSkillId: replacementId,
+              reason: `Rollback restored ${source.name} v${source.version}`
+            })
+          ]
+        };
+      } else {
+        skills[index] = current;
+      }
+    }
+    const proofHash = String(verification.proofBundle.proofHash || "");
+    const rolledBack: StoredSkill = {
+      ...source,
+      id: replacementId,
+      version: nextVersion,
+      lifecycle: "promoted",
+      status: "verified",
+      createdAt: now,
+      updatedAt: now,
+      reuseCount: 0,
+      compilation,
+      verification,
+      actions,
+      compatibility,
+      governanceReceipts: [
+        governanceReceipt({
+          action: "ROLLBACK",
+          skillId: replacementId,
+          sourceSkillId: source.id,
+          proofHash,
+          reason
+        })
+      ],
+      promotedAt: now,
+      promotedProofHash: proofHash,
+      revokedAt: undefined,
+      revocationReason: undefined,
+      supersededAt: undefined,
+      supersededBySkillId: undefined,
+      rollbackFromSkillId: source.id
+    };
+    skills.push(rolledBack);
+    return structuredClone(rolledBack);
   });
 }
 
@@ -284,6 +537,32 @@ function inferLegacyActions(compilation: CompileResult): ActionEvent[] {
         : undefined;
     })
     .filter((action): action is ActionEvent => Boolean(action));
+}
+
+function normalizeStoredSkill(skill: StoredSkill): StoredSkill {
+  return {
+    ...skill,
+    lifecycle:
+      skill.lifecycle ||
+      (skill.status === "verified" ? "promoted" : "candidate"),
+    governanceReceipts: skill.governanceReceipts || []
+  };
+}
+
+function proofHashFor(skill: StoredSkill): string {
+  const proofHash = skill.verification.proofBundle.proofHash;
+  if (typeof proofHash !== "string" || !proofHash) {
+    throw new Error("Stored proof hash is missing");
+  }
+  return proofHash;
+}
+
+function governanceReceipt(input: Omit<SkillGovernanceReceipt, "receiptId" | "createdAt">): SkillGovernanceReceipt {
+  return {
+    ...input,
+    receiptId: id("skill_receipt"),
+    createdAt: new Date().toISOString()
+  };
 }
 
 function permissionToAction(

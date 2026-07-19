@@ -332,10 +332,10 @@ the GAIA-compatible skill artifact.`}
         >
           <Save size={17} />
           {savedSkillId
-            ? "Saved to skill memory"
+            ? "Saved as promotion candidate"
             : isSaving
               ? "Saving"
-              : "Save verified skill"}
+              : "Save verified candidate"}
         </button>
       ) : null}
     </SpotlightCard>

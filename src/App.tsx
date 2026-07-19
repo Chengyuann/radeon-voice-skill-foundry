@@ -23,8 +23,11 @@ import {
   getRuntime,
   listKnowledge,
   listSkills,
+  promoteSkill,
   refineSop,
   revalidateSkill,
+  revokeSkill,
+  rollbackSkill,
   runDemonstrationCommand,
   reuseSkill,
   saveSkill,
@@ -335,6 +338,71 @@ export function App() {
     }
   };
 
+  const handlePromoteSkill = async (skillId: string) => {
+    setBusy("memory");
+    setError(undefined);
+    try {
+      await promoteSkill(skillId);
+      setSkills(await listSkills());
+      await refreshRuntime();
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "Skill promotion failed"
+      );
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const handleRevokeSkill = async (
+    skillId: string,
+    reason: string
+  ) => {
+    setBusy("memory");
+    setError(undefined);
+    try {
+      await revokeSkill(skillId, reason);
+      setLastReuse(undefined);
+      setSkills(await listSkills());
+      await refreshRuntime();
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "Skill revocation failed"
+      );
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const handleRollbackSkill = async (
+    skillId: string,
+    reason: string
+  ) => {
+    setBusy("memory");
+    setError(undefined);
+    try {
+      const rolledBack = await rollbackSkill(skillId, reason);
+      setCompilation(rolledBack.compilation);
+      setVerification(rolledBack.verification);
+      setSavedSkillId(rolledBack.id);
+      setLastReuse(undefined);
+      setSkills(await listSkills());
+      await refreshRuntime();
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "Skill rollback failed"
+      );
+    } finally {
+      setBusy(null);
+    }
+  };
+
   const handleVerify = async () => {
     if (!compilation) return;
     setBusy("verify");
@@ -457,6 +525,9 @@ export function App() {
         onAddKnowledge={handleAddKnowledge}
         onReuseSkill={handleReuseSkill}
         onRevalidateSkill={handleRevalidateSkill}
+        onPromoteSkill={handlePromoteSkill}
+        onRevokeSkill={handleRevokeSkill}
+        onRollbackSkill={handleRollbackSkill}
       />
     ) : null;
 

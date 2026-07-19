@@ -33,7 +33,10 @@ describe("local RAG and skill memory", () => {
     const {
       listSkills,
       markSkillReused,
+      promoteStoredSkill,
       revalidateStoredSkill,
+      revokeStoredSkill,
+      rollbackStoredSkill,
       saveVerifiedSkill
     } = await import("./storage.js");
     const compilation = {
@@ -148,7 +151,8 @@ describe("local RAG and skill memory", () => {
       receipts: [],
       metrics: [],
       proofBundle: {
-        compatibility: createProofCompatibilityManifest(compilation, actions)
+        compatibility: createProofCompatibilityManifest(compilation, actions),
+        proofHash: "f".repeat(64)
       },
       verificationDurationMs: 1
     };
@@ -166,10 +170,34 @@ describe("local RAG and skill memory", () => {
       verification,
       actions
     });
-    const reused = await markSkillReused(second.id);
-
     expect(first.version).toBe(1);
     expect(second.version).toBe(2);
+    expect(first.lifecycle).toBe("candidate");
+    expect(second.lifecycle).toBe("candidate");
+    await expect(markSkillReused(second.id)).rejects.toThrow(
+      "promote it before reuse"
+    );
+    const promotedFirst = await promoteStoredSkill(first.id);
+    const reusedFirst = await markSkillReused(first.id);
+    const promotedSecond = await promoteStoredSkill(second.id);
+    const skillsAfterPromotion = await listSkills();
+    const supersededFirst = skillsAfterPromotion.find(
+      (skill) => skill.id === first.id
+    );
+    const reused = await markSkillReused(second.id);
+
+    expect(promotedFirst.lifecycle).toBe("promoted");
+    expect(promotedFirst.promotedProofHash).toBe(
+      verification.proofBundle.proofHash
+    );
+    expect(reusedFirst.skill.reuseCount).toBe(1);
+    expect(promotedSecond.lifecycle).toBe("promoted");
+    expect(supersededFirst?.lifecycle).toBe("superseded");
+    expect(
+      supersededFirst?.governanceReceipts.some(
+        (receipt) => receipt.action === "SUPERSEDE"
+      )
+    ).toBe(true);
     expect(reused.skill.reuseCount).toBe(1);
     expect(reused.reuseLatencyMs).toBeGreaterThan(0);
     expect(reused.originalCompileDurationMs).toBe(1);
@@ -195,8 +223,39 @@ describe("local RAG and skill memory", () => {
     const revalidated = await revalidateStoredSkill(second.id);
     expect(revalidated.compatibility.status).toBe("compatible");
     expect(revalidated.skill.status).toBe("verified");
+    expect(revalidated.skill.lifecycle).toBe("candidate");
     expect(revalidated.skill.actions).toEqual(actions);
-    expect((await markSkillReused(second.id)).skill.reuseCount).toBe(2);
+    await expect(markSkillReused(second.id)).rejects.toThrow(
+      "promote it before reuse"
+    );
+    const repromoted = await promoteStoredSkill(second.id);
+    expect(repromoted.lifecycle).toBe("promoted");
+
+    const revoked = await revokeStoredSkill(
+      second.id,
+      "Policy owner requested an emergency stop"
+    );
+    expect(revoked.lifecycle).toBe("revoked");
+    expect(revoked.revocationReason).toMatch(/emergency stop/);
+    await expect(markSkillReused(second.id)).rejects.toThrow(
+      "revoked"
+    );
+
+    const rolledBack = await rollbackStoredSkill(
+      first.id,
+      "Restore the last known safe policy"
+    );
+    expect(rolledBack.version).toBe(3);
+    expect(rolledBack.lifecycle).toBe("promoted");
+    expect(rolledBack.rollbackFromSkillId).toBe(first.id);
+    expect(
+      rolledBack.governanceReceipts.some(
+        (receipt) =>
+          receipt.action === "ROLLBACK" &&
+          receipt.sourceSkillId === first.id
+      )
+    ).toBe(true);
+    expect((await markSkillReused(rolledBack.id)).skill.reuseCount).toBe(1);
   });
 
   it("packages the server-authoritative action contract", async () => {

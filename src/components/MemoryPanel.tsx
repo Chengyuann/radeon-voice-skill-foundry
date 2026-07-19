@@ -1,11 +1,14 @@
 import {
   BookOpen,
+  CircleCheckBig,
   Database,
+  History,
   Plus,
   RotateCw,
   ShieldAlert,
   Search,
   ShieldCheck,
+  ShieldX,
   Zap
 } from "lucide-react";
 import { useState } from "react";
@@ -26,6 +29,9 @@ type MemoryPanelProps = {
   onAddKnowledge: (input: { title: string; content: string }) => Promise<void>;
   onReuseSkill: (skillId: string) => Promise<void>;
   onRevalidateSkill: (skillId: string) => Promise<void>;
+  onPromoteSkill: (skillId: string) => Promise<void>;
+  onRevokeSkill: (skillId: string, reason: string) => Promise<void>;
+  onRollbackSkill: (skillId: string, reason: string) => Promise<void>;
 };
 
 export function MemoryPanel({
@@ -36,17 +42,37 @@ export function MemoryPanel({
   isBusy,
   onAddKnowledge,
   onReuseSkill,
-  onRevalidateSkill
+  onRevalidateSkill,
+  onPromoteSkill,
+  onRevokeSkill,
+  onRollbackSkill
 }: MemoryPanelProps) {
   const [showAdd, setShowAdd] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [governanceSkillId, setGovernanceSkillId] = useState<string>();
+  const [governanceAction, setGovernanceAction] = useState<
+    "revoke" | "rollback"
+  >();
+  const [governanceReason, setGovernanceReason] = useState("");
 
   const submit = async () => {
     await onAddKnowledge({ title, content });
     setTitle("");
     setContent("");
     setShowAdd(false);
+  };
+
+  const submitGovernance = async () => {
+    if (!governanceSkillId || !governanceAction) return;
+    if (governanceAction === "revoke") {
+      await onRevokeSkill(governanceSkillId, governanceReason.trim());
+    } else {
+      await onRollbackSkill(governanceSkillId, governanceReason.trim());
+    }
+    setGovernanceSkillId(undefined);
+    setGovernanceAction(undefined);
+    setGovernanceReason("");
   };
 
   return (
@@ -152,16 +178,41 @@ export function MemoryPanel({
                   <div>
                     <strong>{skill.name}</strong>
                     <span>
-                      v{skill.version} ·{" "}
-                      {skill.status === "verified"
-                        ? "proof compatible"
-                        : "revalidation required"}
+                      v{skill.version} · {skill.lifecycle}
                     </span>
                   </div>
                   <p>
                     {skill.compilation.constraints.length} rules · reused{" "}
-                    {skill.reuseCount} times
+                    {skill.reuseCount} times ·{" "}
+                    {skill.status === "verified"
+                      ? "proof compatible"
+                      : "revalidation required"}
                   </p>
+                  <div className="skill-governance-meta">
+                    <Badge
+                      tone={
+                        skill.lifecycle === "promoted"
+                          ? "green"
+                          : skill.lifecycle === "revoked"
+                            ? "red"
+                            : skill.lifecycle === "candidate"
+                              ? "blue"
+                              : "neutral"
+                      }
+                    >
+                      {skill.lifecycle}
+                    </Badge>
+                    <code>
+                      {String(
+                        skill.promotedProofHash ||
+                          skill.verification.proofBundle.proofHash ||
+                          ""
+                      ).slice(0, 10)}
+                    </code>
+                    <span>
+                      {skill.governanceReceipts.length} governance receipts
+                    </span>
+                  </div>
                   {lastReuse?.skill.id === skill.id ? (
                     <div className="reuse-benchmark">
                       <Zap size={12} />
@@ -187,18 +238,108 @@ export function MemoryPanel({
                       <span>{skill.compatibility.reasons[0]}</span>
                     </div>
                   ) : null}
-                  <button
-                    className="memory-reuse"
-                    disabled={isBusy}
-                    onClick={() =>
-                      skill.status === "verified"
-                        ? onReuseSkill(skill.id)
-                        : onRevalidateSkill(skill.id)
-                    }
-                  >
-                    <RotateCw size={13} />
-                    {skill.status === "verified" ? "Reuse" : "Revalidate"}
-                  </button>
+                  {governanceSkillId === skill.id ? (
+                    <div className="skill-governance-form">
+                      <textarea
+                        placeholder={
+                          governanceAction === "revoke"
+                            ? "Why is this skill being revoked?"
+                            : "Why should this historical version be restored?"
+                        }
+                        value={governanceReason}
+                        onChange={(event) =>
+                          setGovernanceReason(event.target.value)
+                        }
+                      />
+                      <div>
+                        <button
+                          className="memory-reuse"
+                          disabled={
+                            governanceReason.trim().length < 4 || isBusy
+                          }
+                          onClick={submitGovernance}
+                        >
+                          {governanceAction === "revoke" ? (
+                            <ShieldX size={13} />
+                          ) : (
+                            <History size={13} />
+                          )}
+                          Confirm {governanceAction}
+                        </button>
+                        <button
+                          className="memory-reuse"
+                          disabled={isBusy}
+                          onClick={() => {
+                            setGovernanceSkillId(undefined);
+                            setGovernanceAction(undefined);
+                            setGovernanceReason("");
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="skill-governance-actions">
+                      {skill.status === "revalidation_required" &&
+                      (skill.lifecycle === "candidate" ||
+                        skill.lifecycle === "promoted") ? (
+                        <button
+                          className="memory-reuse"
+                          disabled={isBusy}
+                          onClick={() => onRevalidateSkill(skill.id)}
+                        >
+                          <RotateCw size={13} />
+                          Revalidate
+                        </button>
+                      ) : skill.lifecycle === "candidate" ? (
+                        <button
+                          className="memory-reuse governance-promote"
+                          disabled={isBusy}
+                          onClick={() => onPromoteSkill(skill.id)}
+                        >
+                          <CircleCheckBig size={13} />
+                          Promote
+                        </button>
+                      ) : skill.lifecycle === "promoted" ? (
+                        <button
+                          className="memory-reuse"
+                          disabled={isBusy}
+                          onClick={() => onReuseSkill(skill.id)}
+                        >
+                          <RotateCw size={13} />
+                          Reuse
+                        </button>
+                      ) : (
+                        <button
+                          className="memory-reuse"
+                          disabled={isBusy}
+                          onClick={() => {
+                            setGovernanceSkillId(skill.id);
+                            setGovernanceAction("rollback");
+                          }}
+                        >
+                          <History size={13} />
+                          Rollback
+                        </button>
+                      )}
+                      {(skill.lifecycle === "candidate" ||
+                        skill.lifecycle === "promoted") &&
+                      skill.status === "verified" ? (
+                        <button
+                          className="memory-reuse governance-revoke"
+                          disabled={isBusy}
+                          onClick={() => {
+                            setGovernanceSkillId(skill.id);
+                            setGovernanceAction("revoke");
+                          }}
+                        >
+                          <ShieldX size={13} />
+                          Revoke
+                        </button>
+                      ) : null}
+                    </div>
+                  )}
                 </article>
               ))
           ) : (

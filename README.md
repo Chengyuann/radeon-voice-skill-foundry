@@ -79,6 +79,10 @@ The web UI now supports:
 - proof-bound `sandbox_replay.json` with six execution steps and five probes
 - local policy/SOP RAG with retrieved evidence
 - persistent verified-skill memory with versioning and reuse counts
+- explicit skill governance lifecycle: candidate, promoted, superseded, and
+  revoked
+- human promotion gate bound to the current proof hash, reasoned revocation,
+  immutable history, and verified rollback into a new version
 - measured full-compilation versus verified-skill reuse speedup
 - multi-turn natural-language constraint refinement
 - compact model output with runtime-owned IDs and confidence metadata
@@ -282,6 +286,13 @@ against an isolated local state machine, records before/after hashes and output
 diffs, then runs probes for automatic email sending, P2 scope escape, sensitive
 report leakage, missing-owner guessing, and network writes. Any failed step or
 probe quarantines the skill.
+
+Verified output is first saved as a promotion candidate. Exact reuse remains
+blocked until a human promotes that proof-compatible version. Promoting a newer
+version supersedes the previous promoted version. Revocation requires a reason,
+and rollback never mutates history: it revalidates the selected historical
+version under the current runtime and creates a new promoted version with a
+governance receipt.
 
 Quark quantization v11 tested INT4 W4A16 export and INT8 W8A8 serving on the
 same W7900. INT8 reduced model-load VRAM by 44.07% and increased KV-cache
