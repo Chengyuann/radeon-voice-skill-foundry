@@ -14,10 +14,14 @@ to perform risky actions.
 - Project repository:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry`
 - License: MIT
+- Live product:
+  `https://radeon-voice-skill-foundry.pages.dev/`
 - Recommended live Demo V2:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO_V2.mp4`
 - Demo V2 captions:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO_V2.srt`
+- Demo V2 proof:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/demo-v2-proof.zip`
 - Original overview video:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
 - Official submission PR:
@@ -50,6 +54,7 @@ The system compiles both signals into:
 
 - `PROJECT_SPECIFICATION.pdf` - required English project specification
 - `PROJECT_SPECIFICATION.md` - accessible source version
+- `SCORING_EVIDENCE_MATRIX.md` - rubric-to-proof judge navigation
 - `ARCHITECTURE.png` - Agent architecture diagram
 - `POSTER.pdf` - supplementary one-page poster
 - `POSTER.png` - poster preview
@@ -90,6 +95,11 @@ The system compiles both signals into:
   `6ff30ccc2d052e226051fa6819760abe3b2c2ef6243b63169ab9d5e0caebfc40`
 - final proof ZIP SHA-256:
   `6ea53dfe28f8221b3db9b06e6eed537767bf28b4c6536d25d45f3ffec20500e9`
+- vLLM graph concurrency-eight: 257.65 aggregate output tokens/s
+- same-model serialized Transformers: 20.66 aggregate output tokens/s
+- measured serving uplift: 12.47x
+- native ASR batch-eight: 85.35x aggregate real-time
+- current local regression suite: 36/36, typecheck, production build
 
 Raw measurements are in:
 
@@ -97,6 +107,7 @@ Raw measurements are in:
 - `benchmarks/optimization-w7900-2026-07-17.json`
 - `benchmarks/radeon-audio-proof-v8-2026-07-18.json`
 - `benchmarks/lifecycle-enhancements-v9-2026-07-18.json`
+- `benchmarks/weekend-v10-summary.json`
 
 ## Current External Deliverable Status
 
@@ -107,6 +118,7 @@ Raw measurements are in:
 - Demo script: complete
 - Demo video URL: complete
 - Official hackathon PR: open and publicly verified
+- Scoring evidence matrix: complete
 
 The final narration uses AIDP `gemini-3.1-flash-tts-preview`, male voice
 `Charon`. Both demo MP4 files contain burned-in English narration captions and
@@ -135,10 +147,18 @@ revalidation, and child-proof download in one continuous browser session.
   policy, skill, and voice-evidence schema.
 - Changed runtime identity marks a skill `revalidation_required`; one-click
   revalidation creates a new child run before reuse is restored.
-- Final enhanced regression suite: 33/33 passed locally and on Radeon.
+- Current local regression suite: 36/36, typecheck, and production build.
+- Weekend v10 pinned Radeon source: 33/33 and production build.
 - vLLM graph serving reached 257.65 aggregate output tokens/s at concurrency
   eight versus 20.66 for the serialized Transformers server.
 - Native Qwen3-ASR batch-eight reached 85.35x aggregate real-time and was
   6.66x faster than sequential inference.
 - Voice Evidence v0.3 closes a measured burst-loss blind spot and forces old
   v0.2 proofs through revalidation.
+
+## Evidence Boundary
+
+- Main Demo V2 is the real Cloudflare + W7900 inference and performance proof.
+- Continuous Demo V2 uses deterministic ASR/compiler fixtures with real Node
+  process restarts; it proves lifecycle control, not GPU throughput.
+- No quantized Quark INT8/FP8 A/B is claimed.

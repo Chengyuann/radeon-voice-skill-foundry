@@ -1,119 +1,120 @@
 # Track 2 Rules and Readiness Audit
 
-Audited: 2026-07-17 (UTC+8)
+Audited: 2026-07-19 (UTC+8)
 
-## Authoritative requirements
+## Governing Requirements
 
-Track 2 asks for a fully local, customizable AI Agent on AMD Radeon GPU and
-ROCm, with scenario execution, tool invocation/workflow orchestration, and
-stable local performance.
+The official competition repository requires Track 2 submissions to include:
 
-Core inference must run locally on Radeon. Closed remote APIs cannot implement
-the core function.
+- an English Project Specification covering application scenarios, Agent
+  architecture, core capabilities, local deployment, and Radeon inference
+  optimization
+- complete source code with environment, dependency, and startup instructions
+- a 3-5 minute Demo showing the actual workflow and Radeon execution
+- either a PPT or poster
+- an English pull request to the official repository
 
-Minimum capability requirement: at least two of:
-
-- local RAG
-- tool invocation
-- multi-step planning
-- local multi-turn memory
-- permission and privacy controls
-
-## Scoring
-
-The current Rules & Conditions export states:
+The detailed Rules & Conditions export scores the main rubric out of 100:
 
 - Agent functional completeness: 60
-  - clear positioning and creative scenario: 20
+  - positioning and creative scenario: 20
   - decomposition, tools, RAG, and memory: 20
   - smooth multi-turn interaction: 20
 - Radeon / ROCm: 40
   - core inference on Radeon: 20
   - targeted inference-speed optimization: 20
-- optional optimization bonus: 20 in the detailed English rules export
 
-The Chinese event copy describes the main score as 100 (60 + 40) and does not
-show the optional 20-point line. We should treat 60 + 40 as the guaranteed
-rubric and pursue quantization/model-API optimization as bonus evidence rather
-than depending on it.
+The detailed English rules also describe a possible 20-point optimization
+bonus. The guaranteed readiness claim in this audit remains the 100-point main
+rubric.
 
-## Submission requirements
+Track 2 requires at least two of local RAG, tool invocation, multi-step
+planning, local memory, and permission/privacy control. This project implements
+all five.
 
-- English Project Specification
-  - application scenario
-  - Agent architecture diagram
-  - core capabilities
-  - model and local deployment plan
-  - Radeon inference optimization
-- complete source repository
-- English README with setup, startup, and dependencies
-- 3-5 minute demo video showing real Radeon execution
-- PPT or poster
-- fork the official repository and open an English pull request
-- PR title:
-  - `Track 2, N/A, Radeon Voice Skill Foundry`
+## Judge Quick Path
 
-## Current project coverage
+1. Open the live product:
+   `https://radeon-voice-skill-foundry.pages.dev/`
+2. Watch the recommended 4:48 Demo V2:
+   `RADEON_VOICE_SKILL_FOUNDRY_DEMO_V2.mp4`
+3. Read `submission/SCORING_EVIDENCE_MATRIX.md`.
+4. Review `submission/PROJECT_SPECIFICATION.pdf` and
+   `submission/ARCHITECTURE.png`.
+5. Inspect `docs/WEEKEND_W7900_EXPERIMENTS.md` and
+   `benchmarks/weekend-v10-summary.json` for raw Radeon optimization evidence.
+6. Use `CONTINUOUS_OPERATION_DEMO_V2.mp4` only for restart, invalidation, and
+   proof-lineage behavior.
 
-| Requirement | Status | Evidence / Gap |
+## Main Rubric Readiness
+
+| Rubric item | Weight | Status | Primary evidence |
+|---|---:|---|---|
+| Positioning and creative scenario | 20 | Complete | voice-seeded cold-start verification; Project Specification sections 1-3; Demo V2 00:00-00:32 |
+| Decomposition, tools, RAG, and memory | 20 | Complete | all five Track 2 capability categories; Demo V2 Voice -> Policy -> Proof -> Memory |
+| Smooth multi-turn interaction | 20 | Complete | module UI, transcript acknowledgement, natural-language revision, save/reuse, revalidation; both V2 demos |
+| Core inference on Radeon | 20 | Complete | real Cloudflare -> authenticated gateway -> W7900 Qwen3-ASR and Qwen3-4B path; Demo V2 |
+| Targeted inference optimization | 20 | Complete | Transformers/vLLM A/B, native ASR batching, compact output, exact verified-skill reuse |
+
+This table is a readiness mapping, not a claim that judges have awarded a
+score.
+
+## Required Deliverables
+
+| Deliverable | Status | Evidence |
 |---|---|---|
-| Registration approved | Complete | User confirmed |
-| AMD Developer Program / Cloud credit | Complete | Radeon Cloud access and 5 credits observed |
-| Solo entry | Complete | Team name should be `N/A` |
-| Radeon + ROCm local inference | Complete | W7900-class, gfx1100, ROCm 7.2.1 |
-| Open-source local Agent model | Complete | Qwen3-4B-Instruct-2507 |
-| Local voice model | Complete at benchmark level | Qwen3-ASR-0.6B, 17.98x real-time warm |
-| Tool invocation | Complete in deterministic workspace | mail/calendar/file/report capability model |
-| Multi-step planning | Complete | spoken SOP -> constraints -> skill -> tests -> proof |
-| Permission/privacy | Complete | mail.send deny, redaction, review, receipts |
-| RAG | Complete | local policy/SOP index, retrieval evidence, context injected into compiler |
-| Persistent multi-turn memory | Complete | verified skills persist with versions and reuse counts |
-| Smooth multi-turn UX | Substantially complete | natural-language rule revisions create parent/child runs; polish still possible |
-| Real audio in product UI | Complete | browser recording/upload -> WAV -> persistent Radeon Qwen3-ASR -> transcript |
-| Targeted speed optimization | Partial | warm/cold and model-size benchmarks exist; no vLLM/quantization comparison |
-| Dedicated Radeon Model API | Missing | custom local server works; official vLLM Model API not created |
-| English source README | Partial | usable but still describes planned work that is now complete |
-| Project Specification PDF | Missing | must be produced |
-| Architecture diagram | Missing as final artifact | text architecture exists |
-| Demo video | Missing | must show voice input and real Radeon metrics |
-| PPT/poster | Missing | choose poster or compact deck |
-| Official submission PR | Missing | only open after final package is ready |
+| Public source repository | Complete | `github.com/Chengyuann/radeon-voice-skill-foundry` |
+| English source README | Complete | setup, deployment, verification, benchmark, and Demo instructions |
+| English Project Specification | Complete | Markdown and generated PDF |
+| Agent architecture diagram | Complete | `submission/ARCHITECTURE.png` |
+| 3-5 minute actual-operation Demo | Complete | 4:48 Demo V2 with real W7900 inference |
+| Poster | Complete | `submission/POSTER.pdf` and PNG |
+| Official English PR | Complete | AMD official repository PR #7, open and mergeable |
+| Public interactive surface | Complete | Cloudflare Pages entry point with authenticated W7900 gateway |
 
-## Estimated rubric readiness
+## Technical Evidence
 
-Current evidence-based estimate before the next implementation pass:
+- Radeon Pro W7900-class, `gfx1100`, 47.98 GiB VRAM
+- ROCm 7.2.1
+- Qwen3-ASR-0.6B and Qwen3-4B-Instruct-2507 core inference on Radeon
+- Voice Evidence v0.3 clean sample: `pass / 100`
+- server-authoritative policy: `mail.send = deny`
+- deterministic verification: `7/7`
+- current local regression suite: `36/36`, typecheck, production build
+- clean W7900 weekend experiment commit: `33/33`, production build
+- vLLM graph concurrency-eight throughput: `257.65 tokens/s`
+- serialized Transformers concurrency-eight throughput: `20.66 tokens/s`
+- measured serving throughput improvement: `12.47x`
+- native ASR batch-eight aggregate speed: `85.35x real-time`
+- compact structured output: `29.42%` fewer output tokens and `30.03%`
+  lower generation latency
+- exact Verified Skill reuse: `2.18 ms` median HTTP, measured `11,052x`
+  identical-skill fast path
 
-- positioning / scenario: strong
-- core capabilities: medium-high, reduced by missing RAG and memory UX
-- multi-turn experience: medium-low
-- local Radeon execution: strong
-- optimization: medium, because measured but not yet compared against a
-  deliberate optimized serving configuration
+## Evidence Boundaries
 
-The highest-value next work is:
+The two V2 videos have intentionally different evidence roles:
 
-1. benchmark Transformers versus an optimized path
-2. compare full replanning with verified-skill reuse
-3. produce English specification, video, and poster
+- **Main Demo V2** is the performance and product proof. It records the public
+  Cloudflare product executing real Qwen3-ASR and Qwen3-4B inference on the
+  W7900. The real model generation wait is preserved.
+- **Continuous Lifecycle Demo V2** is deterministic control evidence. It uses
+  repository ASR/compiler fixtures so two real Node API restarts, runtime
+  drift, invalidation, and child-proof revalidation can be reproduced in one
+  take. It is not presented as GPU performance evidence.
 
-## Platform readiness
+The synthetic Chinese SOP WAV is a reproducible fixture, not a claimed human
+recording. Acoustic drift in the weekend study is relative to the deterministic
+clean ASR output, not a human gold transcript.
 
-Completed:
+## Residual Risk and Bonus Work
 
-- email login and credits
-- Blank OpenCode Workspace launch
-- Jupyter terminal/API operation
-- ROCm/PyTorch/Triton installation
-- Node build/test on Radeon Cloud
-- local 4B Agent service
-- local 0.6B ASR benchmark
-- proof ZIP generated on Radeon
+The main 100-point rubric has direct evidence. Remaining risk is operational:
+the stable Cloudflare Pages URL depends on a W7900 Quick Tunnel origin, so a
+tunnel restart requires rotating the encrypted Pages origin and redeploying.
 
-Not required but currently absent:
-
-- SSH key and SSH-enabled private template
-- official dedicated vLLM Model API
-- public cloud URL for the web UI
-
-The lack of SSH does not block development because Jupyter is usable. A public
-or recorded demo surface is still needed for judging and presentation.
+No Quark INT8, FP8, or other quantized A/B has been completed. Quantization is
+therefore a future optional-bonus experiment, not part of the current evidence
+claim. A valid next experiment should compare FP16 and quantized variants on
+the same W7900 with semantic safety gates, TTFT, throughput, VRAM, and proof
+reproduction held constant.

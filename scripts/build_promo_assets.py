@@ -131,7 +131,7 @@ def campaign_banner() -> Path:
         width=2,
     )
     draw.text((104, 862), "FINAL RADEON VALIDATION", font=font(20, bold=True, mono=True), fill=GREEN)
-    draw.text((104, 904), "21/21 tests  |  7/7 proof  |  mail.send DENY", font=font(24, bold=True), fill=WHITE)
+    draw.text((104, 904), "36/36 tests  |  7/7 proof  |  mail.send DENY", font=font(24, bold=True), fill=WHITE)
     path = DEST / "PROMO_BANNER_V2.png"
     image.convert("RGB").save(path, optimize=True)
     return path

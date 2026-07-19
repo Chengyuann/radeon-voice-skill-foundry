@@ -26,6 +26,9 @@ Original continuous operation demo:
 Official AMD hackathon submission:
 `https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07/pull/7`
 
+Judge scoring matrix:
+`submission/SCORING_EVIDENCE_MATRIX.md`
+
 Radeon Voice Skill Foundry is a Track 2 project for the AMD AI DevMaster
 Hackathon. It turns a private spoken SOP and a structured workflow demonstration
 into a GAIA-compatible Agent Skill with:
@@ -227,8 +230,8 @@ and 17.17% near-silence. The proof bundle stores server-held derived metrics,
 the source SHA-256, the original ASR transcript hash, and whether the transcript
 was edited and reviewed. It does not include raw audio.
 
-The final Radeon audio-backed rerun used source commit `c759a41` and passed
-`21/21` tests, the production build, and `7/7` verification fixtures. The
+The pinned final Radeon audio-backed rerun used source commit `c759a41` and
+passed `21/21` tests, the production build, and `7/7` verification fixtures. The
 20.39-second SOP WAV transcribed in 1.426 seconds (`0.0699` RTF, `14.3x`
 real-time). Qwen3-4B compiled 13 constraints in 24.13 seconds with 368 ms TTFT,
 20.07 tokens/s, and 8.001 GiB peak VRAM. The server preserved
@@ -253,6 +256,12 @@ The experiments also found a 280 ms burst-loss blind spot in Voice Evidence
 v0.2; v0.3 now quarantines that sample and invalidates older proofs until
 revalidation. See `docs/WEEKEND_W7900_EXPERIMENTS.md` and
 `benchmarks/weekend-v10-summary.json`.
+
+The current local suite has since grown to `36/36` and passes typecheck and the
+production build. The main Demo V2 is the real Cloudflare-to-W7900 inference
+evidence. Continuous Demo V2 uses deterministic ASR/compiler fixtures with real
+Node process restarts and is used only for durability, invalidation, and proof
+lineage evidence. No Quark INT8/FP8 quantization A/B is claimed.
 
 Radeon Cloud local model server:
 
@@ -311,6 +320,7 @@ See:
 
 - `docs/AMD_ALIGNMENT_RECOMMENDATION.md`
 - `docs/RULES_AND_READINESS_AUDIT.md`
+- `submission/SCORING_EVIDENCE_MATRIX.md`
 - `docs/RADEON_CLOUD_RUNBOOK.md`
 - `docs/RADEON_W7900_BENCHMARK.md`
 - `docs/VOICE_INTEGRATION.md`

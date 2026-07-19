@@ -142,66 +142,128 @@ def build_architecture() -> Path:
     draw.text((120, 78), "Radeon Voice Skill Foundry", font=font(62, bold=True), fill=INK)
     draw.text(
         (120, 154),
-        "Private voice + source evidence + action trace -> governed skill + proof",
+        "Cloudflare product -> authenticated W7900 inference -> governed skill -> durable proof",
         font=font(30),
         fill=MUTED,
     )
 
-    gpu_box = (530, 278, 1870, 750)
-    rounded_box(draw, gpu_box, WHITE, ACCENT, radius=26, width=4)
-    draw.text((580, 306), "AMD RADEON GPU + ROCm 7.2.1", font=font(27, bold=True), fill=ACCENT_DARK)
-    draw.text((580, 346), "W7900-class | gfx1100 | local FP16 inference", font=font(22), fill=MUTED)
-
-    boxes = [
-        ((100, 390, 430, 625), "1  CAPTURE", "Voice SOP", "16 kHz mono WAV\n+ action events", BLUE_BG, BLUE),
-        ((610, 420, 1010, 650), "2  LOCAL ASR", "Qwen3-ASR-0.6B", "Transcript + timing\n17.98x real-time", "#FBEAE8", ACCENT_DARK),
-        ((1130, 420, 1530, 650), "3  AGENT COMPILER", "Qwen3-4B-Instruct", "Typed constraints\n+ multi-step skill", "#FBEAE8", ACCENT_DARK),
-        ((1970, 390, 2300, 625), "4  OUTPUT", "Proof-carrying Skill", "SKILL.md + policy\n+ tests + receipts", GREEN_BG, GREEN),
+    entry_boxes = [
+        (
+            (100, 300, 490, 555),
+            "PUBLIC PRODUCT",
+            "Cloudflare Pages",
+            "Cinematic module UI\nVoice -> Policy -> Proof -> Memory",
+            BLUE_BG,
+            BLUE,
+        ),
+        (
+            (585, 300, 975, 555),
+            "SAME-ORIGIN /api",
+            "Authenticated Gateway",
+            "Server-held token\nDirect origin requests rejected",
+            AMBER_BG,
+            AMBER,
+        ),
     ]
-
-    for rect, eyebrow, title, body, fill, accent in boxes:
+    for rect, eyebrow, title, body, fill, accent in entry_boxes:
         rounded_box(draw, rect, fill, outline=accent, radius=22, width=3)
-        x1, y1, x2, _ = rect
+        x1, y1, _, _ = rect
         draw.text((x1 + 28, y1 + 28), eyebrow, font=font(20, bold=True, mono=True), fill=accent)
-        draw.text((x1 + 28, y1 + 78), title, font=font(30, bold=True), fill=INK)
+        draw.text((x1 + 28, y1 + 76), title, font=font(29, bold=True), fill=INK)
         for idx, line in enumerate(body.splitlines()):
             draw.text((x1 + 28, y1 + 132 + idx * 38), line, font=font(22), fill=MUTED)
 
-    arrow(draw, (430, 507), (610, 507), color=ACCENT)
-    arrow(draw, (1010, 535), (1130, 535), color=ACCENT)
-    arrow(draw, (1530, 535), (1970, 507), color=ACCENT)
+    arrow(draw, (490, 428), (585, 428), color=BLUE)
 
-    rag = (930, 805, 1450, 1015)
-    guard = (300, 805, 820, 1015)
-    verify = (1580, 805, 2100, 1015)
-    memory = (790, 1110, 1610, 1322)
-    evidence = (100, 260, 430, 370)
+    gpu_box = (1070, 250, 2300, 650)
+    rounded_box(draw, gpu_box, WHITE, ACCENT, radius=26, width=4)
+    draw.text((1110, 278), "AMD RADEON GPU + ROCm 7.2.1", font=font(27, bold=True), fill=ACCENT_DARK)
+    draw.text(
+        (1110, 320),
+        "W7900-class | gfx1100 | Qwen3 FP16 inference",
+        font=font(22),
+        fill=MUTED,
+    )
+    inference_boxes = [
+        (
+            (1110, 375, 1630, 610),
+            "LOCAL SPEECH",
+            "Qwen3-ASR-0.6B",
+            "Voice transcript + timing\n85.35x aggregate RT at batch 8",
+        ),
+        (
+            (1740, 375, 2260, 610),
+            "AGENT COMPILER",
+            "Qwen3-4B-Instruct",
+            "Typed constraints + procedure\n257.65 tok/s at concurrency 8",
+        ),
+    ]
+    for rect, eyebrow, title, body in inference_boxes:
+        rounded_box(draw, rect, "#FBEAE8", outline=ACCENT_DARK, radius=20, width=3)
+        x1, y1, _, _ = rect
+        draw.text((x1 + 26, y1 + 25), eyebrow, font=font(19, bold=True, mono=True), fill=ACCENT_DARK)
+        draw.text((x1 + 26, y1 + 68), title, font=font(29, bold=True), fill=INK)
+        for idx, line in enumerate(body.splitlines()):
+            draw.text((x1 + 26, y1 + 121 + idx * 36), line, font=font(21), fill=MUTED)
 
-    for rect, eyebrow, title, body, fill, accent in [
-        (rag, "LOCAL CONTEXT", "Policy / SOP RAG", "Evidence injected into compilation", BLUE_BG, BLUE),
-        (guard, "DETERMINISTIC CPU", "Safety Kernel", "deny / review / redact / confirm", AMBER_BG, AMBER),
-        (verify, "DETERMINISTIC CPU", "Verification", "adversarial replay + hashes", GREEN_BG, GREEN),
-        (memory, "PROCEDURAL MEMORY", "Versioned Verified Skill Registry", "Exact reuse: 2.18 ms median HTTP", WHITE, GREEN),
-    ]:
+    arrow(draw, (975, 428), (1110, 428), color=ACCENT)
+    arrow(draw, (1630, 500), (1740, 500), color=ACCENT)
+
+    layer_y = 745
+    layer_w = 390
+    layer_gap = 55
+    layers = [
+        ("VOICE EVIDENCE", "Source-bound Gate", "PASS / REVIEW / QUARANTINE", AMBER_BG, AMBER),
+        ("LOCAL CONTEXT", "Policy / SOP RAG", "Retrieved evidence injected", BLUE_BG, BLUE),
+        ("SAFETY KERNEL", "Least Privilege", "deny / review / redact / confirm", AMBER_BG, AMBER),
+        ("VERIFICATION", "Adversarial Replay", "7/7 + receipts + proof hash", GREEN_BG, GREEN),
+        ("PROCEDURAL MEMORY", "Verified Skill", "2.18 ms exact reuse", WHITE, GREEN),
+    ]
+    layer_rects: list[tuple[int, int, int, int]] = []
+    for idx, (eyebrow, title, body, fill, accent) in enumerate(layers):
+        x1 = 100 + idx * (layer_w + layer_gap)
+        rect = (x1, layer_y, x1 + layer_w, layer_y + 225)
+        layer_rects.append(rect)
         rounded_box(draw, rect, fill, outline=accent, radius=22, width=3)
-        x1, y1, x2, _ = rect
-        draw.text((x1 + 28, y1 + 26), eyebrow, font=font(19, bold=True, mono=True), fill=accent)
-        draw.text((x1 + 28, y1 + 70), title, font=font(29, bold=True), fill=INK)
-        draw_wrapped(draw, (x1 + 28, y1 + 120), body, font(21), MUTED, x2 - x1 - 56, 7)
+        draw.text((x1 + 25, layer_y + 25), eyebrow, font=font(17, bold=True, mono=True), fill=accent)
+        draw.text((x1 + 25, layer_y + 68), title, font=font(27, bold=True), fill=INK)
+        draw_wrapped(draw, (x1 + 25, layer_y + 120), body, font(20), MUTED, layer_w - 50, 7)
+        if idx:
+            previous = layer_rects[idx - 1]
+            arrow(
+                draw,
+                (previous[2], layer_y + 112),
+                (rect[0], layer_y + 112),
+                color=GREEN if idx >= 3 else BLUE,
+                width=4,
+            )
 
-    rounded_box(draw, evidence, AMBER_BG, outline=AMBER, radius=18, width=3)
-    draw.text((124, 280), "VOICE EVIDENCE GATE", font=font(16, bold=True, mono=True), fill=AMBER)
-    draw.text((124, 316), "level | clipping | silence | hashes", font=font(18, bold=True), fill=INK)
-    draw.text((124, 345), "PASS / REVIEW / QUARANTINE", font=font(14), fill=MUTED)
-    arrow(draw, (265, 370), (265, 390), color=AMBER)
+    arrow(draw, (1320, 650), (295, layer_y), color=AMBER, width=4)
+    arrow(draw, (2000, 650), (740, layer_y), color=BLUE, width=4)
+    arrow(draw, (2145, 650), (1185, layer_y), color=ACCENT, width=4)
 
-    arrow(draw, (1190, 805), (1290, 650), color=BLUE)
-    arrow(draw, (1250, 650), (560, 805), color=AMBER)
-    arrow(draw, (1410, 650), (1840, 805), color=GREEN)
-    arrow(draw, (1840, 1015), (1450, 1110), color=GREEN)
-    arrow(draw, (1040, 1110), (560, 1015), color=GREEN)
+    lifecycle = (100, 1085, 2300, 1305)
+    rounded_box(draw, lifecycle, INK, outline=INK, radius=24, width=2)
+    draw.text((140, 1120), "DURABLE PROOF LIFECYCLE", font=font(20, bold=True, mono=True), fill="#B9E1CC")
+    lifecycle_steps = [
+        ("Atomic store", "voice + compile + verification"),
+        ("Restart", "trusted records recover"),
+        ("Runtime drift", "reuse is invalidated"),
+        ("Revalidate", "child proof + parentRunId"),
+    ]
+    for idx, (title, body) in enumerate(lifecycle_steps):
+        x = 140 + idx * 545
+        draw.text((x, 1170), title, font=font(27, bold=True), fill=WHITE)
+        draw.text((x, 1214), body, font=font(19), fill="#D8DCDE")
+        if idx < len(lifecycle_steps) - 1:
+            arrow(draw, (x + 420, 1200), (x + 505, 1200), color="#7FB99B", width=4)
 
-    draw.text((120, 1356), "Actions capture what happened. Voice captures why, when, and what must never happen.", font=font(27, bold=True), fill=INK)
+    draw.text(
+        (120, 1352),
+        "Main Demo V2 proves real W7900 inference. Continuous Demo V2 proves restart and revalidation control.",
+        font=font(25, bold=True),
+        fill=INK,
+    )
 
     path = SUBMISSION / "ARCHITECTURE.png"
     image.save(path, quality=95)
@@ -220,79 +282,104 @@ def build_poster() -> tuple[Path, Path]:
     draw.text((250, 160), "Skill Foundry", font=font(76, bold=True), fill=WHITE)
     draw.text((110, 254), "SPEAK THE SOP. PROVE THE SKILL.", font=font(25, bold=True, mono=True), fill="#D8DCDE")
 
-    draw.text((110, 410), "A local Agent can observe clicks.", font=font(44, bold=True), fill=INK)
-    draw.text((110, 470), "It cannot infer the hidden rules.", font=font(44, bold=True), fill=ACCENT_DARK)
+    draw.text((110, 395), "A local Agent can observe clicks.", font=font(44, bold=True), fill=INK)
+    draw.text((110, 455), "It cannot infer the hidden rules.", font=font(44, bold=True), fill=ACCENT_DARK)
     draw_wrapped(
         draw,
-        (110, 550),
-        "Voice captures exceptions and prohibited actions. Server-held evidence checks level, clipping, silence, source integrity, and the original ASR transcript before promotion.",
-        font(29),
+        (110, 535),
+        "Voice captures exceptions and prohibited actions. The W7900 compiles those rules into a least-privilege skill, then adversarial replay proves it before promotion.",
+        font(27),
         MUTED,
         1580,
-        12,
+        10,
     )
 
-    y = 735
+    y = 690
     metrics = [
-        ("29.42%", "fewer output tokens", "compact structured output"),
-        ("30.03%", "lower generation latency", "same W7900 + same model"),
-        ("100/100", "voice evidence gate", "20.39 s SOP WAV passed"),
+        ("257.65", "output tokens/s", "vLLM graph at concurrency 8"),
+        ("12.47x", "serving uplift", "versus serialized Transformers"),
+        ("85.35x", "ASR aggregate RT", "native Qwen3-ASR batch 8"),
+        ("100/100", "voice evidence", "clean source passed v0.3"),
+        ("7/7", "adversarial proof", "mail.send remains DENY"),
+        ("36/36", "current tests", "typecheck + production build"),
     ]
     card_w = 500
     gap = 40
     for index, (value, title, note) in enumerate(metrics):
-        x = 110 + index * (card_w + gap)
-        rounded_box(draw, (x, y, x + card_w, y + 325), WHITE, LINE, radius=18, width=2)
-        draw.text((x + 30, y + 38), value, font=font(57, bold=True), fill=ACCENT_DARK if index < 2 else GREEN)
-        draw.text((x + 30, y + 120), title, font=font(27, bold=True), fill=INK)
-        draw_wrapped(draw, (x + 30, y + 170), note, font(22), MUTED, card_w - 60, 9)
+        row = index // 3
+        column = index % 3
+        x = 110 + column * (card_w + gap)
+        card_y = y + row * 260
+        rounded_box(draw, (x, card_y, x + card_w, card_y + 225), WHITE, LINE, radius=18, width=2)
+        metric_color = ACCENT_DARK if index < 3 else GREEN
+        draw.text((x + 28, card_y + 25), value, font=font(51, bold=True), fill=metric_color)
+        draw.text((x + 28, card_y + 94), title, font=font(25, bold=True), fill=INK)
+        draw_wrapped(draw, (x + 28, card_y + 137), note, font(20), MUTED, card_w - 56, 7)
 
-    draw.text((110, 1160), "VOICE-TO-VERIFIED-SKILL", font=font(25, bold=True, mono=True), fill=BLUE)
+    draw.text((110, 1245), "VOICE-TO-VERIFIED-SKILL", font=font(25, bold=True, mono=True), fill=BLUE)
     steps = [
         ("1", "Speak + demonstrate", "Private SOP and aligned action trace"),
-        ("2", "Measure the source", "Level, clipping, silence, audio hash"),
-        ("3", "Compile locally", "Qwen3-ASR + Qwen3-4B on Radeon"),
-        ("4", "Prove + reuse", "Policy, tests, receipts, skill memory"),
+        ("2", "Measure + transcribe", "Voice Evidence v0.3 + local ASR"),
+        ("3", "Compile on W7900", "RAG + constraints + least privilege"),
+        ("4", "Prove + remember", "7/7 + receipts + durable child proofs"),
     ]
-    sy = 1230
+    sy = 1320
+    step_w = 375
     for idx, (number, title, body) in enumerate(steps):
-        box_y = sy + idx * 180
-        draw.ellipse((110, box_y, 180, box_y + 70), fill=ACCENT if idx < 2 else GREEN)
+        x = 110 + idx * 405
+        rounded_box(draw, (x, sy, x + step_w, sy + 255), WHITE, LINE, radius=18, width=2)
+        draw.ellipse((x + 24, sy + 24, x + 88, sy + 88), fill=ACCENT if idx < 2 else GREEN)
         nfont = font(28, bold=True)
         bbox = draw.textbbox((0, 0), number, font=nfont)
-        draw.text((145 - (bbox[2] - bbox[0]) / 2, box_y + 17), number, font=nfont, fill=WHITE)
+        draw.text((x + 56 - (bbox[2] - bbox[0]) / 2, sy + 38), number, font=nfont, fill=WHITE)
         if idx < len(steps) - 1:
-            draw.line((145, box_y + 72, 145, box_y + 175), fill="#B9BEC1", width=5)
-        draw.text((220, box_y + 2), title, font=font(31, bold=True), fill=INK)
-        draw.text((220, box_y + 52), body, font=font(24), fill=MUTED)
+            arrow(draw, (x + step_w + 8, sy + 128), (x + step_w + 30, sy + 128), color=BLUE, width=4)
+        draw.text((x + 24, sy + 112), title, font=font(25, bold=True), fill=INK)
+        draw_wrapped(draw, (x + 24, sy + 157), body, font(20), MUTED, step_w - 48, 7)
 
-    proof_x, proof_y = 980, 1208
-    rounded_box(draw, (proof_x, proof_y, 1690, 1925), WHITE, GREEN, radius=22, width=3)
-    draw.text((proof_x + 38, proof_y + 35), "PROOF-CARRYING OUTPUT", font=font(23, bold=True, mono=True), fill=GREEN)
+    proof_y = 1645
+    rounded_box(draw, (110, proof_y, 840, proof_y + 420), WHITE, GREEN, radius=22, width=3)
+    draw.text((145, proof_y + 34), "PROOF-CARRYING OUTPUT", font=font(22, bold=True, mono=True), fill=GREEN)
     items = [
-        "GAIA-compatible SKILL.md",
-        "least-privilege policy.yaml",
-        "positive + adversarial fixtures",
-        "governance receipts",
-        "hash-bound proof_bundle.json",
-        "source-bound voice_evidence.json",
-        "versioned procedural memory",
+        "GAIA-compatible SKILL.md + policy",
+        "positive and adversarial fixtures",
+        "governance receipts + artifact hashes",
+        "source-bound Voice Evidence",
+        "versioned memory + child-proof lineage",
     ]
     for idx, item in enumerate(items):
-        iy = proof_y + 102 + idx * 72
-        draw.rounded_rectangle((proof_x + 40, iy, proof_x + 72, iy + 32), radius=7, fill=GREEN_BG, outline=GREEN, width=2)
-        draw.line((proof_x + 49, iy + 17, proof_x + 57, iy + 25), fill=GREEN, width=4)
-        draw.line((proof_x + 57, iy + 25, proof_x + 68, iy + 8), fill=GREEN, width=4)
-        draw.text((proof_x + 95, iy - 2), item, font=font(25, bold=idx == 3), fill=INK)
+        iy = proof_y + 96 + idx * 61
+        draw.rounded_rectangle((146, iy, 176, iy + 30), radius=7, fill=GREEN_BG, outline=GREEN, width=2)
+        draw.line((154, iy + 16, 162, iy + 23), fill=GREEN, width=4)
+        draw.line((162, iy + 23, 173, iy + 7), fill=GREEN, width=4)
+        draw.text((198, iy - 1), item, font=font(21, bold=idx == 4), fill=INK)
 
-    draw.rounded_rectangle((110, 2045, 1690, 2335), radius=22, fill=INK)
-    draw.text((155, 2092), "Radeon Pro W7900-class | gfx1100 | ROCm 7.2.1", font=font(29, bold=True), fill=WHITE)
-    draw.text((155, 2152), "Qwen3-ASR-0.6B  ->  Qwen3-4B-Instruct  ->  deterministic verifier", font=font(24, mono=True), fill="#D8DCDE")
-    draw.text((155, 2220), "mail.send = DENY", font=font(39, bold=True), fill="#F4B6B2")
-    draw.text((620, 2220), "Radeon audio proof: 7/7", font=font(39, bold=True), fill="#B9E1CC")
+    rounded_box(draw, (880, proof_y, 1690, proof_y + 420), INK, INK, radius=22, width=2)
+    draw.text((920, proof_y + 34), "LIVE PRODUCT PATH", font=font(22, bold=True, mono=True), fill="#B9E1CC")
+    deployment = [
+        "Cloudflare Pages module UI",
+        "authenticated same-origin gateway",
+        "W7900 Qwen3-ASR + Qwen3-4B",
+        "deterministic safety + proof kernel",
+    ]
+    for idx, item in enumerate(deployment):
+        draw.text((922, proof_y + 100 + idx * 58), f"0{idx + 1}", font=font(18, bold=True, mono=True), fill="#F4B6B2")
+        draw.text((974, proof_y + 96 + idx * 58), item, font=font(22, bold=True), fill=WHITE)
+    draw.text((922, proof_y + 352), "mail.send = DENY", font=font(30, bold=True), fill="#F4B6B2")
+    draw.text((1285, proof_y + 352), "7/7 PASS", font=font(30, bold=True), fill="#B9E1CC")
 
-    draw.text((110, 2395), "Track 2 | Team N/A | github.com/Chengyuann/radeon-voice-skill-foundry", font=font(24, bold=True), fill=INK)
-    draw.text((110, 2440), "Actions capture what happened. Voice captures why, when, and what must never happen.", font=font(23), fill=MUTED)
+    draw.rounded_rectangle((110, 2130, 1690, 2350), radius=22, fill="#E4EEF3", outline=BLUE, width=3)
+    draw.text((150, 2165), "WATCH THE REAL PATH", font=font(20, bold=True, mono=True), fill=BLUE)
+    draw.text((150, 2210), "radeon-voice-skill-foundry.pages.dev", font=font(34, bold=True), fill=INK)
+    draw.text(
+        (150, 2265),
+        "Main Demo V2: real W7900 inference  |  Continuous Demo V2: restart + revalidation",
+        font=font(22),
+        fill=MUTED,
+    )
+
+    draw.text((110, 2405), "Track 2 | Team N/A | github.com/Chengyuann/radeon-voice-skill-foundry", font=font(24, bold=True), fill=INK)
+    draw.text((110, 2450), "Actions capture what happened. Voice captures why, when, and what must never happen.", font=font(23), fill=MUTED)
 
     png = SUBMISSION / "POSTER.png"
     image.save(png, quality=95)
@@ -499,10 +586,10 @@ def build_spec_pdf(architecture_path: Path) -> Path:
     lead = Table(
         [
             [
-                Paragraph("<b>W7900-class</b><br/><font size=8>gfx1100, 47.98 GiB</font>", styles["Bodyx"]),
-                Paragraph("<b>17.98x</b><br/><font size=8>ASR real-time</font>", styles["Bodyx"]),
-                Paragraph("<b>-30.03%</b><br/><font size=8>generation latency</font>", styles["Bodyx"]),
-                Paragraph("<b>100/100</b><br/><font size=8>voice evidence gate</font>", styles["Bodyx"]),
+                Paragraph("<b>257.65 tok/s</b><br/><font size=8>vLLM graph C8</font>", styles["Bodyx"]),
+                Paragraph("<b>12.47x</b><br/><font size=8>serving uplift</font>", styles["Bodyx"]),
+                Paragraph("<b>85.35x</b><br/><font size=8>ASR batch real-time</font>", styles["Bodyx"]),
+                Paragraph("<b>100 / 7 / 36</b><br/><font size=8>voice / proof / tests</font>", styles["Bodyx"]),
             ]
         ],
         colWidths=[41 * mm] * 4,
@@ -531,7 +618,7 @@ def build_spec_pdf(architecture_path: Path) -> Path:
         )
     )
     story.append(Spacer(1, 30 * mm))
-    story.append(Paragraph("Project Specification | 2026-07-18", styles["Smallx"]))
+    story.append(Paragraph("Project Specification | 2026-07-19", styles["Smallx"]))
     story.append(PageBreak())
 
     md_lines = (SUBMISSION / "PROJECT_SPECIFICATION.md").read_text().splitlines()
@@ -617,7 +704,7 @@ def build_spec_pdf(architecture_path: Path) -> Path:
                             Spacer(1, 4),
                             RLImage(str(architecture_path), width=doc.width, height=doc.width * 1420 / 2400),
                             Paragraph(
-                                "Figure 1. Local voice-to-verified-skill architecture. Red paths run on Radeon GPU; source evidence, safety, replay, and hashing remain deterministic.",
+                                "Figure 1. Public-to-W7900 voice-to-verified-skill architecture. Core ASR and Agent inference run on Radeon; source evidence, safety, replay, persistence, and hashing remain deterministic.",
                                 styles["Smallx"],
                             ),
                         ]
