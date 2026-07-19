@@ -1,6 +1,8 @@
 import express from "express";
 import Busboy from "busboy";
+import { spawn } from "node:child_process";
 import { timingSafeEqual } from "node:crypto";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -47,6 +49,7 @@ const app = express();
 const port = Number(process.env.PORT || 8791);
 const host = process.env.HOST || "127.0.0.1";
 const maxAudioUploadBytes = 25 * 1024 * 1024;
+let httpServer: ReturnType<typeof app.listen> | undefined;
 
 app.use(express.json({ limit: "2mb" }));
 app.use("/api", (request, response, next) => {
@@ -81,6 +84,40 @@ app.get("/api/health", async (_request, response) => {
 
 app.get("/api/runtime", (_request, response) => {
   response.json(getRuntimeInfo());
+});
+
+app.post("/api/demo-control/restart", (request, response) => {
+  if (process.env.RVSF_DEMO_CONTROL !== "1") {
+    response.status(404).json({ error: "Demo control is disabled" });
+    return;
+  }
+  const model =
+    request.body &&
+    typeof request.body === "object" &&
+    "model" in request.body &&
+    typeof request.body.model === "string"
+      ? request.body.model.trim()
+      : "";
+  if (model.length < 2 || model.length > 160) {
+    response.status(400).json({ error: "A valid runtime model is required" });
+    return;
+  }
+  response.json({
+    ok: true,
+    action: "restart",
+    nextModel: model,
+    currentPid: process.pid
+  });
+  response.on("finish", () => scheduleDemoRestart(model));
+});
+
+app.post("/api/demo-control/shutdown", (_request, response) => {
+  if (process.env.RVSF_DEMO_CONTROL !== "1") {
+    response.status(404).json({ error: "Demo control is disabled" });
+    return;
+  }
+  response.json({ ok: true, action: "shutdown", currentPid: process.pid });
+  response.on("finish", () => scheduleDemoShutdown());
 });
 
 app.get("/api/knowledge", async (_request, response) => {
@@ -291,11 +328,71 @@ app.get("/{*splat}", (_request, response) => {
   });
 });
 
-app.listen(port, host, () => {
+httpServer = app.listen(port, host, () => {
   console.log(
     `Radeon Voice Skill Foundry API listening on http://${host}:${port}`
   );
 });
+
+function scheduleDemoRestart(model: string): void {
+  setTimeout(() => {
+    closeDemoServer(() => {
+      const child = spawn(
+        process.execPath,
+        [...process.execArgv, ...process.argv.slice(1)],
+        {
+          cwd: process.cwd(),
+          env: {
+            ...process.env,
+            RADEON_MODEL: model,
+            RVSF_DEMO_RESTART_COUNT: String(
+              Number(process.env.RVSF_DEMO_RESTART_COUNT || 0) + 1
+            )
+          },
+          detached: true,
+          stdio: "ignore"
+        }
+      );
+      child.unref();
+      process.exit(0);
+    });
+  }, 100).unref();
+}
+
+function scheduleDemoShutdown(): void {
+  setTimeout(() => {
+    closeDemoServer(() => {
+      const pidFile = process.env.RVSF_DEMO_TUNNEL_PID_FILE;
+      if (pidFile) {
+        try {
+          const tunnelPid = Number(readFileSync(pidFile, "utf8").trim());
+          if (Number.isInteger(tunnelPid) && tunnelPid > 1) {
+            process.kill(tunnelPid, "SIGTERM");
+          }
+        } catch {
+          // The isolated Tunnel already exited or its PID file is unavailable.
+        }
+      }
+      process.exit(0);
+    });
+  }, 100).unref();
+}
+
+function closeDemoServer(onClosed: () => void): void {
+  let completed = false;
+  const finish = () => {
+    if (completed) return;
+    completed = true;
+    onClosed();
+  };
+  if (!httpServer) {
+    finish();
+    return;
+  }
+  httpServer.close(finish);
+  httpServer.closeIdleConnections?.();
+  setTimeout(finish, 2_000).unref();
+}
 
 type UploadedAudio = {
   buffer: Buffer;
