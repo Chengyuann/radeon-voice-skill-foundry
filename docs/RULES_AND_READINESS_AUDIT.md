@@ -97,6 +97,11 @@ score.
     capacity by `88.43%`
   - INT8 C128 was `36.70%` slower at concurrency eight and passed only `11/51`
     complete safety-semantic gates, so it was rejected for production
+- Adaptive Precision Controller v12:
+  - JSON Schema improved INT8 strict JSON from `0/12` to `2/12`
+  - semantic admission remained `0/12`
+  - automatic FP16 fallback restored `12/12` accepted outputs
+  - a real voice-backed proof recorded fallback, `mail.send = deny`, and `7/7`
 
 ## Evidence Boundaries
 

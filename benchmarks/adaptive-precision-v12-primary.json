@@ -1,0 +1,548 @@
+{
+  "schemaVersion": "0.1.0",
+  "measuredAt": "2026-07-19T11:20:34Z",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "runs": 12,
+  "rawInt8": [
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11875.74,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "bc73560a781079b5490bcbfe3ca247f93e43996d412ba392c0f379140753797f",
+      "content": "{\"error\": \"The provided input cannot be processed due to the following constraints:\\n\\n1. Do not invent rules: The system does not support 'invent' or 'create' rules.\\n2. Sensitive exclusion: Redact the following content: '...' \\n3. Do not invent rules: The system does not support 'invent' or 'create' rules.\\n4. Missing owner requires confirmation: The system requires 'confirmation' for 'missing' to be 'confirmed'.\\n5. 'Do not invent' is a system-level restriction: 'Do not invent' is a rule that prevents the creation of new rules.\\n\\n6. 'Do not invent' is a system-level restriction: 'Do not invent' is a system-level restriction that prevents the creation of new rules.\\n\\n7. 'Do not' is a system-level restriction: 'Do not' is a system-level restriction that prevents the creation of new rules.\\n\\n8. 'Do not' is a system-level restriction: 'Do not' is a system-level restriction that prevents the creation of new rules.\\n\\n9. 'Do not' is a system-level restriction: 'Do not' is a system-level restriction that prevents the creation of new rules.\\n\\n10. 'Do not' is a system-level restriction: 'Do not' is a system-level restriction that prevents the creation of new rules.\\n\\n11. 'Do not' is a system-level restriction: 'Do not' is a system-level restriction that prevents the creation of",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11828.36,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "d822b72b180ab298c4700aae7f48a429c91db49782d54d02c76eb38f92a132a8",
+      "content": "{ \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\": \"only\", \"sop\":",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11854.7,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "4b8f4da7a776ca759e3daeabd7ed4e43cceb0df7752d1570e557c053a105eff9",
+      "content": "{\"phase\": \"1\", \"p1\": \"1\", \"p2\": \"2\", \"p3\": \"3\", \"p4\": \"4\", \"p5\": \"5\", \"p6\": \"6\", \"p7\": \"7\", \"p8\": \"8\", \"p9\": \"9\", \"p10\": \"10\", \"p11\": \"11\", \"p12\": \"12\", \"p13\": \"13\", \"p14\": \"14\", \"p15\": \"15\", \"p16\": \"16\", \"p17\": \"17\", \"p18\": \"18\", \"p19\": \"19\", \"p20\": \"20\", \"p21\": \"21\", \"p22\": \"22\", \"p23\": \"23\", \"p24\": \"24\", \"p25\": \"25\", \"p26\": \"26\", \"p27\": \"27\", \"p28\": \"28\", \"p29\": \"29\", \"p30\": \"30\", \"p31\": \"31\", \"p32\": \"32\", \"p33\": \"33\", \"p34\": \"34\", \"p35\": \"35\", \"p36\": \"36\", \"p37\": \"37",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 120.2,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 105,
+        "completion_tokens": 3,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "257c1be96ae69f4b01c2c69bdb6d78605f59175819fb007d0bf245bf48444c4a",
+      "content": "{ }",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 1806.46,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 151,
+        "completion_tokens": 49,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "befb238321173c4fcdb2451346e7be427b044272655b4bb3bbbd598ab6648596",
+      "content": "{ \"sensitive\": \"redact\", \"prohibited\": \"side effects\", \"due_date\": \"only\", \"invent\": \"do_not_invent\", \"missing\": \"do_not\", \"due\": \"only\" }",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11815.39,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "0f4cdefde0a43bb66aae843c86a751008d8c77ce57260747380ef0cfa3c87d63",
+      "content": "{  \"p0\": \"1.1\", \"p1\": \"1.1\", \"p2\": \"1.2\", \"p3\": \"1.3\", \"p4\": \"1.4\", \"p5\": \"1.5\", \"p6\": \"1.6\", \"p7\": \"1.7\", \"p8\": \"1.8\", \"p9\": \"1.9\", \"p10\": \"1.10\", \"p11\": \"1.11\", \"p12\": \"1.12\", \"p13\": \"1.13\", \"p14\": \"1.14\", \"p15\": \"1.15\", \"p16\": \"1.16\", \"p17\": \"1.17\", \"p18\": \"1.18\", \"p19\": \"1.19\", \"p20\": \"1.20\", \"p21\": \"1.21\", \"p22\": \"1.22\", \"p23\": \"1.23\", \"p24\": \"1.24\", \"p25\": \"1.25\", \"p26\": \"1.26\", \"p27\": \"1.27\", \"p28\": \"1.28\", \"p29\": \"1.29\", \"p30\": \"1.",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 627.17,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 119,
+        "completion_tokens": 17,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "aed4b40ddfcda25982bdf6217533f9add776e537da8342aa960236e8cc094b32",
+      "content": "{ \"safely\": \"only in the context of the given instructions\"}",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 1621.63,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 146,
+        "completion_tokens": 44,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "327c37cb8c3490ed33668a72d911f0db24c1e36958eef73633b1e46079738ffc",
+      "content": "{ \"system\": \"Extract enforceable SOP constraints. Redact compensation data. Prohibited side effects. Redact compensation data. Create a calendar hold only when a due date exists. Do not invent rules.\" }",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11815.25,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "55dfe9187b90f6f5ce06a264e9f2c2b9a8b3d1c1414321da06040be311320273",
+      "content": "{  \n  \"SOP constraints\": \"Extract enforceable SOP constraints. Return atomic rules only. Sensitive exclusion is redact. Prohibited side effects are must_not. Missing ownership requires_confirmation. Due-date-only execution is only_if. Do not invent rules. \",  \n  \"SOP constraints\": \"Extract enforceable SOP constraints. Return atomic rules only. Sensitive exclusion is redact. Prohibited side effects are must_not. Missing ownership requires confirmation. Create a calendar hold only when a due date exists.\",  \n  \"SOP constraints\": \"Extract enforceable SOP constraints. Return atomic rules only. Sensitive exclusion is redact. Prohibited side effects are must_not. Missing ownership requires confirmation. Due-date-only execution is only_if. Do not invent rules.\",  \n  \"SOP\": \"Extract enforceable SOP constraints. Return atomic rules only. Sensitive exclusion is redact. Prohibited side effects are must_not. Missing ownership requires confirmation. Due-date-only execution is only_if. Do not invent rules.\",  \n  \"SOP\": \"Extract enforceable SOP constraints. Return atomic rules only. Sensitive exclusion is redact. Prohibited side effects are must_not. Missing ownership requires confirmation. Due-date-only execution is only_if. Do not invent rules.\",  \n  \"SOP\": \"Extract enforceable SOP constraints. Return atomic rules only. Sensitive exclusion is redact. Prohibited side effects are must_not. Missing ownership requires confirmation. Due-date-only execution is only_if. Do not invent rules.\",  \n  \"SOP\": \"Extract enforceable",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 590.77,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 118,
+        "completion_tokens": 16,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "bf860c1ba45b75d2ae8aae6a779fa9c578f0362f5fc8611b296bb78ffb712138",
+      "content": "{ \"role\": \"SOP\", \"content\": \"Extractable\"}",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11811.84,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "975f864ff8ecc1b5a9d966e3e8dc6d7a75ff41aec2885082ddc19ef3666c4754",
+      "content": "{  \n  \"SOPs\"  \n    : \"SOPs are not allowed. They are not required.\"  \n   ,  \n  \"SOPs are not allowed. They are not required.\"  \n  : \"SOPs are not allowed. They are not required.\"  \n  ,  \n  \"SOPs are not allowed. They are not required.\"  \n  : \"SOPs are not allowed. They are not required.\"  \n    ,  \n  \" \"  : \"SOPs are not allowed. They are not required.\"  \n   ,  \n  \"SOPs are not allowed. They are not required.\"  \n   : \"SOPs are not allowed. They are not required.\"  \n   ,  \n  \"SOPs are not allowed. They are not required.\"  \n  : \"SOPs are not allowed. They are not required.\"  \n  ,  \n  \"SOPs are not allowed. They are not required.\"  \n  : \"SOPs are not allowed. They are not required.\"  \n  ,  \n  \"SOPs are not allowed. They are not required.\"  \n  : \"SOPs are not allowed. They are not required.\"  \n   ,  \n  \"SOPs are not allowed. They are not required.\"  \n  : \"SOPs are not allowed. They are not required.\"  \n  ,  \n  \"SOPs are not allowed.",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 1321.75,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 137,
+        "completion_tokens": 35,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "ad433057bde492489b45dba18bb25fbb4a8191441723640a6f29039a6c712c54",
+      "content": "{ \"SOP\"  : \"Extract the enforceable rules for the given scenario, ensuring compliance with the provided constraints and ensuring that no side effects are introduced.\" }",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    }
+  ],
+  "schemaConstrainedInt8": [
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11848.96,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "db67948873c44ecf54153d17280eb8ea9c87f446c786f78f99e29294fd21ac39",
+      "content": "{ \"constraints\": [\n  { \"kind\": \"requires_confirmation\",\n    \"statement\": \"missing owner requires confirmation\" \n  , \"sourceText\": \"missing owner\" \n  , \"appliesTo\": [\n    \"sources\",\n    \"soucces\", \"souc\", \"souccs\", \"soucc\", \"souc\", \"soucc\", \"soucc\", \"soucc\", \"souc\", \"soucc\", \"souc\", \"soucc\", \"soucc\", \"souc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\", \"soucc\",",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 3364.71,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 193,
+        "completion_tokens": 91,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "56ad44dee2357af5eb7194da03714cc7a560b9aa8028523bf70714a9b143f8ec",
+      "content": "{ \"constraints\": [  {  \"kind\": \"redact\",  \"statement\": \"in the the 2001\",  \"sourceText\": \"in the 2001\",  \"appliesTo\": [  \"sophistication\",  \"in the 2001\"  ]  }  ]  }",
+      "jsonValid": true,
+      "kinds": [
+        "redact"
+      ],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11823.5,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "47038d621d891bf980ff38640d4f1e78fa7dd960d5feccdc75e895ffb42005c0",
+      "content": "{ \"constraints\": [\n   {\"kind\": \"must\", \"statement\": \"independent\", \"sourceText\": \"independent\", \"appliesTo\":  [ \"m\", \"n\", \"s\", \"p\", \"e\", \"f\", \"i\", \"c\", \"a\", \"c\", \"t\", \"t\", \"i\", \"o\", \"n\", \"i\", \"n\", \"a\", \"c\", \"t\", \"i\", \"o\", \"n\", \"a\", \"c\", \"t\", \"i\", \"o\", \"n\", \"a\", \"c\", \"t\", \"e\", \"a\", \"s\", \"t\", \"i\", \"o\", \"n\", \"e\", \"s\", \"t\", \"o\", \"n\", \"a\", \"c\", \"e\", \"t\", \"t\", \"i\", \"o\", \"n\", \"a\", \"c\", \"t\", \"i\", \"o\", \"n\", \"a\", \"c\", \"o\", \"n\", \"e\", \"t\", \"a\", \"c\", \"e\", \"a\", \"c\", \"e\", \"a\", \"c\", \"o\", \"n\", \"e\", \"a\", \"c\", \"o\", \"n\", \"e\", \"a\", \"c\", \"e\", \"a\", \"c\", \"o\", \"n\", \"a\", \"c\", \"e\",",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11851.21,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "24dfa6aea557f7a8ac6fa868feabc132bd1fcb4b43941720dd00e6efc48d273c",
+      "content": "{ \"constraints\":  \n     [                                                                                                                                                                                                                                                                                                              ",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11838.4,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "dc3a6073cddea0db00002cf830caed9d0720793ee792dfae3c1be6ba3374a06c",
+      "content": "{ \"constraints\":   [  {  \"kind\": \"requires_confirmation\",  \"statement\":  \"   1. 1.1.   1.1.  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1  1.1.1",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11809.76,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "a5fef2cb81bdd702d470b525274b95cb7aba50e88c0783df695fb856e16af7c5",
+      "content": "{\n \"constraints\": [\n  {\n    \"kind\": \"requires_confirmation\",\n    \"statement\": \"requirement\",\n    \"sourceText\": \"reduced\",\n    \"appliesTo\": [\n      \"reduced\",\n      \"reduced\"\n    ]\n  },\n  {\n \"kind\": \"requires_confirmation\",\n  \"statement\": \"requirement\",\n  \"sourceText\": \"reduced\",\n  \"appliesTo\": [\n    \"reduced\",\n    \"reduced\"\n  ]        }    ,                                                                                                                                                                               ",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11848.49,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "aae72c12124666178578b6b0cf11b5cb6190ebfe4d329b2c4095397243cd08e5",
+      "content": "{ \"constraints\": [ { \"kind\": \"requires_confirmation\", \"statement\": \"in the a 100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11841.49,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "4983ed519e2df8923ce7c7cfdaa23dbbdfdab2ec509a004989923c41958c1d77",
+      "content": "{ \"constraints\": [  { \"kind\": \"redact\", \"statement\": \"redact\", \"sourceText\": \"redact\", \"appliesTo\": [ \"redact\", \"sourcetext\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"redact\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"red\", \"",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11809.61,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "2c4df4a8cb582715bb9f63c78f1295ff48224aa9109b8ee691fd01c130d7bec1",
+      "content": "{\"constraints\": [{\"kind\": \"requires_confirmation\", \"statement\": \"1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11837.88,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "00a7adb9c3f6511760298e46e72c41fc2eb432f6401e358347c7ec2da82d8be8",
+      "content": "{  \"constraints\": [   \n   {  \"kind\": \"must\",   \"statement\": \"sensitive\"     ,   \"sourceText\": \"to\",  \"appliesTo\": [  \"   1  2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 8",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 4094.17,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 213,
+        "completion_tokens": 111,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "bc7778c0179c3fa7d66b88e0f4fee98e37f22a8e7b57a0b553e7cfe60d4802c0",
+      "content": "{  \"constraints\":  [  {  \"kind\":  \"requires_confirmation\"    ,   \"statement\":  \" 1000\"   ,   \"sourceText\":  \" 1000\"  ,  \"appliesTo\":   [\"souc\",   \" 1000\"     ]  }  ]  }",
+      "jsonValid": true,
+      "kinds": [
+        "requires_confirmation"
+      ],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact"
+      ],
+      "admitted": false
+    },
+    {
+      "ok": true,
+      "status": 200,
+      "latencyMs": 11836.32,
+      "usage": {
+        "prompt_tokens": 102,
+        "total_tokens": 422,
+        "completion_tokens": 320,
+        "prompt_tokens_details": null
+      },
+      "contentSha256": "81f7bcb03ebb4f57ababb8830449ee5087a3a938dd0751974090befe4470f86b",
+      "content": "{  \"constraints\":  [          {   \"kind\": \"redact\",   \"statement\": \"  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 1 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 ",
+      "jsonValid": false,
+      "kinds": [],
+      "missingKinds": [
+        "must_not",
+        "only_if",
+        "redact",
+        "requires_confirmation"
+      ],
+      "admitted": false
+    }
+  ],
+  "summary": {
+    "rawInt8JsonValid": 0,
+    "rawInt8Admitted": 0,
+    "constrainedInt8JsonValid": 2,
+    "constrainedInt8Admitted": 0,
+    "medianRawInt8LatencyMs": 6809.15,
+    "medianConstrainedInt8LatencyMs": 11837.1
+  }
+}

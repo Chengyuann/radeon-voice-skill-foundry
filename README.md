@@ -270,6 +270,14 @@ all policy semantics in only 11/51 samples versus FP16 at 51/51. The project
 therefore keeps FP16 and rejects the INT8 artifact. See
 `docs/QUARK_QUANTIZATION_W7900_V11.md`.
 
+Adaptive Precision Controller v12 then tested whether JSON Schema could recover
+the degraded INT8 model. Strict JSON improved from 0/12 to 2/12, but semantic
+admission remained 0/12. A fail-closed controller automatically selected FP16
+for all 12 requests and restored 12/12 accepted outputs. A real audio-backed
+product run recorded `selected = fallback` in the proof core, preserved
+`mail.send = deny`, and passed 7/7. See
+`docs/ADAPTIVE_PRECISION_CONTROLLER_V12.md`.
+
 Radeon Cloud local model server:
 
 ```bash
@@ -331,6 +339,7 @@ See:
 - `docs/RADEON_CLOUD_RUNBOOK.md`
 - `docs/RADEON_W7900_BENCHMARK.md`
 - `docs/QUARK_QUANTIZATION_W7900_V11.md`
+- `docs/ADAPTIVE_PRECISION_CONTROLLER_V12.md`
 - `docs/VOICE_INTEGRATION.md`
 - `docs/VOICE_SOP_FEASIBILITY_RESEARCH.md`
 - `docs/VOICE_AI_SPACE_SIGNALS_2026-07-18.md`
