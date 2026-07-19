@@ -261,7 +261,14 @@ The current local suite has since grown to `36/36` and passes typecheck and the
 production build. The main Demo V2 is the real Cloudflare-to-W7900 inference
 evidence. Continuous Demo V2 uses deterministic ASR/compiler fixtures with real
 Node process restarts and is used only for durability, invalidation, and proof
-lineage evidence. No Quark INT8/FP8 quantization A/B is claimed.
+lineage evidence.
+
+Quark quantization v11 tested INT4 W4A16 export and INT8 W8A8 serving on the
+same W7900. INT8 reduced model-load VRAM by 44.07% and increased KV-cache
+capacity by 88.43%, but was 36.70% slower at concurrency eight and preserved
+all policy semantics in only 11/51 samples versus FP16 at 51/51. The project
+therefore keeps FP16 and rejects the INT8 artifact. See
+`docs/QUARK_QUANTIZATION_W7900_V11.md`.
 
 Radeon Cloud local model server:
 
@@ -323,6 +330,7 @@ See:
 - `submission/SCORING_EVIDENCE_MATRIX.md`
 - `docs/RADEON_CLOUD_RUNBOOK.md`
 - `docs/RADEON_W7900_BENCHMARK.md`
+- `docs/QUARK_QUANTIZATION_W7900_V11.md`
 - `docs/VOICE_INTEGRATION.md`
 - `docs/VOICE_SOP_FEASIBILITY_RESEARCH.md`
 - `docs/VOICE_AI_SPACE_SIGNALS_2026-07-18.md`

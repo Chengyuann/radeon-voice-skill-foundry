@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import concurrent.futures
 import difflib
+import hashlib
 import json
 import math
 import os
@@ -282,12 +283,20 @@ def inference_request(
     )
     metrics = result.get("metrics", {})
     content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
+    try:
+        parsed_content = json.loads(content)
+        json_valid = isinstance(parsed_content, (dict, list))
+    except json.JSONDecodeError:
+        json_valid = False
     return {
         "inputTargetTokens": input_target,
         "outputTargetTokens": output_target,
         "variation": variation,
         "httpMs": result["_httpMs"],
         "metrics": metrics,
+        "content": content,
+        "contentSha256": hashlib.sha256(content.encode("utf-8")).hexdigest(),
+        "jsonValid": json_valid,
         "semanticGate": {
             "hasRedaction": "redact" in content.lower()
             or "compensation" in content.lower(),

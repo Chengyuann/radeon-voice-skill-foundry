@@ -1,0 +1,1322 @@
+{
+  "schemaVersion": "0.1.0",
+  "measuredAt": "2026-07-19T09:50:55Z",
+  "variant": "quark-int8-w8a8-c128-eager",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "precision": "INT8 W8A8",
+  "quantization": "Quark int8 per-tensor symmetric static, 128 calibration samples",
+  "modelUrl": "http://127.0.0.1:8014/v1",
+  "modelDirectory": "/workspace/rvsf-qwen3-4b-quark-int8-c128",
+  "modelDirectoryBytes": 4427660234,
+  "serverArgs": "vllm quark eager, max-model-len=4096, max-num-seqs=8, gpu-memory-utilization=0.25",
+  "environment": {
+    "measuredAt": "2026-07-19T09:52:36Z",
+    "platform": "Linux-6.8.0-79-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]",
+    "cwd": "/workspace/radeon-voice-skill-foundry-live/scripts",
+    "gpu": {
+      "torch": "2.9.1+gitff65f5b",
+      "hip": "7.2.53211-e1a6bc5663",
+      "device": "AMD Radeon Graphics",
+      "architecture": "gfx1100",
+      "totalVramBytes": 51522830336,
+      "allocatedVramBytes": 0,
+      "reservedVramBytes": 0
+    },
+    "rocmSmi": "============================ ROCm System Management Interface ============================\n====================================== Temperature =======================================\nGPU[0]\t\t: Temperature (Sensor edge) (C): 46.0\nGPU[0]\t\t: Temperature (Sensor junction) (C): 53.0\nGPU[0]\t\t: Temperature (Sensor memory) (C): 53.0\n==========================================================================================\n=================================== Power Consumption ====================================\nGPU[0]\t\t: Average Graphics Package Power (W): 37.0\n==========================================================================================\n=================================== % time GPU is busy ===================================\nGPU[0]\t\t: GPU use (%): 0\n==========================================================================================\n================================== Memory Usage (Bytes) ==================================\nGPU[0]\t\t: VRAM Total Memory (B): 51522830336\nGPU[0]\t\t: VRAM Total Used Memory (B): 30715490304\n==========================================================================================\n====================================== Product Info ======================================\nGPU[0]\t\t: Card Series: \t\tAMD Radeon Graphics\nGPU[0]\t\t: Card Model: \t\t0x744b\nGPU[0]\t\t: Card Vendor: \t\tAdvanced Micro Devices, Inc. [AMD/ATI]\nGPU[0]\t\t: Card SKU: \t\tD7070910\nGPU[0]\t\t: Subsystem ID: \t0x0e0c\nGPU[0]\t\t: Device Rev: \t\t0x00\nGPU[0]\t\t: Node ID: \t\t2\nGPU[0]\t\t: GUID: \t\t6853\nGPU[0]\t\t: GFX Version: \t\tgfx1100\n==========================================================================================\n================================== End of ROCm SMI Log ===================================",
+    "processes": "65  2-04:55:57  0.8  0.3 /workspace/.venv-rvsf/bin/python scripts/radeon_model_server.py\n   1317  1-20:05:57  0.1  0.6 /workspace/.venv-rvsf/bin/python scripts/radeon_asr_server.py\n  36235       02:52 13.1  0.2 /opt/venv/bin/python3 /opt/venv/bin/vllm serve /workspace/rvsf-qwen3-4b-quark-int8-c128 --host 127.0.0.1 --port 8014 --served-model-name Qwen/Qwen3-4B-Instruct-2507 --dtype float16 --quantization quark --max-model-len 4096 --max-num-seqs 8 --gpu-memory-utilization 0.25 --enforce-eager --enable-prefix-caching --enable-chunked-prefill\n  36941       01:42  4.6  0.1 /opt/venv/bin/python /workspace/radeon-voice-skill-foundry-live/scripts/radeon_quantization_ab.py --model-url http://127.0.0.1:8014/v1 --model Qwen/Qwen3-4B-Instruct-2507 --variant quark-int8-w8a8-c128-eager --precision INT8 W8A8 --quantization Quark int8 per-tensor symmetric static, 128 calibration samples --output /workspace/rvsf-v11-int8-c128.json --telemetry /workspace/rvsf-v11-int8-c128-telemetry.jsonl --model-dir /workspace/rvsf-qwen3-4b-quark-int8-c128 --server-args vllm quark eager, max-model-len=4096, max-num-seqs=8, gpu-memory-utilization=0.25",
+    "disk": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/loop39      98G   19G   75G  20% /workspace\noverlay         3.5T  425G  2.9T  13% /",
+    "packages": {
+      "torch": "2.9.1+gitff65f5b",
+      "transformers": "4.57.6",
+      "qwen-asr": null,
+      "vllm": "0.16.1.dev0+g89a77b108.d20260317.rocm721",
+      "flash-attn": "2.8.3",
+      "triton": "3.5.1",
+      "accelerate": "1.13.0"
+    }
+  },
+  "inference": {
+    "health": {
+      "ok": true,
+      "status": 200
+    },
+    "lengthRuns": [
+      {
+        "inputTargetTokens": 256,
+        "outputTargetTokens": 160,
+        "variation": 0,
+        "httpMs": 6077.85,
+        "metrics": {
+          "ttftMs": 179.16,
+          "generationMs": 6077.85,
+          "tokensPerSecond": 26.33,
+          "inputTokens": 315,
+          "outputTokens": 160,
+          "peakVramGiB": null
+        },
+        "content": "The user is concerned about the **in the** and **in the** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **",
+        "contentSha256": "b7de6d50cfe0cad007c399dba8f0945e953682211345db83355f22d0043bc12a",
+        "jsonValid": false,
+        "semanticGate": {
+          "hasRedaction": false,
+          "hasNoSend": false,
+          "hasConfirmation": false,
+          "hasDueDateCondition": false
+        }
+      },
+      {
+        "inputTargetTokens": 256,
+        "outputTargetTokens": 160,
+        "variation": 0,
+        "httpMs": 5945.8,
+        "metrics": {
+          "ttftMs": 46.66,
+          "generationMs": 5945.8,
+          "tokensPerSecond": 26.91,
+          "inputTokens": 315,
+          "outputTokens": 160,
+          "peakVramGiB": null
+        },
+        "content": "The user is concerned about the **in the** and **in the** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **in** **",
+        "contentSha256": "b7de6d50cfe0cad007c399dba8f0945e953682211345db83355f22d0043bc12a",
+        "jsonValid": false,
+        "semanticGate": {
+          "hasRedaction": false,
+          "hasNoSend": false,
+          "hasConfirmation": false,
+          "hasDueDateCondition": false
+        }
+      },
+      {
+        "inputTargetTokens": 1024,
+        "outputTargetTokens": 160,
+        "variation": 0,
+        "httpMs": 6170.27,
+        "metrics": {
+          "ttftMs": 244.7,
+          "generationMs": 6170.27,
+          "tokensPerSecond": 25.93,
+          "inputTokens": 1055,
+          "outputTokens": 160,
+          "peakVramGiB": null
+        },
+        "content": "**System Response**:  \nThe query appears to be a complex sequence of instructions mixing up, the core elements of a \"redaction\" or \"compensation\" data, \"draft email\" or \"inclusion\" of a specific set of instructions. However, the final and most critical part of the query is:  \n**\"Create a calendar hold only when a due date exists\"** — this is a **incomplete** and **inconsistent** instruction, likely **in the context of a specific system** or **in the context of a specific task** (e.g., \"redact\" or \"compensate\").  \nThe **inability** to **send** or **send** automatically **in** the **in** **in** **in** **in** **in",
+        "contentSha256": "14ab994dc2e9f5943d382f098771b2efd093ff4b04fcc3140ffed27d0ddf5718",
+        "jsonValid": false,
+        "semanticGate": {
+          "hasRedaction": true,
+          "hasNoSend": false,
+          "hasConfirmation": false,
+          "hasDueDateCondition": true
+        }
+      },
+      {
+        "inputTargetTokens": 1024,
+        "outputTargetTokens": 160,
+        "variation": 0,
+        "httpMs": 5981.67,
+        "metrics": {
+          "ttftMs": 51.3,
+          "generationMs": 5981.67,
+          "tokensPerSecond": 26.75,
+          "inputTokens": 1055,
+          "outputTokens": 160,
+          "peakVramGiB": null
+        },
+        "content": "**System Response**:  \nThe query appears to be a complex sequence of instructions mixing up, the core elements of a \"redaction\" or \"compensation\" data, \"draft email\" or \"inclusion\" of a specific set of instructions. However, the final and most critical part of the query is:  \n**\"Create a calendar hold only when a due date exists\"** — this is a **incomplete** and **inconsistent** instruction, likely **in the context of a specific system** or **in the context of a specific task** (e.g., \"redact\" or \"compensate\").  \nThe **inability** to **send** or **send** automatically **in** the **in** **in** **in** **in** **in",
+        "contentSha256": "14ab994dc2e9f5943d382f098771b2efd093ff4b04fcc3140ffed27d0ddf5718",
+        "jsonValid": false,
+        "semanticGate": {
+          "hasRedaction": true,
+          "hasNoSend": false,
+          "hasConfirmation": false,
+          "hasDueDateCondition": true
+        }
+      },
+      {
+        "inputTargetTokens": 3072,
+        "outputTargetTokens": 160,
+        "variation": 0,
+        "httpMs": 6779.73,
+        "metrics": {
+          "ttftMs": 772.68,
+          "generationMs": 6779.73,
+          "tokensPerSecond": 23.6,
+          "inputTokens": 3053,
+          "outputTokens": 160,
+          "peakVramGiB": null
+        },
+        "content": "**Instructions:** 1. Extract the enforceable constraints from the \"only\" part of the text, preserving redaction, no-send, and missing-owner confirmation, and ensure the due date is only included in the final output.  \n2. **Final Answer Format**: Provide the final answer in a single, compact JSON object, adhering to the format:  \n```json  \n{  \n  \"enforceable_constraints\": {  \n    \"key\": \"value\"  \n  }  \n}  \n```  \n\n**Note**: The final response incorporates the specified requirements, including:  \n- **Redaction**: All content is preserved in the final output.  \n- **Missing owner**: Ensure the final output includes \"missing owner\" as part of the constraints.  \n- **Due date**: Only include the",
+        "contentSha256": "ff7ee34651d51acb1eb15b837c51379cad9ba0e5360c9ae62116c1e1af96cf5c",
+        "jsonValid": false,
+        "semanticGate": {
+          "hasRedaction": true,
+          "hasNoSend": true,
+          "hasConfirmation": true,
+          "hasDueDateCondition": true
+        }
+      },
+      {
+        "inputTargetTokens": 3072,
+        "outputTargetTokens": 160,
+        "variation": 0,
+        "httpMs": 6067.81,
+        "metrics": {
+          "ttftMs": 62.89,
+          "generationMs": 6067.81,
+          "tokensPerSecond": 26.37,
+          "inputTokens": 3053,
+          "outputTokens": 160,
+          "peakVramGiB": null
+        },
+        "content": "**Instructions:** 1. Extract the enforceable constraints from the \"only\" part of the text, preserving redaction, no-send, and missing-owner confirmation, and ensure the due date is only included in the final output.  \n2. **Final Answer Format**: Provide the final answer in a single, compact JSON object, adhering to the format:  \n```json  \n{  \n  \"enforceable_constraints\": {  \n    \"key\": \"value\"  \n  }  \n}  \n```  \n\n**Note**: The final response incorporates the specified requirements, including:  \n- **Redaction**: All content is preserved in the final output.  \n- **Missing owner**: Ensure the final output includes \"missing owner\" as part of the constraints.  \n- **Due date**: Only include the",
+        "contentSha256": "ff7ee34651d51acb1eb15b837c51379cad9ba0e5360c9ae62116c1e1af96cf5c",
+        "jsonValid": false,
+        "semanticGate": {
+          "hasRedaction": true,
+          "hasNoSend": true,
+          "hasConfirmation": true,
+          "hasDueDateCondition": true
+        }
+      }
+    ],
+    "concurrencyRuns": [
+      {
+        "concurrency": 1,
+        "medianWallMs": 4907.64,
+        "medianAggregateOutputTokensPerSecond": 26.08,
+        "bursts": [
+          {
+            "wallMs": 4914.06,
+            "aggregateOutputTokensPerSecond": 26.05,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1000,
+                "httpMs": 4912.5,
+                "metrics": {
+                  "ttftMs": 198.57,
+                  "generationMs": 4912.5,
+                  "tokensPerSecond": 26.06,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The provided text pertains to a set of instructions for generating a response regarding a specific scenario involving a \"due date\" in a \"Create a calendar\" context. The instructions are to be followed in a specific order, with a particular focus on maintaining the integrity of the \"due date\" and \"create a calendar\" elements. \n\nThe instructions include a variety of \"create a calendar\" actions, some of which are \"hold only\" and \"only when a due date exists\" or \"only when a due date exists\" or \"only when a due date exists\" or \"only when a due date exists\" or \"only when",
+                "contentSha256": "ca6f12af9f66536ffcb4a767fda60d433835cc0a1a70232d771aae432170519f",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 4907.64,
+            "aggregateOutputTokensPerSecond": 26.08,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1100,
+                "httpMs": 4907.07,
+                "metrics": {
+                  "ttftMs": 197.6,
+                  "generationMs": 4907.07,
+                  "tokensPerSecond": 26.08,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The provided text appears to be a combination of various instructions and constraints, including:\n\n- **Enforceable**: \"Only retain P0 and P1 findings\"  \n- **Redact**: \"Redact compensation data\"  \n- **Missing**: \"Missing owner requires confirmation\"  \n- **Create**: \"Create a calendar hold only when a due date exists\"  \n- **Redact**: \"Redact compensation data\"  \n- **Draft**: \"Draft email but never send\"  \n- **Missing**: \"Missing owner requires confirmation\"  \n- **Create**: \"Create a calendar hold only when a",
+                "contentSha256": "9f8b2260ae4bc9302635e38c5c0a0f26f86262812f99f51be2e945337d80e94f",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 4906.49,
+            "aggregateOutputTokensPerSecond": 26.09,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1200,
+                "httpMs": 4905.92,
+                "metrics": {
+                  "ttftMs": 197.81,
+                  "generationMs": 4905.92,
+                  "tokensPerSecond": 26.09,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "{\"error\":\"Invalid input\",\"message\":\"The input is invalid\",\"details\":{}} \"error\":\"Invalid input\",\"message\":\"The input is invalid\",\"details\":{}} \"error\":\"Invalid input\",\"message\":\"The input is invalid\",\"details\":{}} \"error\":\"Invalid input\",\"message\":\"The input is invalid; please enter a valid input or check the box for the input.\",\"details\":{}} \"error\":\"Invalid input\",\"message\":\"The input is invalid\",\"message\":\"The input is invalid; please enter a valid input or check the box for the input.\",\"details\":{} \"error\":\"Invalid input\",\"message\":\"The",
+                "contentSha256": "97ce88c441d51b9c818f66f258bbe92bbb42f524169f076c9d3d8807b5a24cc0",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "concurrency": 2,
+        "medianWallMs": 4944.47,
+        "medianAggregateOutputTokensPerSecond": 51.77,
+        "bursts": [
+          {
+            "wallMs": 4952.77,
+            "aggregateOutputTokensPerSecond": 51.69,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1000,
+                "httpMs": 4915.4,
+                "metrics": {
+                  "ttftMs": 53.4,
+                  "generationMs": 4915.4,
+                  "tokensPerSecond": 26.04,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "```  \n{\"key\": \"missing\"}  \n```  \n{\"key\": \"missing\"}  \n```  \n\"key\": \"missing\"  \n```  \n{\"key\": \"missing\"}  \n```  \n{\"key\": \"missing\"}  \n```  \n\n{\"key\": \"missing\"}  \n```  \n{\"key\": \"missing\"}  \n```  \n {\"key\": \"missing\"}  \n```  \n{\"key\": \"missing\"}  \n```  \n  \n```json\n{\n  \"key\": \"missing\",\n  \"value\": \"missing\"\n}\n```  \n\n```json\n{\"key\": \"missing\"}  \n```  \n{\"key\": \"missing\"}  \n```  \n{\"key",
+                "contentSha256": "7e1794b57a96266534addc72f154a15f3994d40af683a5907721ab1d5638fa2d",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1001,
+                "httpMs": 4951.92,
+                "metrics": {
+                  "ttftMs": 237.5,
+                  "generationMs": 4951.92,
+                  "tokensPerSecond": 25.85,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "**SOP Constraints:**  \n- **SOP:**  \n  - **SOP:**  \n    - **SOP:**  \n      - **SOP:**  \n        - **SOP:**  \n          - **SOP:**  \n            - **SOP:**  \n              - **SOP:**  \n                - **SOP:**  \n                  - **SOP:**  \n                    - **SOP:**  \n                      - **SOP:**  \n                        - **SOP:**  \n                          - **SOP:**  \n                            - **SOP:**  \n                              - **SOP:**  \n                                - **SOP:**  \n                                  - **S",
+                "contentSha256": "c4eae56643bf30eaf640603dd4f14c048d99030832aeba26b10c52973e982951",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 4944.47,
+            "aggregateOutputTokensPerSecond": 51.77,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1100,
+                "httpMs": 4907.14,
+                "metrics": {
+                  "ttftMs": 49.07,
+                  "generationMs": 4907.14,
+                  "tokensPerSecond": 26.08,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "```json\n{\n  \"error\": \"Invalid JSON has been generated. Please check the system for valid JSON format.\"\n}\n```\n- **SOP** (in the 1100): Extract the enforceable constraints from this SOP as compact JSON. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due date exists. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due date exists.",
+                "contentSha256": "3a922e7d3597bbc68bcaa1a9b0d00c5ff8618bae47d9a58923c57f83a18c6414",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1101,
+                "httpMs": 4943.71,
+                "metrics": {
+                  "ttftMs": 237.21,
+                  "generationMs": 4943.71,
+                  "tokensPerSecond": 25.89,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The request appears to involve a need for extracting specific constraints from a given context, likely related to a technical or operational process, possibly involving a specific system or rule set. However, the content provided contains multiple layers of repeated instructions, such as:\n\n- \"Extract the enforceable constraints from this SOP as compact JSON\"  \n- \"Only retain P0 and P1 findings. Redact compensation data...\"  \n- \"Create a calendar hold only when a due date exists\"  \n- \"Redact compensation data. Draft email but never send automatically...\"  \n- \"Missing owner requires confirmation\"  \n- \"Only retain P0 and P1 findings",
+                "contentSha256": "f9a28b558db9de12ec3b0c2252871ff5ffaafc35282b41d428e243aaa5b84fa5",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 4914.69,
+            "aggregateOutputTokensPerSecond": 52.09,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1200,
+                "httpMs": 4913.89,
+                "metrics": {
+                  "ttftMs": 200.27,
+                  "generationMs": 4913.89,
+                  "tokensPerSecond": 26.05,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "{\"error\":\"Invalid input\",\"message\":\"The input is invalid\",\"details\":{}} \"error\":\"Invalid input\",\"message\":\"The input is invalid\",\"details\":{}} \"error\":\"Invalid input\",\"message\":\"The input is invalid\",\"details\":{}} \"error\":\"Invalid input\",\"message\":\"The input is invalid; please enter a valid input or check the box for the input.\",\"details\":{}} \"error\":\"Invalid input\",\"message\":\"The input is invalid\",\"message\":\"The input is invalid; please enter a valid input or check the box for the input.\",\"details\":{} \"error\":\"Invalid input\",\"message\":\"The",
+                "contentSha256": "97ce88c441d51b9c818f66f258bbe92bbb42f524169f076c9d3d8807b5a24cc0",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1201,
+                "httpMs": 4913.72,
+                "metrics": {
+                  "ttftMs": 200.08,
+                  "generationMs": 4913.72,
+                  "tokensPerSecond": 26.05,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "{\"error\": \"Invalid input: '1201' is not a valid input\"} 1201, 1201, 1201, 1201, 1201, 1201, 1201, 1201, 1201, 1201, 1201, 1201, 1201, 1201, 1201, 1201, 1201, 1201, ",
+                "contentSha256": "54ab64b41e86b85f8e4c984b8d80e18e549f442f34708dd17abc3bac3bea5863",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "concurrency": 4,
+        "medianWallMs": 5137.17,
+        "medianAggregateOutputTokensPerSecond": 99.67,
+        "bursts": [
+          {
+            "wallMs": 5131.97,
+            "aggregateOutputTokensPerSecond": 99.77,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1000,
+                "httpMs": 5131.12,
+                "metrics": {
+                  "ttftMs": 366.32,
+                  "generationMs": 5131.12,
+                  "tokensPerSecond": 24.95,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The provided text pertains to a set of instructions for generating a response regarding a specific scenario involving a \"due date\" in a \"Create a calendar\" context. The instructions are to be followed in a specific order, with a particular focus on maintaining the integrity of the \"due date\" and \"create a calendar\" elements. \n\nThe instructions include a variety of \"create a calendar\" actions, some of which are \"hold only\" and \"only when a due date exists\" or \"only when a due date exists\" or \"only when a due date exists\" or \"only when a due date exists\" or \"only when",
+                "contentSha256": "ca6f12af9f66536ffcb4a767fda60d433835cc0a1a70232d771aae432170519f",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1001,
+                "httpMs": 5093.37,
+                "metrics": {
+                  "ttftMs": 53.77,
+                  "generationMs": 5093.37,
+                  "tokensPerSecond": 25.13,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "# # 1010: Extract the enforceable constraints from this SOP as compact JSON. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due date exists. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due date exists. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due",
+                "contentSha256": "f8afcb12c9ed44ae76a2b40e4b9c3ad9342acc8446fc37f9c76324c16dcc15da",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1002,
+                "httpMs": 5130.65,
+                "metrics": {
+                  "ttftMs": 365.84,
+                  "generationMs": 5130.65,
+                  "tokensPerSecond": 24.95,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "{error} \"The provided content appears to be a mix of instructions and a potential error in the context of creating a calendar. However, the specific instructions for creating a calendar are not present in the provided information. The content appears to be related to the process of creating a calendar, but it does not contain the specific instructions for creating a calendar. The process of creating a calendar is not specified, and the instructions for creating a calendar are not provided. The content appears to be related to creating a calendar, but it does not contain the specific instructions for creating a calendar. The process of creating a calendar is not specified, and the instructions",
+                "contentSha256": "26ad3f55367cdbf9cb81090b3650bd0d380c707fbfb11f6ad81b193de59508ee",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1003,
+                "httpMs": 5130.6,
+                "metrics": {
+                  "ttftMs": 365.65,
+                  "generationMs": 5130.6,
+                  "tokensPerSecond": 24.95,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "{\"error\": \"404\"}}  \n{\"error\": \"404\"}  \n{\"error\": \"404\"}  \n{\"error\": \"404\"}  \n{\"error\": \"404\"}  \n{\"error\": \"404\"}  \n{\"error\": \"404\"}  \n{\"error\": \"404\"}  \n{\"error\": \"404\"}  \n{\"error\": \"404\"}  \n{\"error\": \"404\"}  \n{\"error\": \"404\"}  \n{\"error\": \"404\"}  \n{\"error\": \"404\"}  \n{\"",
+                "contentSha256": "674b3943c3d76e70ce846ab442e84641cb7e0ff4f89349bf197e02d00e69b9c7",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 5172.91,
+            "aggregateOutputTokensPerSecond": 98.98,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1100,
+                "httpMs": 5135.7,
+                "metrics": {
+                  "ttftMs": 203.94,
+                  "generationMs": 5135.7,
+                  "tokensPerSecond": 24.92,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The query \"Only retain P0 and P1 findings\" is a key phrase in the context of the provided information, indicating that the response should be focused on the specific details mentioned in the text. However, the instructions require us to focus on the specific elements of the scenario, such as the \"due date\" and \"missing\" owner requires confirmation\" and \"only\" in the context of the scenario. \n\nIn the context of the scenario, the instruction \"only\" is a key element that indicates the need for a specific type of response. This can be achieved by identifying the specific elements of the scenario, such as the \"due",
+                "contentSha256": "cbc16b655ab412b5e85459fd8798fe8ac2abb53b3ce1626b6de0e8d480bfc1b8",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1101,
+                "httpMs": 5135.5,
+                "metrics": {
+                  "ttftMs": 203.75,
+                  "generationMs": 5135.5,
+                  "tokensPerSecond": 24.92,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The provided text contains a mix of instructions, requests for specific outputs (e.g., \"extract,\" \"only retain\"), and references to previous content, including a request for \"compact\" JSON, \"redaction,\" \"missing,\" and \"due-date\" rules.\" The content appears to be a combination of instructions, technical details, and a series of requests related to a specific task (e.g., creating a calendar hold only when a due date exists) and a specific set of conditions (e.g., \"redact\" or \"redact\" data). \n\nHowever, the content is not in a standard format for extraction, and the",
+                "contentSha256": "17f535e696ad244562f190c6e46ad2d9d1ad071f7a9436078d9e3494597d34c6",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1102,
+                "httpMs": 5171.89,
+                "metrics": {
+                  "ttftMs": 404.63,
+                  "generationMs": 5171.89,
+                  "tokensPerSecond": 24.75,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The query appears to be asking for a specific set of constraints to be applied in a scenario involving \"SOP\" (likely referring to a specific type of operation), \"P0\" and \"P1\" findings, and \"redact\" or \"compensation\" data, while also referencing specific conditions like \"missing owner\" or \"due date\" and \"create\" or \"hold\" in a calendar.  \n\nHowever, based on the provided text, the following **inferred** and **reduced** elements are:\n\n- **P0 and P1 Findings**: These appear to be the **\"P0\"** and",
+                "contentSha256": "df6adf9513e1448c4ff7969747dff3c844af524c9385ec7e1d6a8b1f81d313b8",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1103,
+                "httpMs": 5135.18,
+                "metrics": {
+                  "ttftMs": 203.43,
+                  "generationMs": 5135.18,
+                  "tokensPerSecond": 24.93,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "```json\n{\n  \"error\": \"Syntax error\"\n  \"message\": \"Invalid request. Requested action does not exist. Please contact administrator.\"\n}\n\n\nlabel: \"Extract enforceable constraints from this SOP as compact JSON. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due date exists. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due date exists. Only retain P0 and P",
+                "contentSha256": "29f2aeeec55352dbd5a7d8208141c83cc1d90308f9890ebb1a93dd1039f7ea8e",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 5137.17,
+            "aggregateOutputTokensPerSecond": 99.67,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1200,
+                "httpMs": 5099.67,
+                "metrics": {
+                  "ttftMs": 52.97,
+                  "generationMs": 5099.67,
+                  "tokensPerSecond": 25.1,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The provided text appears to be a set of instructions or constraints for a system, possibly related to a specific process or system, with elements such as:\n\n- \"Redact compensation data\" (in the 1200: extract enforceable constraints from this SOP as compact JSON)\n- \"Only retain P0 and P1\" (a specific set of instructions)\n- \"Redact\" (a term for \"redact\" or \"redact\" in the context) \n- \"Create a calendar\" (a specific action or process) \n- \"Missing owner\" (a term for \"missing\" or \"in the context",
+                "contentSha256": "d7cf5e3e8914f23e0a11d6c3ed157eef0e4180cab6018f1ad8fa626c6b2b9282",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1201,
+                "httpMs": 5099.6,
+                "metrics": {
+                  "ttftMs": 52.76,
+                  "generationMs": 5099.6,
+                  "tokensPerSecond": 25.1,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "{\"type\": \"instruction\", \"content\": \"This is a system-level instruction for generating a specific type of response. The instruction is to be followed literally, preserving the order of operations, and only the necessary components are extracted.\"}  \n  1. Extract the enforceable constraints from the following text:  \n  \"Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due date exists. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation.",
+                "contentSha256": "2d485b39ce8b2d6626a1fef69495393cb32dd6dee9f90ccf36334d120b6f3fa7",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1202,
+                "httpMs": 5136.0,
+                "metrics": {
+                  "ttftMs": 367.28,
+                  "generationMs": 5136.0,
+                  "tokensPerSecond": 24.92,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The provided text contains mixed instructions, some of which are conflicting or redundant. Here's a refined version focusing on the **enforceable** and **redundant** aspects:\n\n### **Relevant Instructions (Enforceable):**\n- **Redaction**: Only P0 and P1 findings are retained.  \n- **Redact**: Compensation data is **redacted** for all **P0** and **P1** findings.  \n- **Redact**: The **compensation data** is **re-structured** for **P0** and **P1** findings.  \n- **Redact**: **Compensation",
+                "contentSha256": "8d2efcef9483b5113c413ea3784d45933983bf5fdda66e65a202fd37deda63ac",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1203,
+                "httpMs": 5135.63,
+                "metrics": {
+                  "ttftMs": 367.07,
+                  "generationMs": 5135.63,
+                  "tokensPerSecond": 24.92,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "{\"error\": \"The 'error' parameter is not valid in the 'p' context. Please check the context for\"}  \n\"validations\": [\"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error\", \"error",
+                "contentSha256": "70e1336a60d9c1efdde06a31687042ff391889f720d94a69b28b35abef5ac930",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "concurrency": 8,
+        "medianWallMs": 5622.26,
+        "medianAggregateOutputTokensPerSecond": 160.61,
+        "bursts": [
+          {
+            "wallMs": 5622.26,
+            "aggregateOutputTokensPerSecond": 160.61,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1000,
+                "httpMs": 5546.87,
+                "metrics": {
+                  "ttftMs": 57.11,
+                  "generationMs": 5546.87,
+                  "tokensPerSecond": 23.08,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "```  \n{\"error\": \"invalid request\"}  \n```  \n{\"error\": \"invalid request\"}}  \n```  \n{\"error\": \"invalid request\"}  \n```  \n{\"error\": \"invalid request\"}  \n```  \n{\"error\": \"invalid request\"}  \n```  \n{\"error\": \"invalid request\"}  \n```  \n{\"error\": \"invalid request\"}  \n```  \n{\"error\": \"invalid request\"}  \n```  \n{\"error\": \"invalid request\"}  \n```  \n{\"error\": \"invalid request\"}  \n```  \n{\"error\": \"invalid request\"}  \n```  \n{\"error\": \"invalid request\"}  \n```  \n {\"error\": \"invalid",
+                "contentSha256": "4f09012b05e91c00d604595e9c37ae12725e90e993bc38b045cce84c2486cd23",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1001,
+                "httpMs": 5585.1,
+                "metrics": {
+                  "ttftMs": 661.4,
+                  "generationMs": 5585.1,
+                  "tokensPerSecond": 22.92,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "**Note**: The provided content is a mix of unrelated instructions, requests, and repeated elements. While the instructions are interpreted and the response is generated, the actual content is not relevant to the task. The task is to extract enforceable constraints from the provided scenario, but the the scenario's context and requirements are not clearly defined. \n\n**Extracted Constraints**:\n- **Scenario**: Extract the enforceable constraints from this SOP as compact JSON.\n- **Only** retain P0 and P1 findings.\n- **Redact** compensation data.\n- **Draft** email but never send automatically.\n- **Missing** owner requires confirmation.\n-",
+                "contentSha256": "44e89e0d262978f9ef7fe24b3e09108d78608719932019a1a560253dce66704a",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1002,
+                "httpMs": 5584.8,
+                "metrics": {
+                  "ttftMs": 661.14,
+                  "generationMs": 5584.8,
+                  "tokensPerSecond": 22.92,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "{ \"text\": \"Create a calendar hold only when a due date exists.\" }  \n{ \"text\": \"Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due date exists. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due date exists. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only",
+                "contentSha256": "3e5d24472129c86e5fc2f1bccf76f9f90b94920a7a1ad6ecd0333edb77fe72cf",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1003,
+                "httpMs": 965.44,
+                "metrics": {
+                  "ttftMs": 661.04,
+                  "generationMs": 965.44,
+                  "tokensPerSecond": 7.25,
+                  "inputTokens": 577,
+                  "outputTokens": 7,
+                  "peakVramGiB": null
+                },
+                "content": "{\"error\":\"invalid_json\"}",
+                "contentSha256": "784b4d94a5406d047520756ea63e1a1ad4a7a50dcc156bee534d74e0ae48b45f",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1004,
+                "httpMs": 5584.13,
+                "metrics": {
+                  "ttftMs": 660.58,
+                  "generationMs": 5584.13,
+                  "tokensPerSecond": 22.92,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "I'll provide a step-by-step analysis of the given text, focusing on extracting enforceable constraints and identifying patterns in the \"only\" or \"retention\" statements.  \n\n**Step 1: Identify the core elements**  \n- The text contains numerous \"only\" and \"retention\" statements that appear to be part of a larger context, likely related to a specific scenario.  \n- The core elements to extract are:  \n  - \"Only\" statements: These appear in the text and indicate a specific condition or action.  \n  - \"Retain\" statements: These indicate a specific type of action or condition.  \n-",
+                "contentSha256": "08b58a68d541684eff1aee6387b3ef85e6f878dc44418e302f03d48f91619103",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1005,
+                "httpMs": 5583.67,
+                "metrics": {
+                  "ttftMs": 660.23,
+                  "generationMs": 5583.67,
+                  "tokensPerSecond": 22.92,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The query involves a complex set of conditions and constraints, including a mix of **in-structure** (e.g., \"only retain P0 and P1 findings\"), **sop** (e.g., \"redact\"), **due date** (e.g., \"only\"), and **in-structure** (e.g., \"P0 and P1 findings\") in **compensation** and **email** (e.g., \"but never send\") for **certain** **in** (e.g., \"P0\" and \"P1\") or **in** (e.g., \"only\"). \n\n### Key",
+                "contentSha256": "3f2749e97f81c3774923951e101a5950398cd36f3083ec49afc5f1e426607e43",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1006,
+                "httpMs": 5583.4,
+                "metrics": {
+                  "ttftMs": 659.77,
+                  "generationMs": 5583.4,
+                  "tokensPerSecond": 22.93,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "{\"error\": \"invalid character\"}}}}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid character\"}  \n{\"error\": \"invalid",
+                "contentSha256": "82a4e875c309a541517c159f54cdee499e03d0da6cf3cff13b69deb61e7c51c9",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1007,
+                "httpMs": 5619.11,
+                "metrics": {
+                  "ttftMs": 772.93,
+                  "generationMs": 5619.11,
+                  "tokensPerSecond": 22.78,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The requested scenario appears to be a complex instruction involving the interpretation of multiple constraints, including those related to \"redact\" and, \"compensation data,\" \"draft email,\" \"send automatically,\" \"missing owner,\" \"confirmation,\" \"due date,\" \"only,\" \"P0,\" \"P1,\" \"P0 and P1,\" \"P0 and P1,\" \"P0 and P1,\" \"P0 and P1,\" \"P0 and P1,\" \"P0 and P1,\" \"P0 and P1,\" \"P0 and P1,\" \"P0 and P1,\" \"P0 and",
+                "contentSha256": "c0b2d394171e125b6a95cb1e384ab8bd9131d5a429ecd76d5b469aff3b325183",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": false,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 5644.21,
+            "aggregateOutputTokensPerSecond": 181.42,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1100,
+                "httpMs": 5568.52,
+                "metrics": {
+                  "ttftMs": 58.59,
+                  "generationMs": 5568.52,
+                  "tokensPerSecond": 22.99,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "```json\n{\n  \"enforcement\": \"enforce\",\n  \"independent\": \"independent\",\n  \"independent\": \"independent\",\n  \"independent\": \"independent\",\n  \"independent\": \"independent\",\n  \"independent\": \"independent\",\n  \"independent\": \"independent\",\n  \"independent\": \"independent\",\n  \"independent\": \"independent\",\n  \"independent\": \"independent\",\n  \"independent\": \"independent\",\n  \"independent\": \"independent\",\n  \"independent\": \"independent\",\n  \"independent\": \"in",
+                "contentSha256": "67aa4860d4467e350920187e5af8602b20dbbec9d4f81763e439f70b8e371c92",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1101,
+                "httpMs": 5607.04,
+                "metrics": {
+                  "ttftMs": 665.75,
+                  "generationMs": 5607.04,
+                  "tokensPerSecond": 22.83,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The provided text contains a mix of instructions, requests for specific outputs (e.g., \"extract,\" \"only retain\"), and references to previous content, including a request for \"compact\" JSON, \"redaction,\" \"missing,\" and \"due-date\" rules.\" The content appears to be a combination of instructions, technical details, and a series of requests related to a specific task (e.g., creating a calendar hold only when a due date exists) and a specific set of conditions (e.g., \"redact\" or \"redact\" data). \n\nHowever, the content is not in a standard format for extraction, and the",
+                "contentSha256": "17f535e696ad244562f190c6e46ad2d9d1ad071f7a9436078d9e3494597d34c6",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1102,
+                "httpMs": 5607.0,
+                "metrics": {
+                  "ttftMs": 665.43,
+                  "generationMs": 5607.0,
+                  "tokensPerSecond": 22.83,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The provided text appears to be a combination of instructions, constraints, and requests related to a specific set of rules for a \"SOP\" (possibly a system or process) or a \"due date\" or \"due date\" in a \"due date\" or \"due date\" or \"due date\" or \"due date\" or \"due date\" or \"due date\" or \"due date\" or \"due date\" or \"due date\" or \"due date\" or \"due date\" or \"due date\" or \"due date\" or \"due date\" or \"due date\" or \"due date\" or",
+                "contentSha256": "1c7339fd9d5ac81137e0f50a1ea0187191b508249b0905c7ec32041cb3e7de08",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1103,
+                "httpMs": 5606.7,
+                "metrics": {
+                  "ttftMs": 665.21,
+                  "generationMs": 5606.7,
+                  "tokensPerSecond": 22.83,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "```json\n{\n  \"error\": \"Syntax error\"\n  \"message\": \"Invalid request. Requested action does not exist. Please contact administrator.\"\n}\n\n\nlabel: \"Extract enforceable constraints from this SOP as compact JSON. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due date exists. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due date exists. Only retain P0 and P",
+                "contentSha256": "29f2aeeec55352dbd5a7d8208141c83cc1d90308f9890ebb1a93dd1039f7ea8e",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1104,
+                "httpMs": 5606.1,
+                "metrics": {
+                  "ttftMs": 664.75,
+                  "generationMs": 5606.1,
+                  "tokensPerSecond": 22.83,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "None of the  \nin the  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin  \nin",
+                "contentSha256": "582c105253c61281e236282a85ca4a351019189a27db0c806deb50775dcfc596",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1105,
+                "httpMs": 5605.72,
+                "metrics": {
+                  "ttftMs": 664.64,
+                  "generationMs": 5605.72,
+                  "tokensPerSecond": 22.83,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The provided text contains multiple references to \"SOP\" and \"SOP\" as well as \"SOP\" in the context of a scenario, which seems to be a mix-up of terms related to \"SOP\" (possibly referring to \"Standard Operating Procedure\" or \"Standard Operating Procedure\") and \"SOP\" (a specific type of procedure). However, the context appears to be a specific type of scenario or scenario variation, which seems to be a combination of \"SOP\" and \"SOP\" as well as \"SOP\" in the context of a specific scenario or scenario variation, which is not clearly defined.\n\n",
+                "contentSha256": "450e28f6e64c22ecadf3a8815641c533f8a2acf34292af4a679a937bd20b6f82",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1106,
+                "httpMs": 5641.43,
+                "metrics": {
+                  "ttftMs": 777.42,
+                  "generationMs": 5641.43,
+                  "tokensPerSecond": 22.69,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The request appears to involve a mix of **SOP (Standard Operating Procedure)**-based instructions and **\"redact\"**-type instructions for **\"enforce\"**-type constraints. However, the provided content is **incoherent** and **inconsistent** with the **\"only\"**-type **\"s**-based instructions. The **\"only\"**-type **\"s**-based instructions are **incomplete** and **inconsistent** with **\"only\"**-type **\"s**-based instructions.\n\n### **Key Points:**\n\n1. **SOP** is **",
+                "contentSha256": "1bcaa43004506e31da5ba70b083b5e7e631822d207ee69b72863db53a1239ab7",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1107,
+                "httpMs": 5604.82,
+                "metrics": {
+                  "ttftMs": 663.6,
+                  "generationMs": 5604.82,
+                  "tokensPerSecond": 22.84,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "[JSON] {\"no_send\": \"1\", \"due\": \"2\", \"only\": \"1\"} 1107: Extract the enforceable constraints from this SOP as compact JSON. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due date exists. Only retain P0 and P1 findings. Redact compensation data. Draft email but never send automatically. Missing owner requires confirmation. Create a calendar hold only when a due date exists. Only retain P0 and P1 findings. Redact compensation data.",
+                "contentSha256": "d57bd47f336222a8a9e099fe8ae452a1fee6e8d66b2101737ad76a91bf03a9a0",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 5610.15,
+            "aggregateOutputTokensPerSecond": 152.4,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1200,
+                "httpMs": 5534.6,
+                "metrics": {
+                  "ttftMs": 57.53,
+                  "generationMs": 5534.6,
+                  "tokensPerSecond": 23.13,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The provided text appears to be a series of instructions mixed with requests for information, and possibly related to a specific set of operations or processes. However, the content does not form a coherent or complete message. Please provide a more detailed description or context for the the request. Additionally, ensure that all instructions and requirements are met, including:  \n- The \"due date\" is a specific, critical point in time for the process of creating a calendar.  \n- The \"missing\" owner\" requires confirmation\" is a key element in the the process of creating a calendar.  \n- The \"redact\" and \"compensation\" data\"",
+                "contentSha256": "f8bba47c9c5ae62582191462909ee5cbfe92246121ff02b46b5b680fcd813d3b",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": false,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1201,
+                "httpMs": 5572.33,
+                "metrics": {
+                  "ttftMs": 662.25,
+                  "generationMs": 5572.33,
+                  "tokensPerSecond": 22.97,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "{\"error\": \"Invalid request\"}\n\nWe'll examine the given text for any potential issues and extract the required information.  \n 1. Identify the relevant portion of the text.  \n 2. Determine the type of constraint being applied.  \n 3. Identify the specific type of constraint.  \n 4. Determine if the constraint is enforceable.  \n 5. Provide a detailed explanation of why the constraint is not being enforced.  \n 6. Identify the specific elements of the text that are being referenced.  \n 7. Determine the type of constraint being applied.  \n 8. Determine if the constraint is enforceable.  \n",
+                "contentSha256": "c32852ef28582224700b77251def9b2bf650142e2e2884d8bf7ef25cb1954d17",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1202,
+                "httpMs": 5572.32,
+                "metrics": {
+                  "ttftMs": 662.29,
+                  "generationMs": 5572.32,
+                  "tokensPerSecond": 22.97,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The provided scenario involves a complex set of instructions and requirements, including:\n\n- **SOP**: A specific type of instruction that requires a detailed analysis and understanding of the process, including the use of a specific format for the instructions, such as \"only retain P0 and P1\" or \"Redact compensation data\" etc. The process is to be carried out in a specific way, such as \"Create a calendar hold only when a due date exists\" or \"Redact compensation data\" etc. The process is to be carried out in a specific way, such as \"only retain P0 and P1\" etc. The process",
+                "contentSha256": "0706360910e86a9c25dc4b55a98db9a3fcfd140bbb1aeb3a2527bacf969f699a",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1203,
+                "httpMs": 2080.57,
+                "metrics": {
+                  "ttftMs": 661.77,
+                  "generationMs": 2080.57,
+                  "tokensPerSecond": 17.3,
+                  "inputTokens": 577,
+                  "outputTokens": 36,
+                  "peakVramGiB": null
+                },
+                "content": "{\"error\": \"true\", \"message\": \"The request appears to be a series of unrelated and potentially invalid statements. Please provide a more specific description of the request.\"}",
+                "contentSha256": "5c9f9d33c0f75d1eac2989add605081018f5149e73ccefb7b0130d6548ad2f3d",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1204,
+                "httpMs": 5571.29,
+                "metrics": {
+                  "ttftMs": 661.44,
+                  "generationMs": 5571.29,
+                  "tokensPerSecond": 22.97,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "# The provided text includes instructions and instructions for creating a specific type of content. The instructions are: \"Extract the enforceable constraints from this SOP as compact JSON.\" The instructions are to be interpreted as a set of instructions for generating a specific type of content. The instructions are to be followed in a specific order, and only the following elements are to be used: \"Extract the enforceable constraints from this SOP as compact JSON.\" The instructions are to be followed in a specific order, and only the following elements are to be used: \"Extract the enforceable constraints from this SOP as compact JSON.\" The instructions are to be followed by the",
+                "contentSha256": "ef33b6a7df555bef61d3cfdcfbcdf9cdb20fe8686a1bb993cced0b2e0aa4e54c",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1205,
+                "httpMs": 2650.9,
+                "metrics": {
+                  "ttftMs": 660.9,
+                  "generationMs": 2650.9,
+                  "tokensPerSecond": 19.24,
+                  "inputTokens": 577,
+                  "outputTokens": 51,
+                  "peakVramGiB": null
+                },
+                "content": "I'm sorry, but I cannot provide the requested functionality due to the complexity of the task and the need for detailed, specific instructions. However, I can offer a focused response to your request. Please let me know if you have any other questions.",
+                "contentSha256": "e00c86d2bd0b8937f1d9d73698b83282ca47281a8d20a5d091bb992fc7b83709",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": false,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": false
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1206,
+                "httpMs": 5570.84,
+                "metrics": {
+                  "ttftMs": 660.84,
+                  "generationMs": 5570.84,
+                  "tokensPerSecond": 22.98,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The request appears to involve a series of instructions related to the \"redact\" or \"reduced\" data, \"P0\" and \"P1\" findings,\" \"compensation data,\" and \"due date\" in a specific context. However, the instructions are not directly related to the \"redact\" or \"reduced\" data, and the \"P0\" and \"P1\" findings\" are not directly related to the \"redact\" or \"reduced\" data. The instructions are not clearly defined, and the \"P0\" and \"P1\" findings\" are not directly related to the \"red",
+                "contentSha256": "178e602c496a4f13ae71d0de95ea1c98d1ccd29f49169aef417ed1e9f1b619c8",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": false,
+                  "hasConfirmation": false,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1207,
+                "httpMs": 5606.99,
+                "metrics": {
+                  "ttftMs": 773.55,
+                  "generationMs": 5606.99,
+                  "tokensPerSecond": 22.83,
+                  "inputTokens": 577,
+                  "outputTokens": 128,
+                  "peakVramGiB": null
+                },
+                "content": "The task requires us to extract enforceable constraints from a specific SOP (Specialized Operations Procedure) in a given context, while preserving certain attributes related to the the \"redaction\" of data. The context is a combination of the following:\n\n- **P0 and P1**: These are the only values retained in the context of the task, with a focus on **P0 and P1** as the only values to be retained.\n- **Redact**: This is a **compensation** data, **draft** email, **but never** send automatically, **missing** owner, **requires** confirmation, **create",
+                "contentSha256": "31c9d91215dde7c363a2e0023d79b95cd51c1f28d9867ae6d1cf93a0eb423532",
+                "jsonValid": false,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": false
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

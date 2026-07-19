@@ -90,6 +90,13 @@ score.
   lower generation latency
 - exact Verified Skill reuse: `2.18 ms` median HTTP, measured `11,052x`
   identical-skill fast path
+- Quark quantization evaluation completed on W7900:
+  - INT4 W4A16 export reduced model storage by `66.73%`, but the installed
+    vLLM Quark loader rejected that serving scheme
+  - INT8 W8A8 reduced model-load VRAM by `44.07%` and increased KV-cache
+    capacity by `88.43%`
+  - INT8 C128 was `36.70%` slower at concurrency eight and passed only `11/51`
+    complete safety-semantic gates, so it was rejected for production
 
 ## Evidence Boundaries
 
@@ -113,8 +120,8 @@ The main 100-point rubric has direct evidence. Remaining risk is operational:
 the stable Cloudflare Pages URL depends on a W7900 Quick Tunnel origin, so a
 tunnel restart requires rotating the encrypted Pages origin and redeploying.
 
-No Quark INT8, FP8, or other quantized A/B has been completed. Quantization is
-therefore a future optional-bonus experiment, not part of the current evidence
-claim. A valid next experiment should compare FP16 and quantized variants on
-the same W7900 with semantic safety gates, TTFT, throughput, VRAM, and proof
-reproduction held constant.
+The Quark INT4/INT8 A/B is complete. It produced a capacity benefit but no
+acceptable speed/quality replacement for FP16. This negative result strengthens
+the current deployment decision rather than adding a quantized production
+claim. FP8 remains untested because loader registration alone does not prove a
+native accelerated FP8 path on RDNA3 `gfx1100`.

@@ -1,0 +1,1322 @@
+{
+  "schemaVersion": "0.1.0",
+  "measuredAt": "2026-07-19T10:15:26Z",
+  "variant": "vllm-fp16-eager-final",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "precision": "FP16",
+  "quantization": "none",
+  "modelUrl": "http://127.0.0.1:8015/v1",
+  "modelDirectory": "/root/.cache/huggingface/models--Qwen--Qwen3-4B-Instruct-2507/snapshots/cdbee75f17c01a7cc42f958dc650907174af0554",
+  "modelDirectoryBytes": 8060896487,
+  "serverArgs": "vllm eager, max-model-len=4096, max-num-seqs=8, gpu-memory-utilization=0.25",
+  "environment": {
+    "measuredAt": "2026-07-19T10:15:59Z",
+    "platform": "Linux-6.8.0-79-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]",
+    "cwd": "/workspace/radeon-voice-skill-foundry-live/scripts",
+    "gpu": {
+      "torch": "2.9.1+gitff65f5b",
+      "hip": "7.2.53211-e1a6bc5663",
+      "device": "AMD Radeon Graphics",
+      "architecture": "gfx1100",
+      "totalVramBytes": 51522830336,
+      "allocatedVramBytes": 0,
+      "reservedVramBytes": 0
+    },
+    "rocmSmi": "============================ ROCm System Management Interface ============================\n====================================== Temperature =======================================\nGPU[0]\t\t: Temperature (Sensor edge) (C): 43.0\nGPU[0]\t\t: Temperature (Sensor junction) (C): 49.0\nGPU[0]\t\t: Temperature (Sensor memory) (C): 48.0\n==========================================================================================\n=================================== Power Consumption ====================================\nGPU[0]\t\t: Average Graphics Package Power (W): 49.0\n==========================================================================================\n=================================== % time GPU is busy ===================================\nGPU[0]\t\t: GPU use (%): 0\n==========================================================================================\n================================== Memory Usage (Bytes) ==================================\nGPU[0]\t\t: VRAM Total Memory (B): 51522830336\nGPU[0]\t\t: VRAM Total Used Memory (B): 30446600192\n==========================================================================================\n====================================== Product Info ======================================\nGPU[0]\t\t: Card Series: \t\tAMD Radeon Graphics\nGPU[0]\t\t: Card Model: \t\t0x744b\nGPU[0]\t\t: Card Vendor: \t\tAdvanced Micro Devices, Inc. [AMD/ATI]\nGPU[0]\t\t: Card SKU: \t\tD7070910\nGPU[0]\t\t: Subsystem ID: \t0x0e0c\nGPU[0]\t\t: Device Rev: \t\t0x00\nGPU[0]\t\t: Node ID: \t\t2\nGPU[0]\t\t: GUID: \t\t6853\nGPU[0]\t\t: GFX Version: \t\tgfx1100\n==========================================================================================\n================================== End of ROCm SMI Log ===================================",
+    "processes": "65  2-05:19:20  0.8  0.3 /workspace/.venv-rvsf/bin/python scripts/radeon_model_server.py\n   1317  1-20:29:19  0.1  0.6 /workspace/.venv-rvsf/bin/python scripts/radeon_asr_server.py\n  37791       01:31 22.7  0.2 /opt/venv/bin/python3 /opt/venv/bin/vllm serve /root/.cache/huggingface/models--Qwen--Qwen3-4B-Instruct-2507/snapshots/cdbee75f17c01a7cc42f958dc650907174af0554 --host 127.0.0.1 --port 8015 --served-model-name Qwen/Qwen3-4B-Instruct-2507 --dtype float16 --max-model-len 4096 --max-num-seqs 8 --gpu-memory-utilization 0.25 --enforce-eager --enable-prefix-caching --enable-chunked-prefill\n  38459       00:33  9.8  0.1 /opt/venv/bin/python /workspace/radeon-voice-skill-foundry-live/scripts/radeon_quantization_ab.py --model-url http://127.0.0.1:8015/v1 --model Qwen/Qwen3-4B-Instruct-2507 --variant vllm-fp16-eager-final --precision FP16 --quantization none --output /workspace/rvsf-v11-fp16-final.json --telemetry /workspace/rvsf-v11-fp16-final-telemetry.jsonl --model-dir /root/.cache/huggingface/models--Qwen--Qwen3-4B-Instruct-2507/snapshots/cdbee75f17c01a7cc42f958dc650907174af0554 --server-args vllm eager, max-model-len=4096, max-num-seqs=8, gpu-memory-utilization=0.25",
+    "disk": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/loop39      98G   19G   75G  20% /workspace\noverlay         3.5T  425G  2.9T  13% /",
+    "packages": {
+      "torch": "2.9.1+gitff65f5b",
+      "transformers": "4.57.6",
+      "qwen-asr": null,
+      "vllm": "0.16.1.dev0+g89a77b108.d20260317.rocm721",
+      "flash-attn": "2.8.3",
+      "triton": "3.5.1",
+      "accelerate": "1.13.0"
+    }
+  },
+  "inference": {
+    "health": {
+      "ok": true,
+      "status": 200
+    },
+    "lengthRuns": [
+      {
+        "inputTargetTokens": 256,
+        "outputTargetTokens": 160,
+        "variation": 0,
+        "httpMs": 1533.54,
+        "metrics": {
+          "ttftMs": 105.78,
+          "generationMs": 1533.54,
+          "tokensPerSecond": 39.13,
+          "inputTokens": 315,
+          "outputTokens": 60,
+          "peakVramGiB": null
+        },
+        "content": "{\n  \"enforceable_constraints\": [\n    \"Redact compensation data\",\n    \"Draft email but never send automatically\",\n    \"Missing owner requires confirmation\",\n    \"Create a calendar hold only when a due date exists\",\n    \"Only retain P0 and P1 findings\"\n  ]\n}",
+        "contentSha256": "d656613abd6a1d0c26a82b76c83a3b0a0115bfcd6f97cca21a8276920ba10df6",
+        "jsonValid": true,
+        "semanticGate": {
+          "hasRedaction": true,
+          "hasNoSend": true,
+          "hasConfirmation": true,
+          "hasDueDateCondition": true
+        }
+      },
+      {
+        "inputTargetTokens": 256,
+        "outputTargetTokens": 160,
+        "variation": 0,
+        "httpMs": 1491.2,
+        "metrics": {
+          "ttftMs": 65.71,
+          "generationMs": 1491.2,
+          "tokensPerSecond": 40.24,
+          "inputTokens": 315,
+          "outputTokens": 60,
+          "peakVramGiB": null
+        },
+        "content": "{\n  \"enforceable_constraints\": [\n    \"Redact compensation data\",\n    \"Draft email but never send automatically\",\n    \"Missing owner requires confirmation\",\n    \"Create a calendar hold only when a due date exists\",\n    \"Only retain P0 and P1 findings\"\n  ]\n}",
+        "contentSha256": "d656613abd6a1d0c26a82b76c83a3b0a0115bfcd6f97cca21a8276920ba10df6",
+        "jsonValid": true,
+        "semanticGate": {
+          "hasRedaction": true,
+          "hasNoSend": true,
+          "hasConfirmation": true,
+          "hasDueDateCondition": true
+        }
+      },
+      {
+        "inputTargetTokens": 1024,
+        "outputTargetTokens": 160,
+        "variation": 0,
+        "httpMs": 1620.71,
+        "metrics": {
+          "ttftMs": 170.42,
+          "generationMs": 1620.71,
+          "tokensPerSecond": 37.02,
+          "inputTokens": 1055,
+          "outputTokens": 60,
+          "peakVramGiB": null
+        },
+        "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+        "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+        "jsonValid": true,
+        "semanticGate": {
+          "hasRedaction": true,
+          "hasNoSend": true,
+          "hasConfirmation": true,
+          "hasDueDateCondition": true
+        }
+      },
+      {
+        "inputTargetTokens": 1024,
+        "outputTargetTokens": 160,
+        "variation": 0,
+        "httpMs": 1509.99,
+        "metrics": {
+          "ttftMs": 66.75,
+          "generationMs": 1509.99,
+          "tokensPerSecond": 39.74,
+          "inputTokens": 1055,
+          "outputTokens": 60,
+          "peakVramGiB": null
+        },
+        "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+        "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+        "jsonValid": true,
+        "semanticGate": {
+          "hasRedaction": true,
+          "hasNoSend": true,
+          "hasConfirmation": true,
+          "hasDueDateCondition": true
+        }
+      },
+      {
+        "inputTargetTokens": 3072,
+        "outputTargetTokens": 160,
+        "variation": 0,
+        "httpMs": 1991.05,
+        "metrics": {
+          "ttftMs": 509.25,
+          "generationMs": 1991.05,
+          "tokensPerSecond": 30.13,
+          "inputTokens": 3053,
+          "outputTokens": 60,
+          "peakVramGiB": null
+        },
+        "content": "{\n  \"enforceable_constraints\": [\n    \"Redact compensation data\",\n    \"Draft email but never send automatically\",\n    \"Missing owner requires confirmation\",\n    \"Create a calendar hold only when a due date exists\",\n    \"Only retain P0 and P1 findings\"\n  ]\n}",
+        "contentSha256": "d656613abd6a1d0c26a82b76c83a3b0a0115bfcd6f97cca21a8276920ba10df6",
+        "jsonValid": true,
+        "semanticGate": {
+          "hasRedaction": true,
+          "hasNoSend": true,
+          "hasConfirmation": true,
+          "hasDueDateCondition": true
+        }
+      },
+      {
+        "inputTargetTokens": 3072,
+        "outputTargetTokens": 160,
+        "variation": 0,
+        "httpMs": 1545.77,
+        "metrics": {
+          "ttftMs": 67.29,
+          "generationMs": 1545.77,
+          "tokensPerSecond": 38.82,
+          "inputTokens": 3053,
+          "outputTokens": 60,
+          "peakVramGiB": null
+        },
+        "content": "{\n  \"enforceable_constraints\": [\n    \"Redact compensation data\",\n    \"Draft email but never send automatically\",\n    \"Missing owner requires confirmation\",\n    \"Create a calendar hold only when a due date exists\",\n    \"Only retain P0 and P1 findings\"\n  ]\n}",
+        "contentSha256": "d656613abd6a1d0c26a82b76c83a3b0a0115bfcd6f97cca21a8276920ba10df6",
+        "jsonValid": true,
+        "semanticGate": {
+          "hasRedaction": true,
+          "hasNoSend": true,
+          "hasConfirmation": true,
+          "hasDueDateCondition": true
+        }
+      }
+    ],
+    "concurrencyRuns": [
+      {
+        "concurrency": 1,
+        "medianWallMs": 1556.8,
+        "medianAggregateOutputTokensPerSecond": 38.54,
+        "bursts": [
+          {
+            "wallMs": 1557.96,
+            "aggregateOutputTokensPerSecond": 38.51,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1000,
+                "httpMs": 1556.44,
+                "metrics": {
+                  "ttftMs": 112.71,
+                  "generationMs": 1556.44,
+                  "tokensPerSecond": 38.55,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 1556.17,
+            "aggregateOutputTokensPerSecond": 38.56,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1100,
+                "httpMs": 1555.47,
+                "metrics": {
+                  "ttftMs": 112.04,
+                  "generationMs": 1555.47,
+                  "tokensPerSecond": 38.57,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 1556.8,
+            "aggregateOutputTokensPerSecond": 38.54,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1200,
+                "httpMs": 1556.31,
+                "metrics": {
+                  "ttftMs": 112.11,
+                  "generationMs": 1556.31,
+                  "tokensPerSecond": 38.55,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "concurrency": 2,
+        "medianWallMs": 1570.82,
+        "medianAggregateOutputTokensPerSecond": 76.39,
+        "bursts": [
+          {
+            "wallMs": 1570.82,
+            "aggregateOutputTokensPerSecond": 76.39,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1000,
+                "httpMs": 1570.08,
+                "metrics": {
+                  "ttftMs": 116.2,
+                  "generationMs": 1570.08,
+                  "tokensPerSecond": 38.21,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1001,
+                "httpMs": 1569.62,
+                "metrics": {
+                  "ttftMs": 115.73,
+                  "generationMs": 1569.62,
+                  "tokensPerSecond": 38.23,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 1567.99,
+            "aggregateOutputTokensPerSecond": 76.53,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1100,
+                "httpMs": 1567.25,
+                "metrics": {
+                  "ttftMs": 112.8,
+                  "generationMs": 1567.25,
+                  "tokensPerSecond": 38.28,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1101,
+                "httpMs": 1567.01,
+                "metrics": {
+                  "ttftMs": 112.56,
+                  "generationMs": 1567.01,
+                  "tokensPerSecond": 38.29,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 1572.92,
+            "aggregateOutputTokensPerSecond": 76.29,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1200,
+                "httpMs": 1572.22,
+                "metrics": {
+                  "ttftMs": 112.9,
+                  "generationMs": 1572.22,
+                  "tokensPerSecond": 38.16,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1201,
+                "httpMs": 1572.02,
+                "metrics": {
+                  "ttftMs": 112.72,
+                  "generationMs": 1572.02,
+                  "tokensPerSecond": 38.17,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "concurrency": 4,
+        "medianWallMs": 1673.33,
+        "medianAggregateOutputTokensPerSecond": 143.43,
+        "bursts": [
+          {
+            "wallMs": 1671.8,
+            "aggregateOutputTokensPerSecond": 143.56,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1000,
+                "httpMs": 1670.78,
+                "metrics": {
+                  "ttftMs": 189.57,
+                  "generationMs": 1670.78,
+                  "tokensPerSecond": 35.91,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1001,
+                "httpMs": 1670.71,
+                "metrics": {
+                  "ttftMs": 189.38,
+                  "generationMs": 1670.71,
+                  "tokensPerSecond": 35.91,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1002,
+                "httpMs": 1670.23,
+                "metrics": {
+                  "ttftMs": 189.01,
+                  "generationMs": 1670.23,
+                  "tokensPerSecond": 35.92,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1003,
+                "httpMs": 1670.03,
+                "metrics": {
+                  "ttftMs": 188.88,
+                  "generationMs": 1670.03,
+                  "tokensPerSecond": 35.93,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 1673.33,
+            "aggregateOutputTokensPerSecond": 143.43,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1100,
+                "httpMs": 1672.33,
+                "metrics": {
+                  "ttftMs": 189.14,
+                  "generationMs": 1672.33,
+                  "tokensPerSecond": 35.88,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1101,
+                "httpMs": 1672.26,
+                "metrics": {
+                  "ttftMs": 188.95,
+                  "generationMs": 1672.26,
+                  "tokensPerSecond": 35.88,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1102,
+                "httpMs": 1671.9,
+                "metrics": {
+                  "ttftMs": 188.77,
+                  "generationMs": 1671.9,
+                  "tokensPerSecond": 35.89,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1103,
+                "httpMs": 1671.56,
+                "metrics": {
+                  "ttftMs": 188.37,
+                  "generationMs": 1671.56,
+                  "tokensPerSecond": 35.89,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 1677.2,
+            "aggregateOutputTokensPerSecond": 143.1,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1200,
+                "httpMs": 1676.17,
+                "metrics": {
+                  "ttftMs": 189.35,
+                  "generationMs": 1676.17,
+                  "tokensPerSecond": 35.8,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1201,
+                "httpMs": 1676.08,
+                "metrics": {
+                  "ttftMs": 189.17,
+                  "generationMs": 1676.08,
+                  "tokensPerSecond": 35.8,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1202,
+                "httpMs": 1675.67,
+                "metrics": {
+                  "ttftMs": 188.86,
+                  "generationMs": 1675.67,
+                  "tokensPerSecond": 35.81,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1203,
+                "httpMs": 1675.29,
+                "metrics": {
+                  "ttftMs": 188.55,
+                  "generationMs": 1675.29,
+                  "tokensPerSecond": 35.81,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "concurrency": 8,
+        "medianWallMs": 1891.72,
+        "medianAggregateOutputTokensPerSecond": 253.74,
+        "bursts": [
+          {
+            "wallMs": 1891.77,
+            "aggregateOutputTokensPerSecond": 253.73,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1000,
+                "httpMs": 1866.19,
+                "metrics": {
+                  "ttftMs": 320.55,
+                  "generationMs": 1866.19,
+                  "tokensPerSecond": 32.15,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1001,
+                "httpMs": 1866.07,
+                "metrics": {
+                  "ttftMs": 320.36,
+                  "generationMs": 1866.07,
+                  "tokensPerSecond": 32.15,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1002,
+                "httpMs": 1865.86,
+                "metrics": {
+                  "ttftMs": 319.95,
+                  "generationMs": 1865.86,
+                  "tokensPerSecond": 32.16,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1003,
+                "httpMs": 1865.63,
+                "metrics": {
+                  "ttftMs": 319.68,
+                  "generationMs": 1865.63,
+                  "tokensPerSecond": 32.16,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1004,
+                "httpMs": 1864.72,
+                "metrics": {
+                  "ttftMs": 319.14,
+                  "generationMs": 1864.72,
+                  "tokensPerSecond": 32.18,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1005,
+                "httpMs": 1864.59,
+                "metrics": {
+                  "ttftMs": 319.01,
+                  "generationMs": 1864.59,
+                  "tokensPerSecond": 32.18,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1006,
+                "httpMs": 1864.32,
+                "metrics": {
+                  "ttftMs": 318.86,
+                  "generationMs": 1864.32,
+                  "tokensPerSecond": 32.18,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1007,
+                "httpMs": 1888.89,
+                "metrics": {
+                  "ttftMs": 364.21,
+                  "generationMs": 1888.89,
+                  "tokensPerSecond": 31.76,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 1891.64,
+            "aggregateOutputTokensPerSecond": 253.75,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1100,
+                "httpMs": 1865.85,
+                "metrics": {
+                  "ttftMs": 320.46,
+                  "generationMs": 1865.85,
+                  "tokensPerSecond": 32.16,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1101,
+                "httpMs": 1865.36,
+                "metrics": {
+                  "ttftMs": 319.82,
+                  "generationMs": 1865.36,
+                  "tokensPerSecond": 32.17,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1102,
+                "httpMs": 1865.48,
+                "metrics": {
+                  "ttftMs": 319.83,
+                  "generationMs": 1865.48,
+                  "tokensPerSecond": 32.16,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1103,
+                "httpMs": 1864.77,
+                "metrics": {
+                  "ttftMs": 319.29,
+                  "generationMs": 1864.77,
+                  "tokensPerSecond": 32.18,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1104,
+                "httpMs": 1864.51,
+                "metrics": {
+                  "ttftMs": 318.89,
+                  "generationMs": 1864.51,
+                  "tokensPerSecond": 32.18,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1105,
+                "httpMs": 1864.67,
+                "metrics": {
+                  "ttftMs": 318.89,
+                  "generationMs": 1864.67,
+                  "tokensPerSecond": 32.18,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1106,
+                "httpMs": 1864.16,
+                "metrics": {
+                  "ttftMs": 318.49,
+                  "generationMs": 1864.16,
+                  "tokensPerSecond": 32.19,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1107,
+                "httpMs": 1888.55,
+                "metrics": {
+                  "ttftMs": 364.1,
+                  "generationMs": 1888.55,
+                  "tokensPerSecond": 31.77,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          },
+          {
+            "wallMs": 1891.72,
+            "aggregateOutputTokensPerSecond": 253.74,
+            "requests": [
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1200,
+                "httpMs": 1865.68,
+                "metrics": {
+                  "ttftMs": 320.48,
+                  "generationMs": 1865.68,
+                  "tokensPerSecond": 32.16,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1201,
+                "httpMs": 1865.72,
+                "metrics": {
+                  "ttftMs": 320.33,
+                  "generationMs": 1865.72,
+                  "tokensPerSecond": 32.16,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1202,
+                "httpMs": 1865.16,
+                "metrics": {
+                  "ttftMs": 319.98,
+                  "generationMs": 1865.16,
+                  "tokensPerSecond": 32.17,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1203,
+                "httpMs": 1865.16,
+                "metrics": {
+                  "ttftMs": 319.97,
+                  "generationMs": 1865.16,
+                  "tokensPerSecond": 32.17,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1204,
+                "httpMs": 1864.47,
+                "metrics": {
+                  "ttftMs": 319.24,
+                  "generationMs": 1864.47,
+                  "tokensPerSecond": 32.18,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1205,
+                "httpMs": 1864.42,
+                "metrics": {
+                  "ttftMs": 319.16,
+                  "generationMs": 1864.42,
+                  "tokensPerSecond": 32.18,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1206,
+                "httpMs": 1864.07,
+                "metrics": {
+                  "ttftMs": 318.77,
+                  "generationMs": 1864.07,
+                  "tokensPerSecond": 32.19,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              },
+              {
+                "inputTargetTokens": 512,
+                "outputTargetTokens": 128,
+                "variation": 1207,
+                "httpMs": 1888.76,
+                "metrics": {
+                  "ttftMs": 364.36,
+                  "generationMs": 1888.76,
+                  "tokensPerSecond": 31.77,
+                  "inputTokens": 577,
+                  "outputTokens": 60,
+                  "peakVramGiB": null
+                },
+                "content": "{\n  \"enforceable_constraints\": [\n    \"Only retain P0 and P1 findings.\",\n    \"Redact compensation data.\",\n    \"Draft email but never send automatically.\",\n    \"Missing owner requires confirmation.\",\n    \"Create a calendar hold only when a due date exists.\"\n  ]\n}",
+                "contentSha256": "0a5b9f88fce8dbb6ee7cb738107b7774caa2df309114f6b85626a8188f7e9ff4",
+                "jsonValid": true,
+                "semanticGate": {
+                  "hasRedaction": true,
+                  "hasNoSend": true,
+                  "hasConfirmation": true,
+                  "hasDueDateCondition": true
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
