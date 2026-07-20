@@ -1,21 +1,21 @@
-type Env = {
-  RADEON_API_ORIGIN?: string;
-  RVSF_API_TOKEN?: string;
-};
+import {
+  resolveRadeonOrigin,
+  type RadeonOriginEnv
+} from "../../shared/cloudflare-origin.js";
 
 type PagesContext = {
   request: Request;
-  env: Env;
+  env: RadeonOriginEnv;
 };
 
 export async function onRequest(context: PagesContext): Promise<Response> {
-  const origin = context.env.RADEON_API_ORIGIN?.replace(/\/$/, "");
+  const origin = await resolveRadeonOrigin(context.env);
   const token = context.env.RVSF_API_TOKEN;
   if (!origin || !token) {
     return Response.json(
       {
         error:
-          "The Radeon API gateway is not configured. Set RADEON_API_ORIGIN and RVSF_API_TOKEN."
+          "The Radeon API gateway is not configured. Set an origin registry value or RADEON_API_ORIGIN, plus RVSF_API_TOKEN."
       },
       { status: 503 }
     );

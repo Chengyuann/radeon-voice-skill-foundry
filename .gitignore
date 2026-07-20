@@ -11,6 +11,7 @@ coverage/
 outputs/
 .rvsf-data/
 .playwright-cli/
+.wrangler/
 tmp/
 output/playwright/
 submission/*.mp4

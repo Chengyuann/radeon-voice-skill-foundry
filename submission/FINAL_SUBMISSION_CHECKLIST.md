@@ -230,4 +230,7 @@ Measured result:
 - [x] Payload tampering and deleted tail/middle events are detected
 - [x] Ledger UI exposes status, issues, head hash, and ordered events
 - [x] Full governance chain exports as JSONL
+- [x] Product and canonical Demo V3 narrative frozen
+- [ ] Deploy KV-backed Quick Tunnel origin recovery
+- [ ] Verify controlled tunnel-only restart without Pages redeployment
 - [ ] Record the final product Demo only after feature and narrative freeze

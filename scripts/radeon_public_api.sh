@@ -6,12 +6,16 @@ repo_dir="${RVSF_REPO_DIR:-/workspace/radeon-voice-skill-foundry-live}"
 runtime_dir="${RVSF_RUNTIME_DIR:-/workspace}"
 api_port="${RVSF_PUBLIC_API_PORT:-8792}"
 token_file="${RVSF_API_TOKEN_FILE:-$runtime_dir/.rvsf-api-token}"
+recovery_token_file="${RVSF_ORIGIN_RECOVERY_TOKEN_FILE:-$runtime_dir/.rvsf-origin-recovery-token}"
 api_pid_file="$runtime_dir/rvsf-live-api.pid"
 api_log="$runtime_dir/rvsf-live-api.log"
 tunnel_pid_file="$runtime_dir/rvsf-cloudflared.pid"
 tunnel_log="$runtime_dir/rvsf-cloudflared.log"
+registrar_pid_file="$runtime_dir/rvsf-origin-registrar.pid"
+registrar_log="$runtime_dir/rvsf-origin-registrar.log"
 origin_file="$runtime_dir/rvsf-public-origin.txt"
 cloudflared_bin="${CLOUDFLARED_BIN:-$runtime_dir/cloudflared}"
+registrar_script="$repo_dir/scripts/radeon_origin_registrar.sh"
 
 require_file() {
   if [[ ! -s "$1" ]]; then
@@ -99,6 +103,29 @@ start_tunnel() {
   exit 1
 }
 
+start_registrar() {
+  if pid_is_running "$registrar_pid_file"; then
+    return
+  fi
+  : >"$registrar_log"
+  nohup env \
+    RVSF_REPO_DIR="$repo_dir" \
+    RVSF_RUNTIME_DIR="$runtime_dir" \
+    RVSF_ORIGIN_RECOVERY_TOKEN_FILE="$recovery_token_file" \
+    bash "$registrar_script" watch \
+    >"$registrar_log" 2>&1 </dev/null &
+  echo "$!" >"$registrar_pid_file"
+
+  for _ in $(seq 1 40); do
+    if bash "$registrar_script" status >/dev/null 2>&1; then
+      return
+    fi
+    sleep 0.5
+  done
+  echo "Origin registrar did not become healthy; inspect $registrar_log" >&2
+  exit 1
+}
+
 stop_pid_file() {
   local pid_file="$1"
   if pid_is_running "$pid_file"; then
@@ -109,10 +136,13 @@ stop_pid_file() {
 status() {
   local api_state="stopped"
   local tunnel_state="stopped"
+  local registrar_state="stopped"
   pid_is_running "$api_pid_file" && api_state="running"
   pid_is_running "$tunnel_pid_file" && tunnel_state="running"
+  pid_is_running "$registrar_pid_file" && registrar_state="running"
   echo "api=$api_state port=$api_port"
   echo "tunnel=$tunnel_state"
+  echo "origin_registrar=$registrar_state"
   if [[ -s "$origin_file" ]]; then
     echo "origin=$(cat "$origin_file")"
   else
@@ -128,14 +158,18 @@ status() {
 case "$command_name" in
   start)
     require_file "$token_file"
+    require_file "$recovery_token_file"
     require_file "$cloudflared_bin"
+    require_file "$registrar_script"
     check_health "Qwen3 model" "http://127.0.0.1:8000/health"
     check_health "Qwen3 ASR" "http://127.0.0.1:8001/health"
     start_api
     start_tunnel
+    start_registrar
     status
     ;;
   stop)
+    stop_pid_file "$registrar_pid_file"
     stop_pid_file "$tunnel_pid_file"
     stop_pid_file "$api_pid_file"
     ;;

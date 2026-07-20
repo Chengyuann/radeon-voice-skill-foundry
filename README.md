@@ -141,15 +141,18 @@ the Radeon-hosted API and injects `RVSF_API_TOKEN`.
 
 **Live demo:** https://radeon-voice-skill-foundry.pages.dev/
 
-Required Pages secrets:
+Required Pages secrets and binding:
 
 ```text
-RADEON_API_ORIGIN=https://<radeon-tunnel-host>
 RVSF_API_TOKEN=<shared-random-token>
+RVSF_ORIGIN_RECOVERY_TOKEN=<independent-random-token>
+RVSF_ORIGIN_REGISTRY=<Cloudflare KV binding>
+RADEON_API_ORIGIN=https://<fallback-radeon-tunnel-host>
 ```
 
 The same token must be present in the W7900 Node process. Local development does
-not require it. Build and deploy with:
+not require it. `RADEON_API_ORIGIN` is a fallback; production first resolves
+`radeon-api-origin` from the KV registry. Build and deploy with:
 
 ```bash
 npm run deploy:pages
@@ -163,15 +166,22 @@ The public app is only a complete demo while the W7900 services are available:
 8791  Radeon Voice Skill Foundry API
 ```
 
-On the W7900 workspace, recover or inspect the authenticated public stack with:
+On the W7900 workspace, the API, Quick Tunnel, and origin registrar run under
+Supervisor. The tunnel wrapper writes every newly issued URL to
+`/workspace/rvsf-public-origin.txt`; the registrar authenticates to
+`/internal/origin-recovery`, where Pages verifies the candidate against the
+server-held API token before updating KV.
+
+Recover or inspect the authenticated public stack with:
 
 ```bash
 bash scripts/radeon_public_api.sh start
 bash scripts/radeon_public_api.sh status
 ```
 
-If a Quick Tunnel restart creates a new origin, update the encrypted Pages
-secret and redeploy from the local repository:
+The recovery token exists only as an encrypted Pages secret and a mode-`600`
+file on W7900. A Quick Tunnel restart no longer requires a Pages redeploy.
+The old manual rotation script remains an emergency fallback:
 
 ```bash
 bash scripts/update_cloudflare_origin.sh https://<new-origin>

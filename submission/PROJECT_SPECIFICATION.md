@@ -686,8 +686,12 @@ The two V2 videos have separate evidence roles:
   and fails the required semantic acceptance gate, so it is not promoted.
 - FP8 remains untested because loader registration alone does not prove a
   native accelerated FP8 path on RDNA3 `gfx1100`.
-- The stable Cloudflare Pages URL currently depends on a W7900 Quick Tunnel
-  origin. Restarting the tunnel requires rotating the encrypted Pages origin.
+- The stable Cloudflare Pages URL currently depends on a W7900 Quick Tunnel.
+  Its rotating origin is registered in Cloudflare KV by a Supervisor-managed
+  W7900 process. Pages accepts only authenticated HTTPS `trycloudflare.com`
+  candidates that pass a server-side Radeon health check, so a tunnel restart
+  no longer requires a frontend redeploy. A named Tunnel remains the preferred
+  post-contest infrastructure upgrade.
 
 ## 14.1 Lifecycle Engineering Upgrade
 

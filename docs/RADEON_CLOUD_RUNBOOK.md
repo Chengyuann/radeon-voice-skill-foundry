@@ -1,6 +1,6 @@
 # Radeon Cloud Runbook
 
-Last updated: 2026-07-17 (UTC+8)
+Last updated: 2026-07-20 (UTC+8)
 
 ## Current status
 
@@ -16,6 +16,10 @@ Last updated: 2026-07-17 (UTC+8)
 - Instance status during validation: Ready.
 - Local app port: `8791`.
 - Local app URL: `http://127.0.0.1:8791/`.
+- Public product: `https://radeon-voice-skill-foundry.pages.dev/`.
+- Public API port on W7900: `8792`.
+- Public API, Quick Tunnel, and origin registrar: Supervisor managed.
+- Dynamic origin registry: Cloudflare KV binding `RVSF_ORIGIN_REGISTRY`.
 
 If the browser says `127.0.0.1 refused to connect`, the local Express server is
 not running. Start it from the project root:
@@ -112,6 +116,49 @@ Expected local service:
 npm start
 curl http://127.0.0.1:8791/api/health
 ```
+
+## Public gateway auto-recovery
+
+The public browser never receives the W7900 API token. Pages Functions proxy
+same-origin `/api/*` requests and inject `RVSF_API_TOKEN`.
+
+The Quick Tunnel hostname is intentionally treated as replaceable:
+
+1. `scripts/radeon_tunnel_supervisor.sh` starts `cloudflared`.
+2. It extracts the issued HTTPS `trycloudflare.com` origin and atomically writes
+   `/workspace/rvsf-public-origin.txt`.
+3. `scripts/radeon_origin_registrar.sh watch` detects a changed origin.
+4. It authenticates to the Pages-only `/internal/origin-recovery` endpoint.
+5. Pages validates `${origin}/api/health` with its server-held
+   `RVSF_API_TOKEN`.
+6. Only a healthy Radeon runtime is written to KV as `radeon-api-origin`.
+7. The normal `/api/*` proxy reads KV first and uses `RADEON_API_ORIGIN` only
+   as a fallback.
+
+Secret files on W7900:
+
+```text
+/workspace/.rvsf-api-token              mode 600
+/workspace/.rvsf-origin-recovery-token  mode 600
+```
+
+Inspect the managed services:
+
+```bash
+supervisorctl -c /workspace/rvsf-supervisord.conf status
+bash /workspace/radeon-voice-skill-foundry-live/scripts/radeon_origin_registrar.sh status
+```
+
+Controlled recovery test:
+
+```bash
+supervisorctl -c /workspace/rvsf-supervisord.conf restart rvsf-tunnel
+watch -n 2 'cat /workspace/rvsf-public-origin.txt; curl -fsS https://radeon-voice-skill-foundry.pages.dev/api/health'
+```
+
+Success means the tunnel origin changes, the registrar reports the same origin,
+and the stable Pages health endpoint returns the W7900 Radeon runtime without a
+new Pages deployment.
 
 ## Data to record for submission
 
