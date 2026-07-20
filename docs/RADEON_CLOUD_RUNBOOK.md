@@ -149,6 +149,15 @@ supervisorctl -c /workspace/rvsf-supervisord.conf status
 bash /workspace/radeon-voice-skill-foundry-live/scripts/radeon_origin_registrar.sh status
 ```
 
+Production releases use immutable directories and one stable symlink:
+
+```text
+/workspace/radeon-voice-skill-foundry-release-<commit>
+/workspace/radeon-voice-skill-foundry-current -> release-<commit>
+```
+
+Supervisor configuration is versioned at `deploy/rvsf-supervisord.conf`.
+
 Controlled recovery test:
 
 ```bash
