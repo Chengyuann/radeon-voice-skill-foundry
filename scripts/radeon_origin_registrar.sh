@@ -69,20 +69,21 @@ register_origin() {
 import hashlib
 import hmac
 import json
+import requests
 import sys
 import time
-import urllib.request
 
 origin, recovery_url, api_token_file, recovery_token_file, output_file = sys.argv[1:]
 api_token = open(api_token_file, encoding="utf-8").read().strip()
 recovery_token = open(recovery_token_file, encoding="utf-8").read().strip()
 
-health_request = urllib.request.Request(
+health_response = requests.get(
     f"{origin}/api/health",
     headers={"x-rvsf-api-token": api_token},
+    timeout=20,
 )
-with urllib.request.urlopen(health_request, timeout=20) as response:
-    health = json.load(response)
+health_response.raise_for_status()
+health = health_response.json()
 runtime = health.get("runtime") if health.get("ok") is True else None
 if not isinstance(runtime, dict):
     raise RuntimeError("candidate origin did not return a health payload")
@@ -114,18 +115,18 @@ proof["signature"] = hmac.new(
     hashlib.sha256,
 ).hexdigest()
 body = json.dumps(proof, separators=(",", ":")).encode()
-register_request = urllib.request.Request(
+register_response = requests.post(
     recovery_url,
     data=body,
-    method="POST",
     headers={
         "content-type": "application/json",
         "x-rvsf-origin-recovery-token": recovery_token,
+        "user-agent": "rvsf-origin-registrar/1.0",
     },
+    timeout=20,
 )
-with urllib.request.urlopen(register_request, timeout=20) as response:
-    result = response.read()
-open(output_file, "wb").write(result)
+register_response.raise_for_status()
+open(output_file, "wb").write(register_response.content)
 PY
   then
     rm -f "$temporary_response"
