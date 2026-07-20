@@ -168,9 +168,11 @@ The public app is only a complete demo while the W7900 services are available:
 
 On the W7900 workspace, the API, Quick Tunnel, and origin registrar run under
 Supervisor. The tunnel wrapper writes every newly issued URL to
-`/workspace/rvsf-public-origin.txt`; the registrar authenticates to
-`/internal/origin-recovery`, where Pages verifies the candidate against the
-server-held API token before updating KV.
+`/workspace/rvsf-public-origin.txt`. The registrar validates the public
+candidate with `RVSF_API_TOKEN`, signs a fresh Radeon runtime proof with
+HMAC-SHA256, then authenticates to `/internal/origin-recovery` with the
+independent recovery token. Pages verifies the signature, timestamp, and
+runtime fields before updating KV.
 
 Recover or inspect the authenticated public stack with:
 
@@ -290,7 +292,7 @@ v0.2; v0.3 now quarantines that sample and invalidates older proofs until
 revalidation. See `docs/WEEKEND_W7900_EXPERIMENTS.md` and
 `benchmarks/weekend-v10-summary.json`.
 
-The current local suite has since grown to `56/56` and passes typecheck and the
+The current local suite has since grown to `63/63` and passes typecheck and the
 production build. The main Demo V2 is the real Cloudflare-to-W7900 inference
 evidence. Continuous Demo V2 uses deterministic ASR/compiler fixtures with real
 Node process restarts and is used only for durability, invalidation, and proof

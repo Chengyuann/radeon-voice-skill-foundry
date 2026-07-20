@@ -404,7 +404,7 @@ The client verification payload was deliberately modified to claim
 returned `mail.send = deny`, demonstrating that browser-supplied proof fields
 are not trusted.
 
-The current local regression suite has since grown to 56/56 and passes
+The current local regression suite has since grown to 63/63 and passes
 typecheck and the production build. The weekend v10 source commit was also
 clean-cloned on Radeon and passed 33/33 plus the production build.
 
@@ -714,7 +714,7 @@ run without changing the measured Radeon claims:
    65/100, and older proofs require revalidation. These remain deterministic
    measurements and do not claim learned acoustic diagnosis.
 
-The current enhanced regression suite passes 56/56 tests locally, with
+The current enhanced regression suite passes 63/63 tests locally, with
 typecheck and production build. A single-take browser demo shows upload,
 voice-evidence analysis, compile, 7/7 verification, save, reuse, service
 restart recovery, runtime invalidation, one-click revalidation, and proof

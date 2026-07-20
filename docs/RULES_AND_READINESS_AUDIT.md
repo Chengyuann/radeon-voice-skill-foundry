@@ -80,7 +80,7 @@ score.
 - Voice Evidence v0.3 clean sample: `pass / 100`
 - server-authoritative policy: `mail.send = deny`
 - deterministic verification: `7/7`
-- current local regression suite: `56/56`, typecheck, production build
+- current local regression suite: `63/63`, typecheck, production build
 - server-authoritative demonstration workspace captures six ordered user
   operations, rejects browser action tampering, and exports
   `action_contract.json`; irreversible email/calendar side effects remain
