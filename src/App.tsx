@@ -21,6 +21,8 @@ import {
   compileSop,
   createDemonstration,
   getRuntime,
+  getGovernanceLedger,
+  governanceLedgerDownloadUrl,
   approvePromotion,
   getPromotionReview,
   listKnowledge,
@@ -343,6 +345,10 @@ export function App() {
     return getPromotionReview(skillId);
   };
 
+  const handleGetGovernanceLedger = async () => {
+    return getGovernanceLedger();
+  };
+
   const handlePromoteSkill = async (
     skillId: string,
     reviewHash: string,
@@ -539,6 +545,8 @@ export function App() {
         onRevalidateSkill={handleRevalidateSkill}
         onPromoteSkill={handlePromoteSkill}
         onGetPromotionReview={handleGetPromotionReview}
+        onGetGovernanceLedger={handleGetGovernanceLedger}
+        governanceLedgerUrl={governanceLedgerDownloadUrl()}
         onRevokeSkill={handleRevokeSkill}
         onRollbackSkill={handleRollbackSkill}
       />

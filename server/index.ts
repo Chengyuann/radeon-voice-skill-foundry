@@ -29,6 +29,7 @@ import {
 } from "./demonstration-store.js";
 import { id } from "./hash.js";
 import { buildSubmissionPackage } from "./package.js";
+import { governanceLedgerJsonl } from "./governance-ledger.js";
 import { getRuntimeInfo } from "./runtime.js";
 import {
   resolveCompileRun,
@@ -46,6 +47,7 @@ import {
 } from "./voice-evidence-store.js";
 import {
   addKnowledge,
+  getGovernanceLedger,
   getSkillPromotionReview,
   listKnowledge,
   listSkills,
@@ -316,6 +318,21 @@ app.get("/api/package/:runId", async (request, response) => {
 
 app.get("/api/skills", async (_request, response) => {
   response.json(await listSkills());
+});
+
+app.get("/api/governance/ledger", async (_request, response) => {
+  response.json(await getGovernanceLedger());
+});
+
+app.get("/api/governance/ledger.jsonl", async (_request, response) => {
+  const ledger = await getGovernanceLedger();
+  response
+    .setHeader("Content-Type", "application/x-ndjson; charset=utf-8")
+    .setHeader(
+      "Content-Disposition",
+      'attachment; filename="rvsf-governance-ledger.jsonl"'
+    )
+    .send(governanceLedgerJsonl(ledger));
 });
 
 app.post("/api/skills/:runId", async (request, response) => {

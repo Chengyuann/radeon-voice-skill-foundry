@@ -1,6 +1,7 @@
 import type {
   CompileRequest,
   CompileResult,
+  GovernanceLedger,
   DemonstrationSession,
   KnowledgeDocument,
   KnowledgeMatch,
@@ -134,6 +135,14 @@ export function refineSop(input: {
 
 export function listSkills(): Promise<StoredSkill[]> {
   return requestJson(apiUrl("/api/skills"));
+}
+
+export function getGovernanceLedger(): Promise<GovernanceLedger> {
+  return requestJson(apiUrl("/api/governance/ledger"));
+}
+
+export function governanceLedgerDownloadUrl(): string {
+  return apiUrl("/api/governance/ledger.jsonl");
 }
 
 export function saveSkill(runId: string): Promise<StoredSkill> {

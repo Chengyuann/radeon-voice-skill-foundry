@@ -2,7 +2,9 @@ import {
   BookOpen,
   CircleCheckBig,
   Database,
+  Download,
   History,
+  ListChecks,
   Plus,
   RotateCw,
   ShieldAlert,
@@ -16,6 +18,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import type {
+  GovernanceLedger,
   KnowledgeDocument,
   KnowledgeMatch,
   SkillReuseResult,
@@ -36,6 +39,8 @@ type MemoryPanelProps = {
   onGetPromotionReview: (
     skillId: string
   ) => Promise<SkillPromotionReview>;
+  onGetGovernanceLedger: () => Promise<GovernanceLedger>;
+  governanceLedgerUrl: string;
   onPromoteSkill: (
     skillId: string,
     reviewHash: string,
@@ -55,6 +60,8 @@ export function MemoryPanel({
   onReuseSkill,
   onRevalidateSkill,
   onGetPromotionReview,
+  onGetGovernanceLedger,
+  governanceLedgerUrl,
   onPromoteSkill,
   onRevokeSkill,
   onRollbackSkill
@@ -72,6 +79,9 @@ export function MemoryPanel({
   const [promotionReviewLoading, setPromotionReviewLoading] =
     useState(false);
   const [riskAcknowledged, setRiskAcknowledged] = useState(false);
+  const [governanceLedger, setGovernanceLedger] =
+    useState<GovernanceLedger>();
+  const [ledgerLoading, setLedgerLoading] = useState(false);
 
   const submit = async () => {
     await onAddKnowledge({ title, content });
@@ -111,6 +121,19 @@ export function MemoryPanel({
     );
     setPromotionReview(undefined);
     setRiskAcknowledged(false);
+  };
+
+  const toggleGovernanceLedger = async () => {
+    if (governanceLedger) {
+      setGovernanceLedger(undefined);
+      return;
+    }
+    setLedgerLoading(true);
+    try {
+      setGovernanceLedger(await onGetGovernanceLedger());
+    } finally {
+      setLedgerLoading(false);
+    }
   };
 
   return (
@@ -201,11 +224,99 @@ export function MemoryPanel({
             <p className="eyebrow">Procedural memory</p>
             <h2>Verified skills</h2>
           </div>
-          <Badge tone={skills.length ? "green" : "neutral"}>
-            <ShieldCheck size={12} />
-            {skills.length}
-          </Badge>
+          <div className="memory-heading-actions">
+            <button
+              className="icon-button"
+              title="Open governance audit ledger"
+              aria-label="Open governance audit ledger"
+              disabled={ledgerLoading}
+              onClick={toggleGovernanceLedger}
+            >
+              <ListChecks size={16} />
+            </button>
+            <Badge tone={skills.length ? "green" : "neutral"}>
+              <ShieldCheck size={12} />
+              {skills.length}
+            </Badge>
+          </div>
         </div>
+        {governanceLedger ? (
+          <div className="governance-ledger">
+            <div className="governance-ledger-head">
+              <span>
+                <strong>Governance audit ledger</strong>
+                <small>
+                  {governanceLedger.receiptCount} events · head{" "}
+                  {governanceLedger.headHash.slice(0, 10)}
+                </small>
+              </span>
+              <Badge
+                tone={
+                  governanceLedger.status === "valid" ? "green" : "red"
+                }
+              >
+                {governanceLedger.status}
+              </Badge>
+            </div>
+            {governanceLedger.issues.length ? (
+              <div className="ledger-issues">
+                {governanceLedger.issues.map((issue) => (
+                  <span key={issue}>
+                    <ShieldAlert size={12} />
+                    {issue}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+            <div className="ledger-entry-list">
+              {governanceLedger.entries.length ? (
+                governanceLedger.entries
+                  .slice()
+                  .reverse()
+                  .map((entry) => (
+                    <div className="ledger-entry" key={entry.entryHash}>
+                      <span className="ledger-sequence">
+                        {String(entry.sequence).padStart(2, "0")}
+                      </span>
+                      <div>
+                        <strong>
+                          {entry.action} · {entry.skillName} v
+                          {entry.skillVersion}
+                        </strong>
+                        <small>
+                          {entry.lifecycleAfter} ·{" "}
+                          {entry.entryHash.slice(0, 12)}
+                        </small>
+                      </div>
+                      <Badge
+                        tone={
+                          entry.action === "REVOKE"
+                            ? "red"
+                            : entry.action === "SUPERSEDE"
+                              ? "neutral"
+                              : "green"
+                        }
+                      >
+                        {entry.action}
+                      </Badge>
+                    </div>
+                  ))
+              ) : (
+                <div className="memory-empty">
+                  Governance events appear after promotion.
+                </div>
+              )}
+            </div>
+            <a
+              className="ledger-download"
+              href={governanceLedgerUrl}
+              download="rvsf-governance-ledger.jsonl"
+            >
+              <Download size={13} />
+              Export JSONL
+            </a>
+          </div>
+        ) : null}
         <div className="skill-memory-list">
           {skills.length ? (
             skills

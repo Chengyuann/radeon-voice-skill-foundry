@@ -1,6 +1,7 @@
 import type {
   ActionEvent,
   CompileResult,
+  GovernanceLedger,
   KnowledgeDocument,
   KnowledgeMatch,
   SkillGovernanceReceipt,
@@ -15,6 +16,10 @@ import { assessProofCompatibility } from "./proof-compatibility.js";
 import { getRuntimeInfo } from "./runtime.js";
 import { verifyCompilation } from "./verifier.js";
 import { buildPromotionReview } from "./promotion-review.js";
+import {
+  appendGovernanceLedgerEntry,
+  readGovernanceLedger
+} from "./governance-ledger.js";
 
 const knowledgePath = () => dataFile("knowledge.json");
 const skillsPath = () => dataFile("skills.json");
@@ -337,7 +342,11 @@ export async function promoteStoredSkill(
     acknowledgeRisk: boolean;
   }
 ): Promise<StoredSkill> {
-  return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
+  await synchronizeGovernanceLedger();
+  const result = await updateStoredJson(
+    skillsPath(),
+    [],
+    (skills: StoredSkill[]) => {
     for (let skillIndex = 0; skillIndex < skills.length; skillIndex += 1) {
       skills[skillIndex] = normalizeStoredSkill(skills[skillIndex]);
     }
@@ -391,6 +400,7 @@ export async function promoteStoredSkill(
       );
     }
     const now = new Date().toISOString();
+    const ledgerEvents: GovernanceEvent[] = [];
     const proofHash = proofHashFor(skills[index]);
     for (let otherIndex = 0; otherIndex < skills.length; otherIndex += 1) {
       if (otherIndex === index) continue;
@@ -402,6 +412,13 @@ export async function promoteStoredSkill(
         skills[otherIndex] = other;
         continue;
       }
+      const receipt = governanceReceipt({
+        action: "SUPERSEDE",
+        skillId: other.id,
+        proofHash: proofHashFor(other),
+        replacementSkillId: idValue,
+        reason: `Promoted ${skills[index].name} v${skills[index].version}`
+      });
       skills[otherIndex] = {
         ...other,
         lifecycle: "superseded",
@@ -410,16 +427,27 @@ export async function promoteStoredSkill(
         updatedAt: now,
         governanceReceipts: [
           ...other.governanceReceipts,
-          governanceReceipt({
-            action: "SUPERSEDE",
-            skillId: other.id,
-            proofHash: proofHashFor(other),
-            replacementSkillId: idValue,
-            reason: `Promoted ${skills[index].name} v${skills[index].version}`
-          })
+          receipt
         ]
       };
+      ledgerEvents.push({
+        receipt,
+        skillName: other.name,
+        skillVersion: other.version,
+        lifecycleAfter: "superseded"
+      });
     }
+    const promotionReceipt = governanceReceipt({
+      action: "PROMOTE",
+      skillId: idValue,
+      proofHash,
+      reason: "Human promotion gate approved",
+      reviewHash: review.reviewHash,
+      riskLevel: review.riskLevel,
+      riskAcknowledged:
+        !review.requiresRiskAcknowledgement ||
+        approval.acknowledgeRisk
+    });
     skills[index] = {
       ...skills[index],
       lifecycle: "promoted",
@@ -431,28 +459,35 @@ export async function promoteStoredSkill(
       updatedAt: now,
       governanceReceipts: [
         ...skills[index].governanceReceipts,
-        governanceReceipt({
-          action: "PROMOTE",
-          skillId: idValue,
-          proofHash,
-          reason: "Human promotion gate approved",
-          reviewHash: review.reviewHash,
-          riskLevel: review.riskLevel,
-          riskAcknowledged:
-            !review.requiresRiskAcknowledgement ||
-            approval.acknowledgeRisk
-        })
+        promotionReceipt
       ]
     };
-    return structuredClone(skills[index]);
-  });
+    ledgerEvents.push({
+      receipt: promotionReceipt,
+      skillName: skills[index].name,
+      skillVersion: skills[index].version,
+      lifecycleAfter: "promoted"
+    });
+    return {
+      skill: structuredClone(skills[index]),
+      ledgerEvents
+    };
+    }
+  );
+  await appendGovernanceEvents(result.ledgerEvents);
+  await synchronizeGovernanceLedger();
+  return result.skill;
 }
 
 export async function revokeStoredSkill(
   idValue: string,
   reason: string
 ): Promise<StoredSkill> {
-  return updateStoredJson(skillsPath(), [], (skills: StoredSkill[]) => {
+  await synchronizeGovernanceLedger();
+  const result = await updateStoredJson(
+    skillsPath(),
+    [],
+    (skills: StoredSkill[]) => {
     const index = skills.findIndex((skill) => skill.id === idValue);
     if (index < 0) throw new Error("Stored skill not found");
     const skill = normalizeStoredSkill(skills[index]);
@@ -463,6 +498,12 @@ export async function revokeStoredSkill(
       throw new Error("Superseded skills are immutable; use rollback");
     }
     const now = new Date().toISOString();
+    const receipt = governanceReceipt({
+      action: "REVOKE",
+      skillId: skill.id,
+      proofHash: proofHashFor(skill),
+      reason
+    });
     skills[index] = {
       ...skill,
       lifecycle: "revoked",
@@ -471,23 +512,36 @@ export async function revokeStoredSkill(
       updatedAt: now,
       governanceReceipts: [
         ...skill.governanceReceipts,
-        governanceReceipt({
-          action: "REVOKE",
-          skillId: skill.id,
-          proofHash: proofHashFor(skill),
-          reason
-        })
+        receipt
       ]
     };
-    return structuredClone(skills[index]);
-  });
+    return {
+      skill: structuredClone(skills[index]),
+      ledgerEvents: [
+        {
+          receipt,
+          skillName: skill.name,
+          skillVersion: skill.version,
+          lifecycleAfter: "revoked" as const
+        }
+      ]
+    };
+    }
+  );
+  await appendGovernanceEvents(result.ledgerEvents);
+  await synchronizeGovernanceLedger();
+  return result.skill;
 }
 
 export async function rollbackStoredSkill(
   idValue: string,
   reason: string
 ): Promise<StoredSkill> {
-  return updateStoredJson(skillsPath(), [], async (skills: StoredSkill[]) => {
+  await synchronizeGovernanceLedger();
+  const result = await updateStoredJson(
+    skillsPath(),
+    [],
+    async (skills: StoredSkill[]) => {
     const sourceIndex = skills.findIndex((skill) => skill.id === idValue);
     if (sourceIndex < 0) throw new Error("Stored skill not found");
     skills[sourceIndex] = normalizeStoredSkill(skills[sourceIndex]);
@@ -529,12 +583,20 @@ export async function rollbackStoredSkill(
           .map((skill) => skill.version)
       ) + 1;
     const replacementId = id("skill");
+    const ledgerEvents: GovernanceEvent[] = [];
     for (let index = 0; index < skills.length; index += 1) {
       const current = normalizeStoredSkill(skills[index]);
       if (
         current.name === source.name &&
         current.lifecycle === "promoted"
       ) {
+        const receipt = governanceReceipt({
+          action: "SUPERSEDE",
+          skillId: current.id,
+          proofHash: proofHashFor(current),
+          replacementSkillId: replacementId,
+          reason: `Rollback restored ${source.name} v${source.version}`
+        });
         skills[index] = {
           ...current,
           lifecycle: "superseded",
@@ -543,20 +605,27 @@ export async function rollbackStoredSkill(
           updatedAt: now,
           governanceReceipts: [
             ...current.governanceReceipts,
-            governanceReceipt({
-              action: "SUPERSEDE",
-              skillId: current.id,
-              proofHash: proofHashFor(current),
-              replacementSkillId: replacementId,
-              reason: `Rollback restored ${source.name} v${source.version}`
-            })
+            receipt
           ]
         };
+        ledgerEvents.push({
+          receipt,
+          skillName: current.name,
+          skillVersion: current.version,
+          lifecycleAfter: "superseded"
+        });
       } else {
         skills[index] = current;
       }
     }
     const proofHash = String(verification.proofBundle.proofHash || "");
+    const rollbackReceipt = governanceReceipt({
+      action: "ROLLBACK",
+      skillId: replacementId,
+      sourceSkillId: source.id,
+      proofHash,
+      reason
+    });
     const rolledBack: StoredSkill = {
       ...source,
       id: replacementId,
@@ -570,15 +639,7 @@ export async function rollbackStoredSkill(
       verification,
       actions,
       compatibility,
-      governanceReceipts: [
-        governanceReceipt({
-          action: "ROLLBACK",
-          skillId: replacementId,
-          sourceSkillId: source.id,
-          proofHash,
-          reason
-        })
-      ],
+      governanceReceipts: [rollbackReceipt],
       promotedAt: now,
       promotedProofHash: proofHash,
       revokedAt: undefined,
@@ -588,8 +649,28 @@ export async function rollbackStoredSkill(
       rollbackFromSkillId: source.id
     };
     skills.push(rolledBack);
-    return structuredClone(rolledBack);
-  });
+    ledgerEvents.push({
+      receipt: rollbackReceipt,
+      skillName: rolledBack.name,
+      skillVersion: rolledBack.version,
+      lifecycleAfter: "promoted"
+    });
+    return {
+      skill: structuredClone(rolledBack),
+      ledgerEvents
+    };
+    }
+  );
+  await appendGovernanceEvents(result.ledgerEvents);
+  await synchronizeGovernanceLedger();
+  return result.skill;
+}
+
+export async function getGovernanceLedger(): Promise<GovernanceLedger> {
+  const skills = (
+    await readStoredJson<StoredSkill[]>(skillsPath(), [])
+  ).map(normalizeStoredSkill);
+  return readGovernanceLedger(skills);
 }
 
 export function resolveStoredSkillActions(
@@ -638,6 +719,30 @@ function governanceReceipt(input: Omit<SkillGovernanceReceipt, "receiptId" | "cr
     receiptId: id("skill_receipt"),
     createdAt: new Date().toISOString()
   };
+}
+
+async function synchronizeGovernanceLedger(): Promise<void> {
+  const ledger = await getGovernanceLedger();
+  if (ledger.status !== "valid") {
+    throw new Error(
+      `Governance ledger integrity failure: ${ledger.issues.join(" ")}`
+    );
+  }
+}
+
+type GovernanceEvent = {
+  receipt: SkillGovernanceReceipt;
+  skillName: string;
+  skillVersion: number;
+  lifecycleAfter: StoredSkill["lifecycle"];
+};
+
+async function appendGovernanceEvents(
+  events: GovernanceEvent[]
+): Promise<void> {
+  for (const event of events) {
+    await appendGovernanceLedgerEntry(event);
+  }
 }
 
 function permissionToAction(

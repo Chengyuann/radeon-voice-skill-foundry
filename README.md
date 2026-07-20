@@ -87,6 +87,8 @@ The web UI now supports:
   actions, and runtime with the current promoted baseline
 - hash-bound approval that rejects stale reviews and requires explicit
   acknowledgement for risk escalation
+- append-only Governance Audit Ledger with sequence, previous hash, payload
+  hash, entry hash, receipt reconciliation, and JSONL export
 - measured full-compilation versus verified-skill reuse speedup
 - multi-turn natural-language constraint refinement
 - compact model output with runtime-owned IDs and confidence metadata
@@ -278,7 +280,7 @@ v0.2; v0.3 now quarantines that sample and invalidates older proofs until
 revalidation. See `docs/WEEKEND_W7900_EXPERIMENTS.md` and
 `benchmarks/weekend-v10-summary.json`.
 
-The current local suite has since grown to `53/53` and passes typecheck and the
+The current local suite has since grown to `56/56` and passes typecheck and the
 production build. The main Demo V2 is the real Cloudflare-to-W7900 inference
 evidence. Continuous Demo V2 uses deterministic ASR/compiler fixtures with real
 Node process restarts and is used only for durability, invalidation, and proof
@@ -303,6 +305,13 @@ risk rating. Approval submits the review hash back to the server; if the
 candidate proof or promoted baseline changed, the approval is rejected as
 stale. Permission escalation, removed `must_not`/`redact` guardrails, and a new
 `send_email` action require explicit risk acknowledgement.
+
+Every Promotion, Supersede, Revoke, and Rollback receipt is appended to a
+separate Governance Audit Ledger. The ledger verifies sequence order,
+previous-hash links, payload and entry hashes, duplicate receipt IDs, and
+bidirectional consistency with skill memory. Payload tampering or deleted tail
+or middle entries mark the ledger `invalid`; the full chain is exportable as
+JSONL.
 
 Quark quantization v11 tested INT4 W4A16 export and INT8 W8A8 serving on the
 same W7900. INT8 reduced model-load VRAM by 44.07% and increased KV-cache

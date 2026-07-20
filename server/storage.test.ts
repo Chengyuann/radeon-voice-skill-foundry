@@ -34,6 +34,7 @@ describe("local RAG and skill memory", () => {
       listSkills,
       markSkillReused,
       getSkillPromotionReview,
+      getGovernanceLedger,
       promoteStoredSkill,
       revalidateStoredSkill,
       revokeStoredSkill,
@@ -293,6 +294,19 @@ describe("local RAG and skill memory", () => {
       )
     ).toBe(true);
     expect((await markSkillReused(rolledBack.id)).skill.reuseCount).toBe(1);
+    const ledger = await getGovernanceLedger();
+    expect(ledger.status).toBe("valid");
+    expect(ledger.entries.map((entry) => entry.action)).toEqual([
+      "PROMOTE",
+      "SUPERSEDE",
+      "PROMOTE",
+      "PROMOTE",
+      "REVOKE",
+      "ROLLBACK"
+    ]);
+    expect(ledger.entries.at(-1)?.previousHash).toBe(
+      ledger.entries.at(-2)?.entryHash
+    );
   });
 
   it("packages the server-authoritative action contract", async () => {

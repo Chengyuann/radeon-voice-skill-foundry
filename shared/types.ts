@@ -366,6 +366,38 @@ export type SkillPromotionReview = {
   reviewHash: string;
 };
 
+export type GovernanceLedgerEntry = {
+  schemaVersion: "0.1.0";
+  sequence: number;
+  previousHash: string;
+  payloadHash: string;
+  entryHash: string;
+  receiptId: string;
+  action: SkillGovernanceReceipt["action"];
+  skillId: string;
+  skillName: string;
+  skillVersion: number;
+  lifecycleAfter: SkillLifecycle;
+  proofHash: string;
+  createdAt: string;
+  reason?: string;
+  sourceSkillId?: string;
+  replacementSkillId?: string;
+  reviewHash?: string;
+  riskLevel?: "low" | "medium" | "high" | "critical";
+  riskAcknowledged?: boolean;
+};
+
+export type GovernanceLedger = {
+  schemaVersion: "0.1.0";
+  status: "valid" | "invalid";
+  entries: GovernanceLedgerEntry[];
+  headHash: string;
+  receiptCount: number;
+  issues: string[];
+  checkedAt: string;
+};
+
 export type StoredSkill = {
   id: string;
   name: string;
