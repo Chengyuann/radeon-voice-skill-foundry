@@ -2,7 +2,16 @@
 
 **Speak the SOP. Prove the Skill.**
 
-Recommended 4-minute 49-second live Cloudflare + W7900 Demo V2:
+Recommended 4-minute 39-second final public Demo V3:
+`https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO_V3.mp4`
+
+Demo V3 captions:
+`https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO_V3.srt`
+
+Demo V3 proof:
+`https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/demo-v3-proof.zip`
+
+Original 4-minute 49-second live Cloudflare + W7900 Demo V2:
 `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO_V2.mp4`
 
 Demo V2 captions:
@@ -215,6 +224,21 @@ node scripts/record_demo_v2.mjs
 python3 scripts/build_demo_v2_video.py
 ```
 
+## Reproduce Demo V3
+
+Demo V3 records the frozen public product continuously through voice capture,
+the six server-authoritative actions, real W7900 inference, Sandbox Replay,
+Promotion Impact Review, proof-bound promotion, Governance Audit Ledger export,
+and exact promoted-skill reuse.
+
+```bash
+AIDP_TTS_AK=... AIDP_TTS_VOICE=Charon \
+  python3 scripts/generate_demo_v3_tts.py
+DEMO_V3_PROJECT=review-followup-final-demo-v3-20260720 \
+  node scripts/record_demo_v3.mjs
+python3 scripts/build_demo_v3_video.py
+```
+
 The companion continuous lifecycle Demo V2 uses deterministic ASR and compiler
 fixtures so service restarts are reproducible in one take. It performs two
 real Node API process restarts, durable recovery, runtime drift, proof
@@ -272,14 +296,14 @@ real-time). Qwen3-4B compiled 13 constraints in 24.13 seconds with 368 ms TTFT,
 20.07 tokens/s, and 8.001 GiB peak VRAM. The server preserved
 `mail.send = deny` even when the client verification payload was modified.
 
-Release artifacts include the narrated demo, SRT captions, visual campaign
+Release artifacts include the narrated demos, SRT captions, visual campaign
 assets, and the final Radeon proof ZIP. Narration uses AIDP
-`gemini-3.1-flash-tts-preview` with the male `Charon` voice. Both demo MP4 files
-contain burned-in English narration captions and an embedded English subtitle
-track. GPT Image 2 generated the cinematic background artwork; project names,
-labels, and metrics are rendered locally for exact typography. Product footage
-is explicitly labeled as a deterministic replay, while runtime screenshots and
-metrics come from the actual Radeon Cloud validation.
+`gemini-3.1-flash-tts-preview` with the male `Charon` voice. Demo V3 and both
+V2 MP4 files contain burned-in English narration captions and an embedded
+English subtitle track. GPT Image 2 generated the cinematic background
+artwork; project names, labels, and metrics are rendered locally for exact
+typography. Demo V3 and Main Demo V2 use the public W7900 product path.
+Continuous Demo V2 is isolated as deterministic lifecycle evidence.
 
 Weekend W7900 experiments now include an isolated Transformers versus vLLM
 comparison, native ASR batching, acoustic robustness, and Voice Evidence v0.3.
@@ -293,10 +317,12 @@ revalidation. See `docs/WEEKEND_W7900_EXPERIMENTS.md` and
 `benchmarks/weekend-v10-summary.json`.
 
 The current local suite has since grown to `63/63` and passes typecheck and the
-production build. The main Demo V2 is the real Cloudflare-to-W7900 inference
-evidence. Continuous Demo V2 uses deterministic ASR/compiler fixtures with real
-Node process restarts and is used only for durability, invalidation, and proof
-lineage evidence.
+production build. Demo V3 is the final continuous public product recording and
+includes real W7900 inference, promotion, ledger export, and exact reuse. Main
+Demo V2 remains the concise optimization-oriented Radeon evidence. Continuous
+Demo V2 uses deterministic ASR/compiler fixtures with real Node process
+restarts and is used only for durability, invalidation, and proof lineage
+evidence.
 
 Sandbox Replay v1 is a deterministic product-verification enhancement, not a
 new GPU performance claim. It replays the trusted six-step action contract

@@ -118,7 +118,12 @@ score.
 
 ## Evidence Boundaries
 
-The two V2 videos have intentionally different evidence roles:
+The final Demo V3 and the two V2 videos have intentionally different evidence
+roles:
+
+- **Final Demo V3** records the complete frozen public product path through
+  real W7900 inference, promotion, Governance Audit Ledger export, and exact
+  reuse. It preserves the real model wait.
 
 - **Main Demo V2** is the performance and product proof. It records the public
   Cloudflare product executing real Qwen3-ASR and Qwen3-4B inference on the
