@@ -688,10 +688,12 @@ The two V2 videos have separate evidence roles:
   native accelerated FP8 path on RDNA3 `gfx1100`.
 - The stable Cloudflare Pages URL currently depends on a W7900 Quick Tunnel.
   Its rotating origin is registered in Cloudflare KV by a Supervisor-managed
-  W7900 process. Pages accepts only authenticated HTTPS `trycloudflare.com`
-  candidates that pass a server-side Radeon health check, so a tunnel restart
-  no longer requires a frontend redeploy. A named Tunnel remains the preferred
-  post-contest infrastructure upgrade.
+  W7900 process. The registrar validates the HTTPS `trycloudflare.com`
+  candidate through the public tunnel and signs a fresh Radeon health proof
+  with the API token. Pages verifies that proof plus an independent recovery
+  token before writing KV, so a tunnel restart no longer requires a frontend
+  redeploy. A named Tunnel remains the preferred post-contest infrastructure
+  upgrade.
 
 ## 14.1 Lifecycle Engineering Upgrade
 

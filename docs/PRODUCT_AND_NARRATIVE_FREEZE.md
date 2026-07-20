@@ -44,8 +44,9 @@ Voice SOP
   receipt reconciliation, deletion/tamper detection, and JSONL export.
 - Exact reuse applies only to an identical promoted skill and records reuse
   evidence; changed intent follows compilation and verification again.
-- Cloudflare Pages is the stable public entry. A server-authenticated KV
-  registrar recovers a rotating Quick Tunnel origin without redeployment.
+- Cloudflare Pages is the stable public entry. A dual-token registrar validates
+  the candidate through the tunnel, signs a fresh Radeon health proof, and
+  recovers the rotating Quick Tunnel origin in KV without redeployment.
 
 No metric, model, GPU, ROCm, performance, or reliability claim may be added
 unless it is already backed by repository evidence.

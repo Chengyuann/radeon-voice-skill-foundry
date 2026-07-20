@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   handleOriginRecovery,
   normalizeRadeonOrigin,
@@ -63,75 +63,81 @@ describe("Cloudflare Radeon origin recovery", () => {
 
   it("rejects unauthorized registration without probing the candidate", async () => {
     const registry = memoryRegistry();
-    const fetcher = vi.fn<typeof fetch>();
     const response = await handleOriginRecovery(
-      recoveryRequest("wrong-token"),
-      recoveryEnv(registry),
-      fetcher
+      await recoveryRequest("wrong-token"),
+      recoveryEnv(registry)
     );
 
     expect(response.status).toBe(401);
-    expect(fetcher).not.toHaveBeenCalled();
     expect(await registry.get(RADEON_ORIGIN_REGISTRY_KEY)).toBeNull();
   });
 
-  it("writes a new origin only after authenticated Radeon health validation", async () => {
+  it("writes a new origin only after a fresh signed Radeon health proof", async () => {
     const registry = memoryRegistry();
-    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
-      Response.json({
-        ok: true,
-        runtime: {
-          mode: "radeon",
-          model: "Qwen/Qwen3-4B-Instruct-2507",
-          baseUrlConfigured: true,
-          gpu: "AMD Radeon Pro W7900-class gfx1100 48GB",
-          rocm: "ROCm 7.2.1"
-        }
-      })
-    );
     const response = await handleOriginRecovery(
-      recoveryRequest("recovery-token"),
-      recoveryEnv(registry),
-      fetcher
+      await recoveryRequest("recovery-token"),
+      recoveryEnv(registry)
     );
 
     expect(response.status).toBe(200);
-    expect(fetcher).toHaveBeenCalledWith(
-      "https://new-tunnel.trycloudflare.com/api/health",
-      expect.objectContaining({
-        headers: { "x-rvsf-api-token": "api-token" }
-      })
-    );
     expect(await registry.get(RADEON_ORIGIN_REGISTRY_KEY)).toBe(
       "https://new-tunnel.trycloudflare.com"
     );
   });
 
-  it("does not register a non-Radeon health response", async () => {
+  it("does not register a non-Radeon health proof", async () => {
     const registry = memoryRegistry();
     const response = await handleOriginRecovery(
-      recoveryRequest("recovery-token"),
-      recoveryEnv(registry),
-      vi.fn<typeof fetch>().mockResolvedValue(
-        Response.json({
-          ok: true,
-          runtime: {
-            mode: "deterministic",
-            model: "fixture",
-            baseUrlConfigured: false,
-            gpu: "none",
-            rocm: "none"
-          }
-        })
-      )
+      await recoveryRequest("recovery-token", {
+        mode: "deterministic",
+        model: "fixture",
+        baseUrlConfigured: false,
+        gpu: "none",
+        rocm: "none"
+      }),
+      recoveryEnv(registry)
     );
 
-    expect(response.status).toBe(502);
+    expect(response.status).toBe(400);
+    expect(await registry.get(RADEON_ORIGIN_REGISTRY_KEY)).toBeNull();
+  });
+
+  it("rejects a stale or incorrectly signed health proof", async () => {
+    const registry = memoryRegistry();
+    const stale = Math.floor(Date.now() / 1000) - 181;
+    const staleResponse = await handleOriginRecovery(
+      await recoveryRequest("recovery-token", validRuntime(), stale),
+      recoveryEnv(registry)
+    );
+    expect(staleResponse.status).toBe(400);
+
+    const request = await recoveryRequest("recovery-token");
+    const body = await request.json();
+    body.signature = "0".repeat(64);
+    const invalidResponse = await handleOriginRecovery(
+      new Request(request.url, {
+        method: "POST",
+        headers: request.headers,
+        body: JSON.stringify(body)
+      }),
+      recoveryEnv(registry)
+    );
+    expect(invalidResponse.status).toBe(401);
     expect(await registry.get(RADEON_ORIGIN_REGISTRY_KEY)).toBeNull();
   });
 });
 
-function recoveryRequest(token: string): Request {
+async function recoveryRequest(
+  token: string,
+  runtime: Record<string, unknown> = validRuntime(),
+  timestamp = Math.floor(Date.now() / 1000)
+): Promise<Request> {
+  const proof = {
+    origin: "https://new-tunnel.trycloudflare.com",
+    timestamp,
+    runtime
+  };
+  const signature = await signProof(proof, "api-token");
   return new Request(
     "https://radeon-voice-skill-foundry.pages.dev/internal/origin-recovery",
     {
@@ -141,10 +147,43 @@ function recoveryRequest(token: string): Request {
         "x-rvsf-origin-recovery-token": token
       },
       body: JSON.stringify({
-        origin: "https://new-tunnel.trycloudflare.com"
+        ...proof,
+        signature
       })
     }
   );
+}
+
+function validRuntime() {
+  return {
+    mode: "radeon",
+    model: "Qwen/Qwen3-4B-Instruct-2507",
+    baseUrlConfigured: true,
+    gpu: "AMD Radeon Pro W7900-class gfx1100 48GB",
+    rocm: "ROCm 7.2.1"
+  };
+}
+
+async function signProof(
+  proof: Record<string, unknown>,
+  token: string
+): Promise<string> {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(token),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    encoder.encode(JSON.stringify(proof))
+  );
+  return Array.from(new Uint8Array(signature), (byte) =>
+    byte.toString(16).padStart(2, "0")
+  ).join("");
 }
 
 function recoveryEnv(registry: KeyValueStore) {

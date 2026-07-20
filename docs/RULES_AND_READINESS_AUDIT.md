@@ -137,10 +137,12 @@ clean ASR output, not a human gold transcript.
 The main 100-point rubric has direct evidence. The stable Cloudflare Pages URL
 still uses a W7900 Quick Tunnel, but the current origin is dynamically
 registered in Cloudflare KV. A Supervisor-managed registrar accepts only HTTPS
-`trycloudflare.com` origins, and Pages writes a candidate only after
-authenticated Radeon health validation. A tunnel restart therefore recovers
-without a Pages redeploy. A named Tunnel remains the preferred post-contest
-upgrade because it removes the rotating hostname entirely.
+`trycloudflare.com` origins, validates the public candidate with the API token,
+and sends a fresh HMAC-signed Radeon health proof. Pages verifies the second
+recovery token, API-token signature, timestamp, and runtime fields before
+writing KV. A tunnel restart therefore recovers without a Pages redeploy. A
+named Tunnel remains the preferred post-contest upgrade because it removes the
+rotating hostname entirely.
 
 The Quark INT4/INT8 A/B is complete. It produced a capacity benefit but no
 acceptable speed/quality replacement for FP16. This negative result strengthens

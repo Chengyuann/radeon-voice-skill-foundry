@@ -128,11 +128,16 @@ The Quick Tunnel hostname is intentionally treated as replaceable:
 2. It extracts the issued HTTPS `trycloudflare.com` origin and atomically writes
    `/workspace/rvsf-public-origin.txt`.
 3. `scripts/radeon_origin_registrar.sh watch` detects a changed origin.
-4. It authenticates to the Pages-only `/internal/origin-recovery` endpoint.
-5. Pages validates `${origin}/api/health` with its server-held
+4. It validates `${origin}/api/health` through the public tunnel using
    `RVSF_API_TOKEN`.
-6. Only a healthy Radeon runtime is written to KV as `radeon-api-origin`.
-7. The normal `/api/*` proxy reads KV first and uses `RADEON_API_ORIGIN` only
+5. It signs the canonical origin, timestamp, and Radeon runtime fields with
+   HMAC-SHA256 using that API token.
+6. It authenticates to the Pages-only `/internal/origin-recovery` endpoint.
+7. Pages uses its server-held copy of `RVSF_API_TOKEN` to verify the HMAC,
+   requires a three-minute timestamp window, and checks the Radeon runtime
+   fields.
+8. Only a valid fresh proof is written to KV as `radeon-api-origin`.
+9. The normal `/api/*` proxy reads KV first and uses `RADEON_API_ORIGIN` only
    as a fallback.
 
 Secret files on W7900:

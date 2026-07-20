@@ -12,17 +12,12 @@ export type RadeonOriginEnv = {
   RVSF_ORIGIN_REGISTRY?: KeyValueStore;
 };
 
-type Fetcher = typeof fetch;
-
-type HealthPayload = {
-  ok?: unknown;
-  runtime?: {
-    mode?: unknown;
-    model?: unknown;
-    baseUrlConfigured?: unknown;
-    gpu?: unknown;
-    rocm?: unknown;
-  };
+type RecoveryRuntimeProof = {
+  mode: "radeon";
+  model: string;
+  baseUrlConfigured: true;
+  gpu: string;
+  rocm: string;
 };
 
 export async function resolveRadeonOrigin(
@@ -68,8 +63,7 @@ export function normalizeRadeonOrigin(
 
 export async function handleOriginRecovery(
   request: Request,
-  env: RadeonOriginEnv,
-  fetcher: Fetcher = fetch
+  env: RadeonOriginEnv
 ): Promise<Response> {
   if (request.method !== "POST") {
     return Response.json(
@@ -114,9 +108,41 @@ export async function handleOriginRecovery(
     );
   }
 
-  const health = await validateRadeonHealth(origin, apiToken, fetcher);
-  if (!health.ok) {
-    return Response.json({ error: health.error }, { status: 502 });
+  const timestamp =
+    body &&
+    typeof body === "object" &&
+    "timestamp" in body &&
+    typeof body.timestamp === "number" &&
+    Number.isInteger(body.timestamp)
+      ? body.timestamp
+      : undefined;
+  const runtime = parseRuntimeProof(body);
+  const signature =
+    body &&
+    typeof body === "object" &&
+    "signature" in body &&
+    typeof body.signature === "string"
+      ? body.signature
+      : undefined;
+  if (
+    timestamp === undefined ||
+    Math.abs(Math.floor(Date.now() / 1000) - timestamp) > 180 ||
+    !runtime ||
+    !signature ||
+    !/^[a-f0-9]{64}$/i.test(signature)
+  ) {
+    return Response.json(
+      { error: "Invalid or expired Radeon health proof" },
+      { status: 400 }
+    );
+  }
+
+  const proof = { origin, timestamp, runtime };
+  if (!(await verifyHealthProof(proof, signature, apiToken))) {
+    return Response.json(
+      { error: "Radeon health proof signature is invalid" },
+      { status: 401 }
+    );
   }
 
   await env.RVSF_ORIGIN_REGISTRY.put(
@@ -127,59 +153,78 @@ export async function handleOriginRecovery(
     ok: true,
     origin,
     registeredAt: new Date().toISOString(),
-    runtime: health.runtime
+    runtime
   });
 }
 
-async function validateRadeonHealth(
-  origin: string,
-  apiToken: string,
-  fetcher: Fetcher
-): Promise<
-  | { ok: true; runtime: Record<string, unknown> }
-  | { ok: false; error: string }
-> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10_000);
-  try {
-    const response = await fetcher(`${origin}/api/health`, {
-      headers: {
-        "x-rvsf-api-token": apiToken
-      },
-      redirect: "error",
-      signal: controller.signal
-    });
-    if (!response.ok) {
-      return {
-        ok: false,
-        error: `Candidate origin health check returned ${response.status}`
-      };
-    }
-    const payload = (await response.json()) as HealthPayload;
-    const runtime = payload.runtime;
-    if (
-      payload.ok !== true ||
-      !runtime ||
-      runtime.mode !== "radeon" ||
-      runtime.baseUrlConfigured !== true ||
-      typeof runtime.model !== "string" ||
-      typeof runtime.gpu !== "string" ||
-      typeof runtime.rocm !== "string"
-    ) {
-      return {
-        ok: false,
-        error: "Candidate origin is not a healthy Radeon runtime"
-      };
-    }
-    return { ok: true, runtime: runtime as Record<string, unknown> };
-  } catch {
-    return {
-      ok: false,
-      error: "Candidate origin health check failed"
-    };
-  } finally {
-    clearTimeout(timeout);
+function parseRuntimeProof(body: unknown): RecoveryRuntimeProof | undefined {
+  if (
+    !body ||
+    typeof body !== "object" ||
+    !("runtime" in body) ||
+    !body.runtime ||
+    typeof body.runtime !== "object"
+  ) {
+    return undefined;
   }
+  const runtime = body.runtime;
+  if (
+    !("mode" in runtime) ||
+    runtime.mode !== "radeon" ||
+    !("baseUrlConfigured" in runtime) ||
+    runtime.baseUrlConfigured !== true ||
+    !("model" in runtime) ||
+    typeof runtime.model !== "string" ||
+    !runtime.model.trim() ||
+    !("gpu" in runtime) ||
+    typeof runtime.gpu !== "string" ||
+    !runtime.gpu.trim() ||
+    !("rocm" in runtime) ||
+    typeof runtime.rocm !== "string" ||
+    !runtime.rocm.trim()
+  ) {
+    return undefined;
+  }
+  return {
+    mode: "radeon",
+    model: runtime.model,
+    baseUrlConfigured: true,
+    gpu: runtime.gpu,
+    rocm: runtime.rocm
+  };
+}
+
+async function verifyHealthProof(
+  proof: {
+    origin: string;
+    timestamp: number;
+    runtime: RecoveryRuntimeProof;
+  },
+  signature: string,
+  apiToken: string
+): Promise<boolean> {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(apiToken),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["verify"]
+  );
+  return crypto.subtle.verify(
+    "HMAC",
+    key,
+    hexToBytes(signature),
+    encoder.encode(JSON.stringify(proof))
+  );
+}
+
+function hexToBytes(value: string): ArrayBuffer {
+  const bytes = new Uint8Array(value.length / 2);
+  for (let index = 0; index < value.length; index += 2) {
+    bytes[index / 2] = Number.parseInt(value.slice(index, index + 2), 16);
+  }
+  return bytes.buffer as ArrayBuffer;
 }
 
 async function secretsMatch(

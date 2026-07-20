@@ -5,6 +5,7 @@ command_name="${1:-watch}"
 runtime_dir="${RVSF_RUNTIME_DIR:-/workspace}"
 origin_file="${RVSF_PUBLIC_ORIGIN_FILE:-$runtime_dir/rvsf-public-origin.txt}"
 token_file="${RVSF_ORIGIN_RECOVERY_TOKEN_FILE:-$runtime_dir/.rvsf-origin-recovery-token}"
+api_token_file="${RVSF_API_TOKEN_FILE:-$runtime_dir/.rvsf-api-token}"
 registered_file="$runtime_dir/rvsf-registered-origin.txt"
 response_file="$runtime_dir/rvsf-origin-registration-response.json"
 pages_origin="${RVSF_PAGES_ORIGIN:-https://radeon-voice-skill-foundry.pages.dev}"
@@ -18,14 +19,18 @@ log() {
 }
 
 require_secret_file() {
-  if [[ ! -s "$token_file" ]]; then
-    log "origin recovery token file is missing: $token_file" >&2
+  local secret_file="$1"
+  if [[ ! -s "$secret_file" ]]; then
+    log "required secret file is missing: $secret_file" >&2
     exit 1
   fi
   local mode
-  mode="$(stat -c '%a' "$token_file" 2>/dev/null || stat -f '%Lp' "$token_file")"
+  mode="$(
+    stat -c '%a' "$secret_file" 2>/dev/null ||
+      stat -f '%Lp' "$secret_file"
+  )"
   if [[ "$mode" != "600" ]]; then
-    log "origin recovery token file must have mode 600" >&2
+    log "secret file must have mode 600: $secret_file" >&2
     exit 1
   fi
 }
@@ -54,21 +59,75 @@ pages_is_healthy() {
 
 register_origin() {
   local origin="$1"
-  local token
-  token="$(tr -d '\r\n' <"$token_file")"
   local temporary_response="${response_file}.tmp"
+  if ! python3 - \
+    "$origin" \
+    "$recovery_url" \
+    "$api_token_file" \
+    "$token_file" \
+    "$temporary_response" <<'PY'
+import hashlib
+import hmac
+import json
+import sys
+import time
+import urllib.request
 
-  if ! {
-    printf 'silent\n'
-    printf 'show-error\n'
-    printf 'fail-with-body\n'
-    printf 'max-time = 20\n'
-    printf 'request = "POST"\n'
-    printf 'url = "%s"\n' "$recovery_url"
-    printf 'header = "content-type: application/json"\n'
-    printf 'header = "x-rvsf-origin-recovery-token: %s"\n' "$token"
-    printf 'data = "{\\"origin\\":\\"%s\\"}"\n' "$origin"
-  } | curl --config - --output "$temporary_response"; then
+origin, recovery_url, api_token_file, recovery_token_file, output_file = sys.argv[1:]
+api_token = open(api_token_file, encoding="utf-8").read().strip()
+recovery_token = open(recovery_token_file, encoding="utf-8").read().strip()
+
+health_request = urllib.request.Request(
+    f"{origin}/api/health",
+    headers={"x-rvsf-api-token": api_token},
+)
+with urllib.request.urlopen(health_request, timeout=20) as response:
+    health = json.load(response)
+runtime = health.get("runtime") if health.get("ok") is True else None
+if not isinstance(runtime, dict):
+    raise RuntimeError("candidate origin did not return a health payload")
+if (
+    runtime.get("mode") != "radeon"
+    or runtime.get("baseUrlConfigured") is not True
+    or not all(
+        isinstance(runtime.get(field), str) and runtime[field].strip()
+        for field in ("model", "gpu", "rocm")
+    )
+):
+    raise RuntimeError("candidate origin is not a healthy Radeon runtime")
+
+proof = {
+    "origin": origin,
+    "timestamp": int(time.time()),
+    "runtime": {
+        "mode": "radeon",
+        "model": runtime["model"],
+        "baseUrlConfigured": True,
+        "gpu": runtime["gpu"],
+        "rocm": runtime["rocm"],
+    },
+}
+canonical = json.dumps(proof, separators=(",", ":")).encode()
+proof["signature"] = hmac.new(
+    api_token.encode(),
+    canonical,
+    hashlib.sha256,
+).hexdigest()
+body = json.dumps(proof, separators=(",", ":")).encode()
+register_request = urllib.request.Request(
+    recovery_url,
+    data=body,
+    method="POST",
+    headers={
+        "content-type": "application/json",
+        "x-rvsf-origin-recovery-token": recovery_token,
+    },
+)
+with urllib.request.urlopen(register_request, timeout=20) as response:
+    result = response.read()
+open(output_file, "wb").write(result)
+PY
+  then
     rm -f "$temporary_response"
     return 1
   fi
@@ -79,7 +138,8 @@ register_origin() {
 }
 
 run_once() {
-  require_secret_file
+  require_secret_file "$token_file"
+  require_secret_file "$api_token_file"
   local origin
   if ! origin="$(current_origin)"; then
     log "no valid Quick Tunnel origin is available" >&2
