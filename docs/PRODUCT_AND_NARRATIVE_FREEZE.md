@@ -2,6 +2,8 @@
 
 Freeze date: 2026-07-20 (UTC+8)
 
+Production gate status: passed on commit `8950009`.
+
 ## Purpose
 
 This freeze establishes the final contest product and the only canonical Demo
@@ -80,6 +82,11 @@ commands, and whether Demo V3 must be re-recorded.
 - Restarting only `rvsf-tunnel` produces a new origin and the stable Pages URL
   recovers without deployment.
 - Desktop and 390px mobile checks show no blocking overlap or clipped controls.
+
+The controlled infrastructure check restarted only `rvsf-tunnel`. The Quick
+Tunnel origin changed, the W7900 registrar and remote KV converged to the new
+origin, the stable Pages health and Governance Ledger endpoints recovered, and
+the Pages deployment remained `fd2aa5ad` on source commit `8950009`.
 
 ## Demo V3 Contract
 

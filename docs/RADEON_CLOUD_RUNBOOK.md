@@ -174,6 +174,15 @@ Success means the tunnel origin changes, the registrar reports the same origin,
 and the stable Pages health endpoint returns the W7900 Radeon runtime without a
 new Pages deployment.
 
+Verified on 2026-07-20:
+
+- Pages deployment: `fd2aa5ad`, source commit `8950009`
+- tunnel-only restart: passed
+- registrar and remote KV convergence: passed
+- stable `/api/health`: Radeon mode, Qwen3-4B, W7900-class, ROCm 7.2.1
+- stable Governance Ledger: `valid`
+- direct unauthenticated new-origin health request: HTTP 401
+
 ## Data to record for submission
 
 - GPU model, expected from group context: Radeon Pro W7900 if that is what your
