@@ -11,7 +11,7 @@ Deadline: 2026-08-06 23:59 UTC+8.
 - [x] GitHub ID: `Chengyuann`
 - [x] Discord/WeChat joined
 
-## Track 2 Main Rubric
+## Track 2 Capability Coverage
 
 - [x] Clear private-Agent positioning and differentiated scenario
 - [x] Local RAG
@@ -24,7 +24,7 @@ Deadline: 2026-08-06 23:59 UTC+8.
 - [x] Local ASR on AMD Radeon + ROCm
 - [x] Targeted Radeon inference optimization
 - [x] Machine-readable raw benchmark evidence
-- [x] Scoring evidence matrix and judge reading path
+- [x] Technical evidence index and project-material links
 
 ## Required Deliverables
 
@@ -108,13 +108,15 @@ Official PR:
 ## Published Integrity Anchors
 
 - Final Demo V3 MP4:
-  `50c3b34bd4b786e3e38d2451066cedd5931385441c6961f8de1663a720b1a132`
+  `3c7c60bb19f7bd36300682b548416ce2f7cb1d84c7d31f90c6b6922091d69727`
 - Final Demo V3 SRT:
   `aaf60da629ba861c3280c7402cdeb83e98526500f53f7f5812d09edf58172534`
 - Final Demo V3 proof ZIP:
   `7898d888112b113d53fce7ca2f9f46eecdaf318c79625af665fa908622f78cc2`
 - Final Demo V3 ledger JSONL:
   `ca04585f5531fc42333f219153b7e3cbabfd3c629917cb4c621e6066ab95fcb3`
+- Technical Evidence Index:
+  `6ea52b0e05ecf6d9e9efc04a02b26a2ff592091aac49ad96b9fb0beaed730877`
 - Main Demo V2 MP4:
   `87fa6304819f01f5c5861d685a9f0c048d71e2e909ab4c9ab133428833125133`
 - Main Demo V2 SRT:

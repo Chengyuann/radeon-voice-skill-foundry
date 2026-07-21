@@ -118,7 +118,7 @@ recorded product session.
 - Terminology card: no external GAIA conformance, digital signature, or
   external ledger anchor is claimed
 - MP4 SHA-256:
-  `50c3b34bd4b786e3e38d2451066cedd5931385441c6961f8de1663a720b1a132`
+  `3c7c60bb19f7bd36300682b548416ce2f7cb1d84c7d31f90c6b6922091d69727`
 - SRT SHA-256:
   `aaf60da629ba861c3280c7402cdeb83e98526500f53f7f5812d09edf58172534`
 - Proof ZIP SHA-256:

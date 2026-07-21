@@ -373,7 +373,7 @@ def build_poster() -> tuple[Path, Path]:
     draw.text((150, 2210), "radeon-voice-skill-foundry.pages.dev", font=font(34, bold=True), fill=INK)
     draw.text(
         (150, 2265),
-        "Demo V3: final public W7900 workflow  |  Full evidence: GitHub Release + scoring matrix",
+        "Demo V3: final public W7900 workflow  |  Technical evidence: GitHub Release + evidence index",
         font=font(22),
         fill=MUTED,
     )

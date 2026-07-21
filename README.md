@@ -9,7 +9,7 @@ W7900-class GPU with ROCm. The application retrieves local policy evidence,
 compiles typed constraints and permissions, runs deterministic positive and
 adversarial tests, and requires explicit human promotion before reuse.
 
-## Submission
+## Project Materials
 
 - Live product:
   `https://radeon-voice-skill-foundry.pages.dev/`
@@ -20,7 +20,7 @@ adversarial tests, and requires explicit human promotion before reuse.
 - Demo proof:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/demo-v3-proof.zip`
 - Project Specification: `submission/PROJECT_SPECIFICATION.pdf`
-- Scoring evidence: `submission/SCORING_EVIDENCE_MATRIX.md`
+- Technical evidence: `submission/TECHNICAL_EVIDENCE_INDEX.md`
 - Official submission:
   `https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07/pull/7`
 
@@ -91,10 +91,9 @@ The public UI is hosted on Cloudflare Pages. A same-origin Pages Function adds a
 server-held token and forwards API requests to the Radeon-hosted backend.
 Direct unauthenticated backend requests are rejected.
 
-Core inference and source audio processing run on the Radeon instance.
-Reviewers should use the supplied synthetic SOP fixture rather than real
-confidential material because the contest UI is publicly reachable through
-Cloudflare.
+Core inference and source audio processing run on the Radeon instance. The
+public deployment provides a synthetic SOP fixture so no real confidential
+material is needed when using the hosted application.
 
 ## Requirements
 
@@ -218,8 +217,8 @@ npm run benchmark:optimization -- benchmarks/optimization-latest.json
 
 ## Integrity and Threat Boundaries
 
-- Voice Evidence scores are internal deterministic signal-quality results, not
-  ASR word-error-rate scores.
+- Voice Evidence values are internal deterministic signal-quality results, not
+  ASR word-error-rate measurements.
 - Governance receipts contain SHA-256 payload hashes; they are not digitally
   signed.
 - The governance ledger checks sequence, previous-entry hashes, payload hashes,
