@@ -89,3 +89,7 @@ Changed intent does not take this shortcut; it must compile and verify again.
 23
 00:04:15,163 --> 00:04:36,379
 The final path is voice, server-authoritative demonstration, Radeon inference, least-privilege policy, adversarial proof, impact-aware promotion, tamper-evident governance, and exact reuse, delivered through one stable public product.
+
+24
+00:04:38,600 --> 00:04:48,300
+Terminology boundary: SKILL.md is portable Agent Skill Markdown; no external GAIA conformance is claimed. "Proof-bound" means checked against the current SHA-256 proof hash. Ledger integrity is hash-chained, not digitally signed or externally anchored.

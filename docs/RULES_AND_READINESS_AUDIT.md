@@ -60,7 +60,7 @@ Rules and Conditions. Submission materials therefore separate the base
 | Radeon inference optimization | Complete | Project Specification sections 7-8 and raw JSON/JSONL |
 | Complete source repository | Complete | Public MIT repository |
 | README with environment, startup, and dependencies | Complete | Root `README.md` |
-| 3-5 minute real-operation Demo | Complete | Demo V3, 4:39 |
+| 3-5 minute real-operation Demo | Complete | Demo V3, 4:49 |
 | Poster or PPT | Complete | Poster PDF and PNG |
 | English official pull request | Complete | PR #7, open and mergeable |
 

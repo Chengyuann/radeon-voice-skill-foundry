@@ -101,9 +101,11 @@ the Pages deployment remained `fd2aa5ad` on source commit `8950009`.
 
 ## Demo V3 Completion
 
-Recorded and validated on 2026-07-20 after the frozen release gate passed.
+Recorded on 2026-07-20 after the frozen release gate passed. A terminology
+boundary card was appended and validated on 2026-07-21 without changing the
+recorded product session.
 
-- Duration: `278.56 s`
+- Duration: `288.58 s`
 - Resolution: `1920x1080`
 - Video: H.264
 - Audio: AAC, male `Charon` narration
@@ -113,10 +115,12 @@ Recorded and validated on 2026-07-20 after the frozen release gate passed.
 - Final lifecycle: promoted
 - Exact reuse count shown: `1`
 - Governance ledger: `valid`, two entries after recording
+- Terminology card: no external GAIA conformance, digital signature, or
+  external ledger anchor is claimed
 - MP4 SHA-256:
-  `85d989a952561650195322c080a46543b93b3070c84e0f89021e59d451a4148e`
+  `50c3b34bd4b786e3e38d2451066cedd5931385441c6961f8de1663a720b1a132`
 - SRT SHA-256:
-  `a0406750ee3c3081597d8ede9ff8eccc853958dda76e54a024d98a87cf21c1ce`
+  `aaf60da629ba861c3280c7402cdeb83e98526500f53f7f5812d09edf58172534`
 - Proof ZIP SHA-256:
   `7898d888112b113d53fce7ca2f9f46eecdaf318c79625af665fa908622f78cc2`
 - Ledger JSONL SHA-256:

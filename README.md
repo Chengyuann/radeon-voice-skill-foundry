@@ -13,7 +13,7 @@ adversarial tests, and requires explicit human promotion before reuse.
 
 - Live product:
   `https://radeon-voice-skill-foundry.pages.dev/`
-- Final 4:39 Demo:
+- Final 4:49 Demo:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO_V3.mp4`
 - Demo captions:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO_V3.srt`

@@ -34,7 +34,7 @@ Deadline: 2026-08-06 23:59 UTC+8.
 - [x] English Project Specification PDF
 - [x] Agent architecture diagram
 - [x] Supplementary poster
-- [x] Recommended 4:39 final public Demo V3
+- [x] Recommended 4:49 final public Demo V3
 - [x] Burned-in English captions and embedded subtitle track
 - [x] Matching public SRT
 - [x] Public interactive Cloudflare entry point
@@ -45,7 +45,8 @@ Deadline: 2026-08-06 23:59 UTC+8.
 - [x] `npm run typecheck`: passed
 - [x] Current local `npm test`: 63/63 passed
 - [x] Current local production build: passed
-- [x] Final public Demo V3: continuous 278.56 s, H.264/AAC/English subtitle
+- [x] Final public Demo V3: 278.56 s continuous session plus 10 s terminology
+  card, 288.58 s total, H.264/AAC/English subtitle
 - [x] Demo V3 real path: W7900 ASR/compile, 7/7 proof, promote, valid ledger, reuse
 - [x] Public Cloudflare page: HTTP 200
 - [x] Public `/api/health`: Radeon mode, W7900-class `gfx1100`, ROCm 7.2.1
@@ -107,9 +108,9 @@ Official PR:
 ## Published Integrity Anchors
 
 - Final Demo V3 MP4:
-  `85d989a952561650195322c080a46543b93b3070c84e0f89021e59d451a4148e`
+  `50c3b34bd4b786e3e38d2451066cedd5931385441c6961f8de1663a720b1a132`
 - Final Demo V3 SRT:
-  `a0406750ee3c3081597d8ede9ff8eccc853958dda76e54a024d98a87cf21c1ce`
+  `aaf60da629ba861c3280c7402cdeb83e98526500f53f7f5812d09edf58172534`
 - Final Demo V3 proof ZIP:
   `7898d888112b113d53fce7ca2f9f46eecdaf318c79625af665fa908622f78cc2`
 - Final Demo V3 ledger JSONL:
