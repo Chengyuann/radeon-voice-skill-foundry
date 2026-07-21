@@ -35,12 +35,8 @@ Deadline: 2026-08-06 23:59 UTC+8.
 - [x] Agent architecture diagram
 - [x] Supplementary poster
 - [x] Recommended 4:39 final public Demo V3
-- [x] Original 4:48 real-operation Demo V2
-- [x] Male TTS narration
 - [x] Burned-in English captions and embedded subtitle track
 - [x] Matching public SRT
-- [x] Public Demo V2 proof ZIP
-- [x] Continuous lifecycle Demo V2
 - [x] Public interactive Cloudflare entry point
 - [x] Official English pull request
 
@@ -53,7 +49,7 @@ Deadline: 2026-08-06 23:59 UTC+8.
 - [x] Demo V3 real path: W7900 ASR/compile, 7/7 proof, promote, valid ledger, reuse
 - [x] Public Cloudflare page: HTTP 200
 - [x] Public `/api/health`: Radeon mode, W7900-class `gfx1100`, ROCm 7.2.1
-- [x] Public real workflow: Voice Evidence v0.3 `100/100`
+- [x] Public real workflow: internal Voice Evidence v0.3 `pass / 100`
 - [x] Public real workflow: `mail.send = deny`
 - [x] Public real workflow: 7/7 verification fixtures
 - [x] Public real workflow: save/reuse and proof ZIP
@@ -105,7 +101,8 @@ Official PR:
 - Compact output token reduction: `29.42%`
 - Compact output generation-latency reduction: `30.03%`
 - Exact reuse HTTP median: `2.18 ms`
-- Measured identical-skill fast path: `11,052.03x`
+- Identical-skill request-latency ratio: `11,052.03x`; avoids a repeat model
+  call and is not a fresh-inference GPU speedup
 
 ## Published Integrity Anchors
 
@@ -135,18 +132,19 @@ Official PR:
   `4871e76d1d0204c5d0179418132ed778f53b8adc6a230120d2974ff61be7158a`
 - Weekend v10 evidence ZIP:
   `1189e0e47c14ba18784f5be82aa5c68366946c0d6378d6a8d26adef61dfd3e9b`
-- Refreshed Project Specification PDF:
-  `e0c8de5f94746055734e4bcb4b1aedbaabf027c8933bfbefd437be9bd6015707`
-- Refreshed architecture PNG:
-  `1feec7ef529232b12c4f4d9bfca6d59f05685bc7253b9aab35efe90688b37fce`
-- Refreshed poster PDF:
-  `80b1c4fed179510766ffe5118ade2f1281612c0681eccb37d04f31bbf33dd0cb`
-- Refreshed poster PNG:
-  `ecd45829137ebc7d5bb7e259b77f34e0355474741773ce12914549cdeaf7bf72`
+- Reviewed Project Specification PDF:
+  `d98e2c4331da1adbe3c3e85f52084340602ce10aa0c8db09becfbe7f7f9d197a`
+- Reviewed architecture PNG:
+  `fd13c1877ef143a5aec8f92297bd8a09f1aa1eb54c50ce452b7458228fcda011`
+- Reviewed poster PDF:
+  `1909b24163c67d54a020212f7c5a392707421386dcdd4d38099878b9a632fd18`
+- Reviewed poster PNG:
+  `7736b1a3bf4579aeb8839db3313c4825feaf9cf6874690f94a62b737a4c24378`
 
 ## Evidence Boundary
 
-- Main Demo V2 is the real Cloudflare + W7900 performance and product proof.
+- Demo V3 is the authoritative product recording and real W7900 path.
+- Main Demo V2 is supplementary performance narration.
 - Continuous Demo V2 is deterministic lifecycle evidence with real process
   restarts; it is not used as GPU performance evidence.
 - The Chinese SOP WAV is a synthetic reproducible fixture.
@@ -196,7 +194,7 @@ Measured result:
 - fallback count: `12/12`
 - final accepted: `12/12`
 - median adaptive latency: `19.42 s`
-- final Voice Evidence: `100/100`
+- final internal Voice Evidence: `pass / 100`
 - final permission: `mail.send = deny`
 - final verification: `7/7`
 - proof hash:

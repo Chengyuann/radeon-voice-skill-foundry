@@ -141,7 +141,7 @@ export function MemoryPanel({
       <div className="memory-column">
         <div className="memory-heading">
           <div>
-            <p className="eyebrow">Local RAG</p>
+            <p className="eyebrow">Local retrieval</p>
             <h2>Policy knowledge</h2>
           </div>
           <button

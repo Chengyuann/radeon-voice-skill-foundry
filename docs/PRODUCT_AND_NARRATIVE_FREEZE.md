@@ -26,7 +26,7 @@ Voice SOP
 -> typed constraints, policy, and permissions
 -> Sandbox Replay v1
 -> Promotion Impact Review
--> proof-bound promotion
+-> proof-hash-checked promotion
 -> Governance Audit Ledger
 -> exact governed reuse
 ```
@@ -38,7 +38,8 @@ Voice SOP
 - The six action events are accepted and persisted by the server before the UI
   advances.
 - The generated skill includes least-privilege permissions, positive fixtures,
-  adversarial fixtures, receipts, and a hash-bound proof bundle.
+  adversarial fixtures, hashed receipts, and a proof bundle with SHA-256
+  integrity fields.
 - `mail.send` remains denied; drafts and tentative calendar holds do not become
   irreversible external side effects.
 - Promotion is gated by compatibility and impact review.

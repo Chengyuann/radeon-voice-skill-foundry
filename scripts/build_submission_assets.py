@@ -142,7 +142,7 @@ def build_architecture() -> Path:
     draw.text((120, 78), "Radeon Voice Skill Foundry", font=font(62, bold=True), fill=INK)
     draw.text(
         (120, 154),
-        "Cloudflare product -> authenticated W7900 inference -> governed skill -> durable proof",
+        "Cloudflare product -> authenticated W7900 inference -> verified skill package",
         font=font(30),
         fill=MUTED,
     )
@@ -214,9 +214,9 @@ def build_architecture() -> Path:
     layer_gap = 55
     layers = [
         ("VOICE EVIDENCE", "Source-bound Gate", "PASS / REVIEW / QUARANTINE", AMBER_BG, AMBER),
-        ("LOCAL CONTEXT", "Policy / SOP RAG", "Retrieved evidence injected", BLUE_BG, BLUE),
+        ("LOCAL CONTEXT", "Policy / SOP Retrieval", "Deterministic token-overlap evidence", BLUE_BG, BLUE),
         ("SAFETY KERNEL", "Least Privilege", "deny / review / redact / confirm", AMBER_BG, AMBER),
-        ("VERIFICATION", "Adversarial Replay", "7/7 + receipts + proof hash", GREEN_BG, GREEN),
+        ("VERIFICATION", "Adversarial Replay", "7/7 + hashed receipts", GREEN_BG, GREEN),
         ("PROCEDURAL MEMORY", "Verified Skill", "2.18 ms exact reuse", WHITE, GREEN),
     ]
     layer_rects: list[tuple[int, int, int, int]] = []
@@ -260,7 +260,7 @@ def build_architecture() -> Path:
 
     draw.text(
         (120, 1352),
-        "Main Demo V2 proves real W7900 inference. Continuous Demo V2 proves restart and revalidation control.",
+        "Demo V3 records the final public W7900 workflow. Supporting evidence separates performance and lifecycle controls.",
         font=font(25, bold=True),
         fill=INK,
     )
@@ -299,9 +299,9 @@ def build_poster() -> tuple[Path, Path]:
         ("257.65", "output tokens/s", "vLLM graph at concurrency 8"),
         ("12.47x", "serving uplift", "versus serialized Transformers"),
         ("85.35x", "ASR aggregate RT", "native Qwen3-ASR batch 8"),
-        ("100/100", "voice evidence", "clean source passed v0.3"),
+        ("PASS", "voice evidence", "internal deterministic gate"),
         ("7/7", "adversarial proof", "mail.send remains DENY"),
-        ("36/36", "current tests", "typecheck + production build"),
+        ("63/63", "current tests", "typecheck + production build"),
     ]
     card_w = 500
     gap = 40
@@ -320,8 +320,8 @@ def build_poster() -> tuple[Path, Path]:
     steps = [
         ("1", "Speak + demonstrate", "Private SOP and aligned action trace"),
         ("2", "Measure + transcribe", "Voice Evidence v0.3 + local ASR"),
-        ("3", "Compile on W7900", "RAG + constraints + least privilege"),
-        ("4", "Prove + remember", "7/7 + receipts + durable child proofs"),
+        ("3", "Compile on W7900", "local retrieval + constraints + least privilege"),
+        ("4", "Prove + remember", "7/7 + hashed receipts + versioned memory"),
     ]
     sy = 1320
     step_w = 375
@@ -339,13 +339,13 @@ def build_poster() -> tuple[Path, Path]:
 
     proof_y = 1645
     rounded_box(draw, (110, proof_y, 840, proof_y + 420), WHITE, GREEN, radius=22, width=3)
-    draw.text((145, proof_y + 34), "PROOF-CARRYING OUTPUT", font=font(22, bold=True, mono=True), fill=GREEN)
+    draw.text((145, proof_y + 34), "VERIFIED SKILL PACKAGE", font=font(22, bold=True, mono=True), fill=GREEN)
     items = [
-        "GAIA-compatible SKILL.md + policy",
+        "portable Agent Skill Markdown + policy",
         "positive and adversarial fixtures",
-        "governance receipts + artifact hashes",
+        "hashed receipts + artifact integrity fields",
         "source-bound Voice Evidence",
-        "versioned memory + child-proof lineage",
+        "versioned memory + child-run lineage",
     ]
     for idx, item in enumerate(items):
         iy = proof_y + 96 + idx * 61
@@ -373,7 +373,7 @@ def build_poster() -> tuple[Path, Path]:
     draw.text((150, 2210), "radeon-voice-skill-foundry.pages.dev", font=font(34, bold=True), fill=INK)
     draw.text(
         (150, 2265),
-        "Main Demo V2: real W7900 inference  |  Continuous Demo V2: restart + revalidation",
+        "Demo V3: final public W7900 workflow  |  Full evidence: GitHub Release + scoring matrix",
         font=font(22),
         fill=MUTED,
     )
@@ -589,7 +589,7 @@ def build_spec_pdf(architecture_path: Path) -> Path:
                 Paragraph("<b>257.65 tok/s</b><br/><font size=8>vLLM graph C8</font>", styles["Bodyx"]),
                 Paragraph("<b>12.47x</b><br/><font size=8>serving uplift</font>", styles["Bodyx"]),
                 Paragraph("<b>85.35x</b><br/><font size=8>ASR batch real-time</font>", styles["Bodyx"]),
-                Paragraph("<b>100 / 7 / 36</b><br/><font size=8>voice / proof / tests</font>", styles["Bodyx"]),
+                Paragraph("<b>PASS / 7 / 63</b><br/><font size=8>voice gate / proof / tests</font>", styles["Bodyx"]),
             ]
         ],
         colWidths=[41 * mm] * 4,
@@ -613,12 +613,12 @@ def build_spec_pdf(architecture_path: Path) -> Path:
     story.append(Spacer(1, 14 * mm))
     story.append(
         Paragraph(
-            "The result is not a transcript. It is a source-bound, proof-carrying local Agent Skill with permissions, adversarial tests, receipts, and versioned memory.",
+            "The result is a source-bound Agent Skill package with explicit permissions, adversarial tests, hashed receipts, and versioned memory.",
             styles["Quotex"],
         )
     )
     story.append(Spacer(1, 30 * mm))
-    story.append(Paragraph("Project Specification | 2026-07-19", styles["Smallx"]))
+    story.append(Paragraph("Project Specification | 2026-07-21", styles["Smallx"]))
     story.append(PageBreak())
 
     md_lines = (SUBMISSION / "PROJECT_SPECIFICATION.md").read_text().splitlines()

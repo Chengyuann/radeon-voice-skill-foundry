@@ -1,156 +1,101 @@
 # Track 2 Rules and Readiness Audit
 
-Audited: 2026-07-19 (UTC+8)
+Audited: 2026-07-21 (UTC+8)
 
-## Governing Requirements
+Sources checked:
 
-The official competition repository requires Track 2 submissions to include:
+- AMD AI DevMaster Hackathon Luma page
+- Official Rules and Conditions Google Doc, text export
+- `AMD-DEV-CONTEST/Radeon-hackathon-2026-07` README at upstream commit
+  `88d4bf6`
 
-- an English Project Specification covering application scenarios, Agent
-  architecture, core capabilities, local deployment, and Radeon inference
-  optimization
-- complete source code with environment, dependency, and startup instructions
-- a 3-5 minute Demo showing the actual workflow and Radeon execution
-- either a PPT or poster
-- an English pull request to the official repository
+## Governing Track 2 Requirements
 
-The detailed Rules & Conditions export scores the main rubric out of 100:
+The detailed Rules and Conditions define Track 2 as development and local
+deployment of a private AI Agent on Radeon Cloud and ROCm. Core inference must
+run on the Radeon GPU; remote APIs cannot provide core functions.
 
-- Agent functional completeness: 60
-  - positioning and creative scenario: 20
-  - decomposition, tools, RAG, and memory: 20
-  - smooth multi-turn interaction: 20
-- Radeon / ROCm: 40
-  - core inference on Radeon: 20
-  - targeted inference-speed optimization: 20
+The project must demonstrate:
 
-The detailed English rules also describe a possible 20-point optimization
-bonus. The guaranteed readiness claim in this audit remains the 100-point main
-rubric.
+1. local deployment on AMD Radeon GPU
+2. scenario-based task execution
+3. tool invocation and workflow orchestration
+4. stable local operation and response performance
 
-Track 2 requires at least two of local RAG, tool invocation, multi-step
-planning, local memory, and permission/privacy control. This project implements
-all five.
+At least two of these five capabilities are required:
 
-## Judge Quick Path
+- local knowledge retrieval
+- tool invocation
+- multi-step planning
+- local multi-turn memory
+- permission control and privacy protection
 
-1. Open the live product:
-   `https://radeon-voice-skill-foundry.pages.dev/`
-2. Watch the recommended 4:48 Demo V2:
-   `RADEON_VOICE_SKILL_FOUNDRY_DEMO_V2.mp4`
-3. Read `submission/SCORING_EVIDENCE_MATRIX.md`.
-4. Review `submission/PROJECT_SPECIFICATION.pdf` and
-   `submission/ARCHITECTURE.png`.
-5. Inspect `docs/WEEKEND_W7900_EXPERIMENTS.md` and
-   `benchmarks/weekend-v10-summary.json` for raw Radeon optimization evidence.
-6. Use `CONTINUOUS_OPERATION_DEMO_V2.mp4` only for restart, invalidation, and
-   proof-lineage behavior.
+Radeon Voice Skill Foundry implements all five.
 
-## Main Rubric Readiness
+## Official Scoring Structure
 
-| Rubric item | Weight | Status | Primary evidence |
-|---|---:|---|---|
-| Positioning and creative scenario | 20 | Complete | voice-seeded cold-start verification; Project Specification sections 1-3; Demo V2 00:00-00:32 |
-| Decomposition, tools, RAG, and memory | 20 | Complete | all five Track 2 capability categories; Demo V2 Voice -> Policy -> Proof -> Memory |
-| Smooth multi-turn interaction | 20 | Complete | module UI, transcript acknowledgement, natural-language revision, save/reuse, revalidation; both V2 demos |
-| Core inference on Radeon | 20 | Complete | real Cloudflare -> authenticated gateway -> W7900 Qwen3-ASR and Qwen3-4B path; Demo V2 |
-| Targeted inference optimization | 20 | Complete | Transformers/vLLM A/B, native ASR batching, compact output, exact verified-skill reuse |
+The detailed governing document defines 120 possible points:
 
-This table is a readiness mapping, not a claim that judges have awarded a
-score.
+| Criterion | Points |
+|---|---:|
+| Clear task positioning and creative scenario | 20 |
+| Task decomposition, tools, RAG, and memory | 20 |
+| Smooth multi-turn interaction | 20 |
+| Core inference on Radeon and ROCm | 20 |
+| Targeted inference-speed optimization | 20 |
+| Optional quantization, distillation, or other optimization bonus | 20 |
+
+The public Luma overview summarizes the base evaluation as 60 functional points
+plus 40 Radeon/ROCm points. The extra 20 points appear only in the detailed
+Rules and Conditions. Submission materials therefore separate the base
+100-point evidence from optional-bonus evidence.
 
 ## Required Deliverables
 
 | Deliverable | Status | Evidence |
 |---|---|---|
-| Public source repository | Complete | `github.com/Chengyuann/radeon-voice-skill-foundry` |
-| English source README | Complete | setup, deployment, verification, benchmark, and Demo instructions |
-| English Project Specification | Complete | Markdown and generated PDF |
+| English Project Specification | Complete | Markdown and PDF |
 | Agent architecture diagram | Complete | `submission/ARCHITECTURE.png` |
-| 3-5 minute actual-operation Demo | Complete | 4:48 Demo V2 with real W7900 inference |
-| Poster | Complete | `submission/POSTER.pdf` and PNG |
-| Official English PR | Complete | AMD official repository PR #7, open and mergeable |
-| Public interactive surface | Complete | Cloudflare Pages entry point with authenticated W7900 gateway |
+| Core capabilities and deployment plan | Complete | Project Specification sections 4-6 |
+| Radeon inference optimization | Complete | Project Specification sections 7-8 and raw JSON/JSONL |
+| Complete source repository | Complete | Public MIT repository |
+| README with environment, startup, and dependencies | Complete | Root `README.md` |
+| 3-5 minute real-operation Demo | Complete | Demo V3, 4:39 |
+| Poster or PPT | Complete | Poster PDF and PNG |
+| English official pull request | Complete | PR #7, open and mergeable |
 
-## Technical Evidence
+## Compliance Assessment
 
-- Radeon Pro W7900-class, `gfx1100`, 47.98 GiB VRAM
-- ROCm 7.2.1
-- Qwen3-ASR-0.6B and Qwen3-4B-Instruct-2507 core inference on Radeon
-- Voice Evidence v0.3 clean sample: `pass / 100`
-- server-authoritative policy: `mail.send = deny`
-- deterministic verification: `7/7`
-- current local regression suite: `63/63`, typecheck, production build
-- server-authoritative demonstration workspace captures six ordered user
-  operations, rejects browser action tampering, and exports
-  `action_contract.json`; irreversible email/calendar side effects remain
-  simulated
-- Sandbox Replay v1 exposes six state transitions, before/after hashes, output
-  diffs, five adversarial probes, and zero external side effects
-- procedural memory uses an explicit candidate/promoted/superseded/revoked
-  lifecycle; reuse requires promotion, revocation requires a reason, and
-  rollback creates a newly verified version instead of mutating history
-- Promotion Impact Review diffs permissions, constraints, actions, and runtime;
-  stale hashes fail closed and risk escalation requires explicit acceptance
-- Governance Audit Ledger chains lifecycle receipts, reconciles them with
-  skill memory, exposes invalid states, and exports JSONL
-- clean W7900 weekend experiment commit: `33/33`, production build
-- vLLM graph concurrency-eight throughput: `257.65 tokens/s`
-- serialized Transformers concurrency-eight throughput: `20.66 tokens/s`
-- measured serving throughput improvement: `12.47x`
-- native ASR batch-eight aggregate speed: `85.35x real-time`
-- compact structured output: `29.42%` fewer output tokens and `30.03%`
-  lower generation latency
-- exact Verified Skill reuse: `2.18 ms` median HTTP, measured `11,052x`
-  identical-skill fast path
-- Quark quantization evaluation completed on W7900:
-  - INT4 W4A16 export reduced model storage by `66.73%`, but the installed
-    vLLM Quark loader rejected that serving scheme
-  - INT8 W8A8 reduced model-load VRAM by `44.07%` and increased KV-cache
-    capacity by `88.43%`
-  - INT8 C128 was `36.70%` slower at concurrency eight and passed only `11/51`
-    complete safety-semantic gates, so it was rejected for production
-- Adaptive Precision Controller v12:
-  - JSON Schema improved INT8 strict JSON from `0/12` to `2/12`
-  - semantic admission remained `0/12`
-  - automatic FP16 fallback restored `12/12` accepted outputs
-  - a real voice-backed proof recorded fallback, `mail.send = deny`, and `7/7`
+| Requirement | Verdict | Notes |
+|---|---|---|
+| Core inference on Radeon Cloud and ROCm | Pass | Qwen3-ASR and Qwen3-4B run on W7900-class `gfx1100`, ROCm 7.2.1 |
+| No closed API for core functions | Pass | TTS and image generation are used only for presentation assets |
+| Scenario task execution | Pass | Six server-accepted actions form the teaching contract |
+| Tool invocation and orchestration | Pass | Typed file, report, mail, calendar, and network capability model |
+| Operational stability | Pass | Durable runs, proof compatibility, restart recovery, and tunnel recovery |
+| Minimum Agent capabilities | Pass | All five listed categories implemented |
+| Actual-operation Demo | Pass | Real public workflow and real model wait retained |
+| Source reproducibility | Pass with environment caveat | Deterministic fallback runs locally; measured Radeon path requires equivalent ROCm hardware |
+| Content restrictions | Pass | No sexual, violent, discriminatory, political, illegal, or defamatory content |
 
-## Evidence Boundaries
+## Claim Boundaries
 
-The final Demo V3 and the two V2 videos have intentionally different evidence
-roles:
+- Local knowledge retrieval is deterministic token-overlap retrieval over
+  local JSON documents. It is not described as embedding or vector search.
+- The Voice Evidence result is an internal signal-quality gate, not word-error
+  rate or an external speech benchmark.
+- Exact promoted-skill reuse avoids an identical repeat model call. It is an
+  application fast path, not a fresh-inference GPU speedup.
+- The governance ledger is hash-chained and cross-checked against skill
+  memory. It has no external signature or immutable third-party anchor.
+- Quark INT8 is a rejected acceptance experiment. Production remains FP16.
+- The public demo uses Cloudflare as a UI and authenticated transport layer;
+  core inference and source audio processing remain on the dedicated Radeon
+  instance.
 
-- **Final Demo V3** records the complete frozen public product path through
-  real W7900 inference, promotion, Governance Audit Ledger export, and exact
-  reuse. It preserves the real model wait.
+## Remaining External Risk
 
-- **Main Demo V2** is the performance and product proof. It records the public
-  Cloudflare product executing real Qwen3-ASR and Qwen3-4B inference on the
-  W7900. The real model generation wait is preserved.
-- **Continuous Lifecycle Demo V2** is deterministic control evidence. It uses
-  repository ASR/compiler fixtures so two real Node API restarts, runtime
-  drift, invalidation, and child-proof revalidation can be reproduced in one
-  take. It is not presented as GPU performance evidence.
-
-The synthetic Chinese SOP WAV is a reproducible fixture, not a claimed human
-recording. Acoustic drift in the weekend study is relative to the deterministic
-clean ASR output, not a human gold transcript.
-
-## Residual Risk and Bonus Work
-
-The main 100-point rubric has direct evidence. The stable Cloudflare Pages URL
-still uses a W7900 Quick Tunnel, but the current origin is dynamically
-registered in Cloudflare KV. A Supervisor-managed registrar accepts only HTTPS
-`trycloudflare.com` origins, validates the public candidate with the API token,
-and sends a fresh HMAC-signed Radeon health proof. Pages verifies the second
-recovery token, API-token signature, timestamp, and runtime fields before
-writing KV. A tunnel restart therefore recovers without a Pages redeploy. A
-named Tunnel remains the preferred post-contest upgrade because it removes the
-rotating hostname entirely.
-
-The Quark INT4/INT8 A/B is complete. It produced a capacity benefit but no
-acceptable speed/quality replacement for FP16. This negative result strengthens
-the current deployment decision rather than adding a quantized production
-claim. FP8 remains untested because loader registration alone does not prove a
-native accelerated FP8 path on RDNA3 `gfx1100`.
+The public product depends on the live Radeon Cloud instance and a Quick
+Tunnel. KV-backed origin recovery has been tested, but a named Cloudflare
+Tunnel would be preferable for a long-lived production deployment. The current
+setup is retained through judging so the public Demo remains available.

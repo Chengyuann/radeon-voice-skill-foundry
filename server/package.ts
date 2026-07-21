@@ -68,7 +68,7 @@ Status: ${verification.status}
 
 ## Contents
 
-- \`SKILL.md\`: GAIA-compatible skill
+- \`SKILL.md\`: portable Agent Skill Markdown
 - \`policy.yaml\`: generated capability decisions
 - \`fixtures.json\`: positive and negative verification fixtures
 - \`receipts.jsonl\`: append-only governance decisions

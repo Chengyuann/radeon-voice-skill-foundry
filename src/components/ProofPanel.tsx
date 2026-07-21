@@ -53,7 +53,7 @@ export function ProofPanel({
     >
       <div className="panel-heading">
         <div>
-          <p className="eyebrow">GAIA artifact</p>
+          <p className="eyebrow">Skill artifact</p>
           <h2>Proof bundle</h2>
         </div>
         {verification ? (
@@ -129,7 +129,7 @@ metadata:
 ---
 
 Compile the spoken SOP to preview
-the GAIA-compatible skill artifact.`}
+the portable Agent Skill Markdown artifact.`}
         </code>
       </pre>
 
@@ -290,7 +290,7 @@ the GAIA-compatible skill artifact.`}
       <div className="receipt-section">
         <div className="subheading-row">
           <h3>Governance receipts</h3>
-          <span>{verification?.receipts.length || 0} signed envelopes</span>
+          <span>{verification?.receipts.length || 0} hashed receipts</span>
         </div>
         <div className="receipt-list">
           {verification?.receipts.length ? (
