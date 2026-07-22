@@ -1,65 +1,76 @@
-# Continuous Demo Narration
+# Continuous Operation Demo Narration
 
-The final continuous-operation demo uses AIDP
-`gemini-3.1-flash-tts-preview`, male voice `Charon`. It is a single browser recording
-of the enhanced local workflow. Radeon measurements and proof values remain
-those of the independently validated Radeon Cloud run.
+The narration is AI-generated with AIDP
+`gemini-3.1-flash-tts-preview`, male voice `Charon`. The video is one
+continuous browser recording against an isolated deterministic lifecycle
+backend. The Performance Demo independently records the real public
+W7900 inference path.
 
-## Open the Workbench
+## Open the Isolated Lifecycle Session
 
-This is one continuous operating session of Radeon Voice Skill Foundry. The
-workbench starts with a clean local data directory. The blue status badge shows
-how many trusted compile runs have been durably stored.
+This is one continuous lifecycle session of Radeon Voice Skill Foundry. The
+cinematic interface runs against an isolated Node API with a clean lifecycle
+data directory. This recording focuses on durability, compatibility, and
+recovery rather than repeating the GPU benchmark. Speech and compile results
+use the repository's deterministic fixtures, while the Performance Demo shows the
+real Cloudflare-to-W7900 Qwen three A-S-R and four-B path. Every durable record
+shown next is created during this session.
 
 ## Upload the Spoken SOP
 
-I upload the same twenty-point-three-nine second spoken procedure used for the
-Radeon validation. Voice Evidence version zero point two measures level,
-clipping, silence, noise floor, estimated signal-to-noise ratio, crest factor,
-dropout ratio, and source integrity. No acoustic diagnostic is triggered, and
-the source receives a one-hundred-out-of-one-hundred pass.
+I open the Voice module and upload the twenty-point-three-nine second Chinese
+procedure. The deterministic A-S-R fixture returns the same transcript used by
+the Radeon validation. Voice Evidence measures
+level, clipping, silence, estimated signal-to-noise ratio, short dropout,
+multi-frame burst loss, and source integrity. The source passes at one hundred
+out of one hundred, and its transcript hash is stored server-side.
 
 ## Compile Voice into Policy
 
-Next, the transcript and aligned action trace are compiled into typed rules.
-The policy retrieves local evidence, keeps P-zero and P-one findings, redacts
-compensation data, requires confirmation for missing ownership, and denies
-automatic email sending. The trusted compile run is written to disk rather
-than kept only in process memory.
+The deterministic compiler now combines the spoken constraints, aligned action
+trace, and local policy retrieval. It generates the same typed policy surface
+used by the live product, including runtime-owned identifiers and safety
+guardrails. The trusted compile run is written to the isolated durable store
+and the interface advances into the Policy module.
 
-## Run Adversarial Verification
+## Verify the Unsafe Paths
 
-The verifier executes seven positive and adversarial fixtures. The unsafe
-paths are tested before promotion. All seven pass, mail dot send remains
-denied, BLOCK and REVIEW receipts are issued, and the proof bundle receives a
-compatibility manifest for the verifier, runtime, tools, policy, skill, and
-voice evidence schema.
+The generated policy denies automatic email sending, redacts salary data,
+opens review for missing ownership, and keeps calendar holds conditional on a
+due date. Seven positive and adversarial fixtures execute before promotion.
+All seven pass. `mail.send` remains denied, four governance receipts are
+issued, and the proof receives a compatibility manifest for the runtime,
+verifier, tools, policy, skill, and Voice Evidence schema.
 
-## Save and Reuse the Verified Skill
+## Save and Reuse the Skill
 
-The verified proof is saved into procedural memory with its original action
-contract. Exact reuse loads the proven skill without regenerating policy or
-fixtures. The reuse counter and measured retrieval latency update immediately.
+The verified result is saved into procedural memory with its original action
+contract. I immediately reuse it. The proven skill loads without regenerating
+the policy or fixtures, while the reuse counter and retrieval latency update
+inside the same browser session.
 
-## Restart and Recover Durable Runs
+## Restart and Recover Durable State
 
-Now the application service is restarted. The browser stays in the same
-session. After reload, the saved skill and trusted proof are still available.
-The durable-run count survives because voice evidence, compile runs, and
-verification results are atomically persisted on disk.
+Now the recording controller terminates the isolated Node API process and
+starts a fresh process with the same runtime identity. The browser UI remains
+open and reconnects to the recovered API. The saved skill, trusted compile
+run, verification result, Voice Evidence, and proof compatibility all survive
+the real process restart because they were atomically persisted rather than
+held only in memory.
 
-## Change Runtime and Invalidate Proof
+## Drift the Runtime and Invalidate Proof
 
-I restart the service again with a different runtime model identity. The saved
-proof is no longer silently trusted. The skill changes to revalidation
-required and explains that the model, GPU, ROCm, or runtime contract changed.
-The Reuse command becomes Revalidate.
+The controller performs a second real API restart, this time with a changed
+runtime model identity. The stored proof is not silently reused. After reload,
+the skill changes to revalidation required, explains that the runtime contract
+changed, and replaces the Reuse command with Revalidate.
 
-## Revalidate and Download Proof
+## Revalidate and Download the Child Proof
 
-Revalidation creates a new child run bound to the current runtime, reruns all
-seven fixtures, and produces a new compatible proof. The skill returns to
-verified status. Finally, I download the proof package containing the skill,
-policy, fixtures, receipts, local evidence, voice evidence, and compatibility
-manifest. This completes the full lifecycle from voice to policy to proof,
-through restart, invalidation, and recovery.
+Revalidation creates a new child run bound to the changed runtime, reruns all
+seven fixtures, and restores compatibility. I confirm the skill is verified
+again, open the new Proof module, and download its package. The ZIP contains
+the skill, least-privilege policy, fixtures, receipts, retrieved evidence,
+source-bound Voice Evidence, compatibility manifest, and parent-child proof
+lineage. This completes voice to policy to proof, through restart, invalidation,
+and recovery, in one continuous session.

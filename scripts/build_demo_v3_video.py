@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mix narration and captions into the frozen public Demo V3 recording."""
+"""Mix narration and captions into the frozen public Demo recording."""
 
 from __future__ import annotations
 
@@ -15,9 +15,9 @@ RAW = ROOT / "tmp" / "demo-v3" / "recording" / "demo-v3-raw.webm"
 EVENTS = ROOT / "tmp" / "demo-v3" / "recording" / "events.json"
 AUDIO_DIR = ROOT / "tmp" / "demo-v3" / "narration"
 WORK = ROOT / "tmp" / "demo-v3" / "build"
-OUTPUT = ROOT / "submission" / "RADEON_VOICE_SKILL_FOUNDRY_DEMO_V3.mp4"
-SRT = ROOT / "submission" / "RADEON_VOICE_SKILL_FOUNDRY_DEMO_V3.srt"
-SOURCE = ROOT / "submission" / "DEMO_V3_NARRATION.md"
+OUTPUT = ROOT / "submission" / "RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4"
+SRT = ROOT / "submission" / "RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt"
+SOURCE = ROOT / "submission" / "DEMO_NARRATION.md"
 FONT_BOLD = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
 TITLES = [
     "Product",

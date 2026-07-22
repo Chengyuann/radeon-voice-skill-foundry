@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate Charon narration for the frozen public Demo V3."""
+"""Generate Charon narration for the frozen public Demo."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "submission" / "DEMO_V3_NARRATION.md"
+SOURCE = ROOT / "submission" / "DEMO_NARRATION.md"
 OUTPUT = ROOT / "tmp" / "demo-v3" / "narration"
 MODEL = "gemini-3.1-flash-tts-preview"
 VOICE = os.environ.get("AIDP_TTS_VOICE", "Charon")

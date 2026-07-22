@@ -14,11 +14,17 @@ adversarial tests, and requires explicit human promotion before reuse.
 - Live product:
   `https://radeon-voice-skill-foundry.pages.dev/`
 - Final 4:49 Demo:
-  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO_V3.mp4`
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
 - Demo captions:
-  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/RADEON_VOICE_SKILL_FOUNDRY_DEMO_V3.srt`
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt`
 - Demo proof:
-  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/final-submission-v1/demo-v3-proof.zip`
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/PRODUCT_DEMO_PROOF.zip`
+- Performance Demo:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_PERFORMANCE_DEMO.mp4`
+- Continuous Operation Demo:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/CONTINUOUS_OPERATION_DEMO.mp4`
+- Submission checksums:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/SHA256SUMS.txt`
 - Project Specification: `submission/PROJECT_SPECIFICATION.pdf`
 - Technical evidence: `submission/TECHNICAL_EVIDENCE_INDEX.md`
 - Official submission:
@@ -224,6 +230,12 @@ npm run benchmark:optimization -- benchmarks/optimization-latest.json
 - The governance ledger checks sequence, previous-entry hashes, payload hashes,
   entry hashes, and consistency with skill memory. It is not externally
   anchored or Byzantine-resistant.
+- The bundled governance ledger is the Product Demo sample and contains two
+  promotion events. Supersede, revoke, and rollback remain implemented product
+  lifecycle actions covered by the regression suite.
+- The Product Demo's recorded `GAIA-compatible` phrase refers only to portable
+  Agent Skill Markdown. No external GAIA conformance or certification is
+  claimed.
 - Raw audio is excluded from proof downloads.
 - Changed intent must compile and verify again; only an identical promoted
   skill can use the reuse fast path.
@@ -232,10 +244,10 @@ npm run benchmark:optimization -- benchmarks/optimization-latest.json
 
 ```bash
 AIDP_TTS_AK=... AIDP_TTS_VOICE=Charon \
-  python3 scripts/generate_demo_v3_tts.py
-DEMO_V3_PROJECT=review-followup-final-demo-v3-20260720 \
-  node scripts/record_demo_v3.mjs
-python3 scripts/build_demo_v3_video.py
+  python3 scripts/generate_demo_tts.py
+DEMO_PROJECT=review-followup-final-demo \
+  node scripts/record_demo.mjs
+python3 scripts/build_demo_video.py
 ```
 
 Narration uses AIDP `gemini-3.1-flash-tts-preview`, voice `Charon`. Campaign

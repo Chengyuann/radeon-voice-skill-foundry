@@ -1,107 +1,115 @@
 1
-00:00:03,464 --> 00:00:07,960
-This is one continuous operating session of Radeon Voice Skill Foundry.
+00:00:04,315 --> 00:00:09,670
+This is one continuous lifecycle session of Radeon Voice Skill Foundry.
 
 2
-00:00:07,960 --> 00:00:11,638
-The workbench starts with a clean local data directory.
+00:00:09,670 --> 00:00:16,972
+The cinematic interface runs against an isolated Node API with a clean lifecycle data directory.
 
 3
-00:00:11,638 --> 00:00:17,360
-The blue status badge shows how many trusted compile runs have been durably stored.
+00:00:16,972 --> 00:00:23,787
+This recording focuses on durability, compatibility, and recovery rather than repeating the GPU benchmark.
 
 4
-00:00:18,461 --> 00:00:26,400
-I upload the same twenty-point-three-nine second spoken procedure used for the Radeon validation.
+00:00:23,787 --> 00:00:35,471
+Speech and compile results use the repository's deterministic fixtures, while the Performance Demo shows the real Cloudflare-to-W7900 Qwen three A-S-R and four-B path.
 
 5
-00:00:26,400 --> 00:00:39,836
-Voice Evidence version zero point two measures level, clipping, silence, noise floor, estimated signal-to-noise ratio, crest factor, dropout ratio, and source integrity.
+00:00:35,471 --> 00:00:40,339
+Every durable record shown next is created during this session.
 
 6
-00:00:39,836 --> 00:00:47,165
-No acoustic diagnostic is triggered, and the source receives a one-hundred-out-of-one-hundred pass.
+00:00:42,841 --> 00:00:49,258
+I open the Voice module and upload the twenty-point-three-nine second Chinese procedure.
 
 7
-00:00:48,268 --> 00:00:53,631
-Next, the transcript and aligned action trace are compiled into typed rules.
+00:00:49,258 --> 00:00:56,744
+The deterministic A-S-R fixture returns the same transcript used by the Radeon validation.
 
 8
-00:00:53,631 --> 00:01:03,909
-The policy retrieves local evidence, keeps P-zero and P-one findings, redacts compensation data, requires confirmation for missing ownership, and denies automatic email sending.
+00:00:56,744 --> 00:01:07,974
+Voice Evidence measures level, clipping, silence, estimated signal-to-noise ratio, short dropout, multi-frame burst loss, and source integrity.
 
 9
-00:01:03,909 --> 00:01:10,612
-The trusted compile run is written to disk rather than kept only in process memory.
+00:01:07,974 --> 00:01:17,065
+The source passes at one hundred out of one hundred, and its transcript hash is stored server-side.
 
 10
-00:01:11,714 --> 00:01:16,038
-The verifier executes seven positive and adversarial fixtures.
+00:01:19,567 --> 00:01:26,573
+The deterministic compiler now combines the spoken constraints, aligned action trace, and local policy retrieval.
 
 11
-00:01:16,038 --> 00:01:19,822
-The unsafe paths are tested before promotion.
+00:01:26,573 --> 00:01:34,981
+It generates the same typed policy surface used by the live product, including runtime-owned identifiers and safety guardrails.
 
 12
-00:01:19,822 --> 00:01:37,658
-All seven pass, mail dot send remains denied, BLOCK and REVIEW receipts are issued, and the proof bundle receives a compatibility manifest for the verifier, runtime, tools, policy, skill, and voice evidence schema.
+00:01:34,981 --> 00:01:43,855
+The trusted compile run is written to the isolated durable store and the interface advances into the Policy module.
 
 13
-00:01:38,759 --> 00:01:45,387
-The verified proof is saved into procedural memory with its original action contract.
+00:01:46,569 --> 00:01:58,911
+The generated policy denies automatic email sending, redacts salary data, opens review for missing ownership, and keeps calendar holds conditional on a due date.
 
 14
-00:01:45,387 --> 00:01:50,995
-Exact reuse loads the proven skill without regenerating policy or fixtures.
+00:01:58,911 --> 00:02:03,024
+Seven positive and adversarial fixtures execute before promotion.
 
 15
-00:01:50,995 --> 00:01:55,583
-The reuse counter and measured retrieval latency update immediately.
+00:02:03,024 --> 00:02:04,567
+All seven pass.
 
 16
-00:01:56,685 --> 00:01:59,467
-Now the application service is restarted.
+00:02:04,567 --> 00:02:17,937
+`mail.send` remains denied, four governance receipts are issued, and the proof receives a compatibility manifest for the runtime, verifier, tools, policy, skill, and Voice Evidence schema.
 
 17
-00:01:59,467 --> 00:02:02,712
-The browser stays in the same session.
+00:02:20,572 --> 00:02:26,492
+The verified result is saved into procedural memory with its original action contract.
 
 18
-00:02:02,712 --> 00:02:07,812
-After reload, the saved skill and trusted proof are still available.
+00:02:26,492 --> 00:02:28,314
+I immediately reuse it.
 
 19
-00:02:07,812 --> 00:02:15,693
-The durable-run count survives because voice evidence, compile runs, and verification results are atomically persisted on disk.
+00:02:28,314 --> 00:02:38,788
+The proven skill loads without regenerating the policy or fixtures, while the reuse counter and retrieval latency update inside the same browser session.
 
 20
-00:02:16,795 --> 00:02:22,487
-I restart the service again with a different runtime model identity.
+00:02:41,573 --> 00:02:50,512
+Now the recording controller terminates the isolated Node API process and starts a fresh process with the same runtime identity.
 
 21
-00:02:22,487 --> 00:02:26,627
-The saved proof is no longer silently trusted.
+00:02:50,512 --> 00:02:55,428
+The browser UI remains open and reconnects to the recovered API.
 
 22
-00:02:26,627 --> 00:02:35,424
-The skill changes to revalidation required and explains that the model, GPU, ROCm, or runtime contract changed.
+00:02:55,428 --> 00:03:08,837
+The saved skill, trusted compile run, verification result, Voice Evidence, and proof compatibility all survive the real process restart because they were atomically persisted rather than held only in memory.
 
 23
-00:02:35,424 --> 00:02:38,011
-The Reuse command becomes Revalidate.
+00:03:11,576 --> 00:03:19,535
+The controller performs a second real API restart, this time with a changed runtime model identity.
 
 24
-00:02:39,113 --> 00:02:50,136
-Revalidation creates a new child run bound to the current runtime, reruns all seven fixtures, and produces a new compatible proof.
+00:03:19,535 --> 00:03:23,017
+The stored proof is not silently reused.
 
 25
-00:02:50,136 --> 00:02:53,285
-The skill returns to verified status.
+00:03:23,017 --> 00:03:33,464
+After reload, the skill changes to revalidation required, explains that the runtime contract changed, and replaces the Reuse command with Revalidate.
 
 26
-00:02:53,285 --> 00:03:03,259
-Finally, I download the proof package containing the skill, policy, fixtures, receipts, local evidence, voice evidence, and compatibility manifest.
+00:03:35,965 --> 00:03:47,666
+Revalidation creates a new child run bound to the changed runtime, reruns all seven fixtures, and restores compatibility.
 
 27
-00:03:03,259 --> 00:03:09,550
-This completes the full lifecycle from voice to policy to proof, through restart, invalidation, and recovery.
+00:03:47,666 --> 00:03:58,067
+I confirm the skill is verified again, open the new Proof module, and download its package.
+
+28
+00:03:58,067 --> 00:04:11,068
+The ZIP contains the skill, least-privilege policy, fixtures, receipts, retrieved evidence, source-bound Voice Evidence, compatibility manifest, and parent-child proof lineage.
+
+29
+00:04:11,068 --> 00:04:19,510
+This completes voice to policy to proof, through restart, invalidation, and recovery, in one continuous session.

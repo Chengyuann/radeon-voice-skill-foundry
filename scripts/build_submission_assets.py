@@ -260,7 +260,7 @@ def build_architecture() -> Path:
 
     draw.text(
         (120, 1352),
-        "Demo V3 records the final public W7900 workflow. Supporting evidence separates performance and lifecycle controls.",
+        "The Product Demo records the public W7900 workflow. Supporting evidence separates performance and lifecycle controls.",
         font=font(25, bold=True),
         fill=INK,
     )
@@ -301,7 +301,7 @@ def build_poster() -> tuple[Path, Path]:
         ("85.35x", "ASR aggregate RT", "native Qwen3-ASR batch 8"),
         ("PASS", "voice evidence", "internal deterministic gate"),
         ("7/7", "adversarial proof", "mail.send remains DENY"),
-        ("63/63", "current tests", "typecheck + production build"),
+        ("63/63", "regression tests", "typecheck + production build"),
     ]
     card_w = 500
     gap = 40
@@ -319,7 +319,7 @@ def build_poster() -> tuple[Path, Path]:
     draw.text((110, 1245), "VOICE-TO-VERIFIED-SKILL", font=font(25, bold=True, mono=True), fill=BLUE)
     steps = [
         ("1", "Speak + demonstrate", "Private SOP and aligned action trace"),
-        ("2", "Measure + transcribe", "Voice Evidence v0.3 + local ASR"),
+        ("2", "Measure + transcribe", "Voice quality evidence + local ASR"),
         ("3", "Compile on W7900", "local retrieval + constraints + least privilege"),
         ("4", "Prove + remember", "7/7 + hashed receipts + versioned memory"),
     ]
@@ -373,7 +373,7 @@ def build_poster() -> tuple[Path, Path]:
     draw.text((150, 2210), "radeon-voice-skill-foundry.pages.dev", font=font(34, bold=True), fill=INK)
     draw.text(
         (150, 2265),
-        "Demo V3: final public W7900 workflow  |  Technical evidence: GitHub Release + evidence index",
+        "Product Demo: public W7900 workflow  |  Technical evidence: GitHub Release + evidence index",
         font=font(22),
         fill=MUTED,
     )
@@ -386,6 +386,10 @@ def build_poster() -> tuple[Path, Path]:
 
     pdf = SUBMISSION / "POSTER.pdf"
     canvas_doc = pdf_canvas.Canvas(str(pdf), pagesize=A4)
+    canvas_doc.setTitle("Radeon Voice Skill Foundry - Poster")
+    canvas_doc.setAuthor("Chengyuann")
+    canvas_doc.setSubject("AMD AI DevMaster Hackathon Track 2")
+    canvas_doc.setCreator("Radeon Voice Skill Foundry submission asset builder")
     canvas_doc.drawImage(str(png), 0, 0, width=A4[0], height=A4[1])
     canvas_doc.showPage()
     canvas_doc.save()
@@ -618,7 +622,7 @@ def build_spec_pdf(architecture_path: Path) -> Path:
         )
     )
     story.append(Spacer(1, 30 * mm))
-    story.append(Paragraph("Project Specification | 2026-07-21", styles["Smallx"]))
+    story.append(Paragraph("Project Specification | Submission Package", styles["Smallx"]))
     story.append(PageBreak())
 
     md_lines = (SUBMISSION / "PROJECT_SPECIFICATION.md").read_text().splitlines()
@@ -752,6 +756,7 @@ def build_spec_pdf(architecture_path: Path) -> Path:
 
     def page(canvas, document) -> None:
         canvas.saveState()
+        canvas.setCreator("Radeon Voice Skill Foundry submission asset builder")
         page_num = canvas.getPageNumber()
         if page_num > 1:
             canvas.setStrokeColor(colors.HexColor(LINE))

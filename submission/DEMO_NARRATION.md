@@ -1,70 +1,66 @@
-# Demo Narration
+# Product Demo Narration
 
-The narration is AI-generated with AIDP
-`gemini-3.1-flash-tts-preview`, male voice `Charon`. Radeon runtime screenshots and
-metrics come from the actual `c759a41` validation run. Product UI scenes are a
-deterministic replay using the same source WAV and application revision; they
-are labeled as replay footage in the video.
+Purpose: continuous recording of the public product and Radeon inference path.
 
-## Speak the SOP. Prove the Skill.
+Voice: male.
 
-A local Agent can observe what someone clicks. It cannot reliably infer why a
-step matters, which exception applies, or what must never happen. Radeon Voice
-Skill Foundry captures that missing intent through a private spoken procedure
-and an aligned action trace. It produces a governed Agent Skill with typed
-rules, minimum permissions, adversarial tests, receipts, and a hash-bound proof
-package.
+Captions: burned in, plus embedded English subtitle track.
 
-## Real Radeon Runtime
+## 00:00-00:22 - Product
 
-The final validation ran on an AMD Radeon Pro W7900-class allocation: GFX
-eleven hundred, about forty-eight gigabytes of VRAM, and rock-em 7.2.1. Kwen
-three ASR handled speech recognition. Kwen three, four-B Instruct compiled the
-procedure into structured constraints. On public commit c759a41, all
-twenty-one tests and the production build passed inside Radeon Cloud.
+Radeon Voice Skill Foundry turns a private spoken operating procedure and a
+real action demonstration into a reusable, governed Agent Skill. The public
+interface runs on Cloudflare, while speech recognition and skill compilation
+run locally on an AMD Radeon Pro W7900 with ROCm 7.2.1.
 
-## Source-Bound Voice Evidence
+## 00:22-01:08 - Voice and Demonstration
 
-The spoken procedure defines the hidden rules of a private project review:
-keep only P-zero and P-one findings, remove salary data, draft email but never
-send automatically, ask for confirmation when an owner is missing, and create
-a calendar hold only when a due date exists. Before those words become policy,
-the Voice Evidence Gate measures level, clipping, silence, format, and source
-integrity. It also binds the original transcript hash, so later edits require
-explicit review.
+I provide the SOP, then perform the six required actions. Each action is
+accepted and stored by the server before the interface advances: open the
+review, filter critical findings, confirm the responsible commitment, prepare
+drafts, create tentative holds, and export the redacted report. No irreversible
+mail or calendar action is executed.
 
-## Local RAG and Skill Compilation
+## 01:08-01:42 - Radeon Compilation
 
-The Agent retrieves local policy evidence and combines it with the transcript
-and action trace. Kwen three, four-B produced thirteen constraints in 24.13
-seconds, with 368 milliseconds time to first token and 20.07 tokens per
-second. Deterministic guardrails preserve critical Chinese semantics even when
-the model misses them. Salary data becomes a redaction rule. A missing owner
-becomes a confirmation rule. The due-date clause remains an only-if condition.
+The server sends the original evidence to Qwen3-ASR and Qwen3 on the W7900.
+The compiler converts intent and action trace into typed constraints, allowed
+capabilities, denied capabilities, tests, policy, and portable Agent Skill
+Markdown in `SKILL.md`. The original transcript hash remains bound to the
+result.
 
-## Adversarial Verification
+## 01:42-02:18 - Policy and Sandbox Replay
 
-Verification proves the voice evidence first, then executes unsafe paths before
-promotion. The final Radeon run passed all seven fixtures: salary data was
-removed, out-of-scope findings were skipped, missing context opened review,
-automatic sending was blocked, and unapproved network writes were denied. We
-also modified the client payload to claim that mail sending was allowed. The
-server ignored the untrusted fields, resolved the authoritative run, and kept
-mail dot send denied.
+Sandbox Replay now exercises the generated contract. Positive fixtures must
+complete the workflow, while adversarial fixtures attempt unsafe behavior.
+`mail.send` stays denied, sensitive values remain redacted, and the report uses
+approved aliases. The verifier packages receipts and artifact hashes into a
+reproducible proof bundle.
 
-## Proof and Procedural Memory
+## 02:18-02:52 - Promotion Impact Review
 
-The package contains a GAIA-compatible skill definition, least-privilege
-policy, fixtures, receipts, retrieved evidence, source-bound voice evidence,
-and the proof bundle. Raw audio is excluded. A verified skill can be versioned
-in local procedural memory and reused without model generation. Compact output
-reduced median tokens by 29.42 percent and generation latency by 30.03 percent.
-Exact verified-skill reuse measured 2.18 milliseconds median HTTP round trip.
+Before promotion, the product compares this candidate with the currently
+promoted skill. It surfaces permission changes, runtime compatibility, proof
+status, and workflow impact. Promotion is an explicit proof-bound governance
+decision, not an automatic side effect of generation.
 
-## Final Artifact
+## 02:52-03:28 - Governance Audit Ledger
 
-Radeon Voice Skill Foundry turns local voice interaction into capability
-creation. Actions capture what happened. Voice captures why, when, exceptions,
-and what must never happen. The final proof scored one hundred out of one
-hundred for source quality, passed seven out of seven fixtures, and preserved
-mail sending as denied. Speak the SOP. Prove the Skill.
+The promoted decision appears in the Governance Audit Ledger. Every event has a
+monotonic sequence, previous hash, payload hash, and entry hash. The ledger
+reconciles its events with the receipts embedded in procedural memory. Mutation
+or deletion makes the ledger invalid and blocks further governance actions.
+The complete chain is exportable as JSONL.
+
+## 03:28-03:55 - Exact Reuse
+
+When the same intent returns, the foundry resolves the identical promoted
+skill, preserves its action contract, and records exact reuse evidence instead
+of replanning from scratch. Changed intent does not take this shortcut; it must
+compile and verify again.
+
+## 03:55-04:10 - Close
+
+The demonstrated path is voice, server-authoritative demonstration, Radeon inference,
+least-privilege policy, adversarial proof, impact-aware promotion, tamper-evident
+governance, and exact reuse, delivered through one stable public product.

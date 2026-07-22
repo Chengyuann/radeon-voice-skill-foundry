@@ -1,127 +1,95 @@
 1
-00:00:00,100 --> 00:00:03,769
-A local Agent can observe what someone clicks.
+00:00:01,694 --> 00:00:13,366
+Radeon Voice Skill Foundry turns a private spoken operating procedure and a real action demonstration into a reusable, governed Agent Skill.
 
 2
-00:00:03,769 --> 00:00:11,107
-It cannot reliably infer why a step matters, which exception applies, or what must never happen.
+00:00:13,366 --> 00:00:26,150
+The public interface runs on Cloudflare, while speech recognition and skill compilation run locally on an AMD Radeon Pro W7900 with ROCm 7.2.1.
 
 3
-00:00:11,107 --> 00:00:19,362
-Radeon Voice Skill Foundry captures that missing intent through a private spoken procedure and an aligned action trace.
+00:00:29,152 --> 00:00:34,663
+I provide the SOP, then perform the six required actions.
 
 4
-00:00:19,362 --> 00:00:28,076
-It produces a governed Agent Skill with typed rules, minimum permissions, adversarial tests, receipts, and a hash-bound proof package.
+00:00:34,663 --> 00:00:52,848
+Each action is accepted and stored by the server before the interface advances: open the review, filter critical findings, confirm the responsible commitment, prepare drafts, create tentative holds, and export the redacted report.
 
 5
-00:00:28,276 --> 00:00:40,466
-The final validation ran on an AMD Radeon Pro W7900-class allocation: GFX eleven hundred, about forty-eight gigabytes of VRAM, and rock-em 7.2.1.
+00:00:52,848 --> 00:00:57,256
+No irreversible mail or calendar action is executed.
 
 6
-00:00:40,466 --> 00:00:43,791
-Kwen three ASR handled speech recognition.
+00:01:17,153 --> 00:01:25,295
+The server sends the original evidence to Qwen3-ASR and Qwen3 on the W7900.
 
 7
-00:00:43,791 --> 00:00:49,332
-Kwen three, four-B Instruct compiled the procedure into structured constraints.
+00:01:25,295 --> 00:01:37,820
+The compiler converts intent and action trace into typed constraints, allowed capabilities, denied capabilities, tests, policy, and a GAIA-compatible `SKILL.md`.
 
 8
-00:00:49,332 --> 00:00:57,644
-On public commit c759a41, all twenty-one tests and the production build passed inside Radeon Cloud.
+00:01:37,820 --> 00:01:43,457
+The original transcript hash remains bound to the result.
 
 9
-00:00:57,844 --> 00:01:20,035
-The spoken procedure defines the hidden rules of a private project review: keep only P-zero and P-one findings, remove salary data, draft email but never send automatically, ask for confirmation when an owner is missing, and create a calendar hold only when a due date exists.
+00:01:53,155 --> 00:01:58,066
+Sandbox Replay now exercises the generated contract.
 
 10
-00:01:20,035 --> 00:01:28,237
-Before those words become policy, the Voice Evidence Gate measures level, clipping, silence, format, and source integrity.
+00:01:58,066 --> 00:02:05,432
+Positive fixtures must complete the workflow, while adversarial fixtures attempt unsafe behavior.
 
 11
-00:01:28,237 --> 00:01:34,508
-It also binds the original transcript hash, so later edits require explicit review.
+00:02:05,432 --> 00:02:13,413
+`mail.send` stays denied, sensitive values remain redacted, and the report uses approved aliases.
 
 12
-00:01:34,708 --> 00:01:42,584
-The Agent retrieves local policy evidence and combines it with the transcript and action trace.
+00:02:13,413 --> 00:02:20,779
+The verifier packages receipts and artifact hashes into a reproducible proof bundle.
 
 13
-00:01:42,584 --> 00:01:53,610
-Kwen three, four-B produced thirteen constraints in 24.13 seconds, with 368 milliseconds time to first token and 20.07 tokens per second.
+00:02:31,157 --> 00:02:38,022
+Before promotion, the product compares this candidate with the currently promoted skill.
 
 14
-00:01:53,610 --> 00:01:59,911
-Deterministic guardrails preserve critical Chinese semantics even when the model misses them.
+00:02:38,022 --> 00:02:44,315
+It surfaces permission changes, runtime compatibility, proof status, and workflow impact.
 
 15
-00:01:59,911 --> 00:02:03,061
-Salary data becomes a redaction rule.
+00:02:44,315 --> 00:02:52,325
+Promotion is an explicit proof-bound governance decision, not an automatic side effect of generation.
 
 16
-00:02:03,061 --> 00:02:06,737
-A missing owner becomes a confirmation rule.
+00:03:07,160 --> 00:03:11,782
+The promoted decision appears in the Governance Audit Ledger.
 
 17
-00:02:06,737 --> 00:02:10,412
-The due-date clause remains an only-if condition.
+00:03:11,782 --> 00:03:18,457
+Every event has a monotonic sequence, previous hash, payload hash, and entry hash.
 
 18
-00:02:10,612 --> 00:02:16,383
-Verification proves the voice evidence first, then executes unsafe paths before promotion.
+00:03:18,457 --> 00:03:24,619
+The ledger reconciles its events with the receipts embedded in procedural memory.
 
 19
-00:02:16,383 --> 00:02:30,810
-The final Radeon run passed all seven fixtures: salary data was removed, out-of-scope findings were skipped, missing context opened review, automatic sending was blocked, and unapproved network writes were denied.
+00:03:24,619 --> 00:03:30,781
+Mutation or deletion makes the ledger invalid and blocks further governance actions.
 
 20
-00:02:30,810 --> 00:02:37,062
-We also modified the client payload to claim that mail sending was allowed.
+00:03:30,781 --> 00:03:34,376
+The complete chain is exportable as JSONL.
 
 21
-00:02:37,062 --> 00:02:44,756
-The server ignored the untrusted fields, resolved the authoritative run, and kept mail dot send denied.
+00:03:45,162 --> 00:03:58,746
+When the same intent returns, the foundry resolves the identical promoted skill, preserves its action contract, and records exact reuse evidence instead of replanning from scratch.
 
 22
-00:02:44,956 --> 00:02:56,214
-The package contains a GAIA-compatible skill definition, least-privilege policy, fixtures, receipts, retrieved evidence, source-bound voice evidence, and the proof bundle.
+00:03:58,746 --> 00:04:05,538
+Changed intent does not take this shortcut; it must compile and verify again.
 
 23
-00:02:56,214 --> 00:02:58,466
-Raw audio is excluded.
+00:04:15,163 --> 00:04:36,379
+The demonstrated path is voice, server-authoritative demonstration, Radeon inference, least-privilege policy, adversarial proof, impact-aware promotion, tamper-evident governance, and exact reuse, delivered through one stable public product.
 
 24
-00:02:58,466 --> 00:03:06,910
-A verified skill can be versioned in local procedural memory and reused without model generation.
-
-25
-00:03:06,910 --> 00:03:14,791
-Compact output reduced median tokens by 29.42 percent and generation latency by 30.03 percent.
-
-26
-00:03:14,791 --> 00:03:20,420
-Exact verified-skill reuse measured 2.18 milliseconds median HTTP round trip.
-
-27
-00:03:20,620 --> 00:03:26,195
-Radeon Voice Skill Foundry turns local voice interaction into capability creation.
-
-28
-00:03:26,195 --> 00:03:28,223
-Actions capture what happened.
-
-29
-00:03:28,223 --> 00:03:33,291
-Voice captures why, when, exceptions, and what must never happen.
-
-30
-00:03:33,291 --> 00:03:45,963
-The final proof scored one hundred out of one hundred for source quality, passed seven out of seven fixtures, and preserved mail sending as denied.
-
-31
-00:03:45,963 --> 00:03:47,483
-Speak the SOP.
-
-32
-00:03:47,483 --> 00:03:49,004
-Prove the Skill.
+00:04:38,600 --> 00:04:48,300
+Terminology boundary: SKILL.md is portable Agent Skill Markdown; no external GAIA conformance is claimed. "Proof-bound" means checked against the current SHA-256 proof hash. Ledger integrity is hash-chained, not digitally signed or externally anchored.

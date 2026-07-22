@@ -24,7 +24,7 @@ Qwen three A-S-R transcribes the audio on the W7900.
 
 7
 00:00:48,292 --> 00:00:57,596
-Voice Evidence version zero point three measures source integrity, level, clipping, silence, signal-to-noise ratio, dropout, and multi-frame burst loss.
+Voice Evidence measures source integrity, level, clipping, silence, signal-to-noise ratio, dropout, and multi-frame burst loss.
 
 8
 00:00:57,596 --> 00:01:07,879
@@ -108,7 +108,7 @@ I immediately reuse the same skill without asking the model to regenerate its ru
 
 28
 00:03:20,783 --> 00:03:29,469
-Compatibility remains bound to the current runtime, verifier, tool contract, policy, skill definition, and Voice Evidence schema.
+Compatibility remains bound to the active runtime, verifier, tool contract, policy, skill definition, and Voice Evidence schema.
 
 29
 00:03:29,469 --> 00:03:36,112
@@ -128,7 +128,7 @@ Native Qwen three A-S-R batching reached eighty-five point three five times aggr
 
 33
 00:04:08,940 --> 00:04:13,830
-The current regression suite passes thirty-five out of thirty-five tests.
+The recorded performance revision passes thirty-five out of thirty-five tests.
 
 34
 00:04:16,355 --> 00:04:33,248

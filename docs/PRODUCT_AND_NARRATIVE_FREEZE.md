@@ -6,8 +6,8 @@ Production gate status: passed on commit `8950009`.
 
 ## Purpose
 
-This freeze establishes the final contest product and the only canonical Demo
-V3 story. Recording begins only after the frozen production path passes the
+This freeze establishes the final contest product and the canonical Demo
+story. Recording begins only after the frozen production path passes the
 release checks below.
 
 ## Frozen Product
@@ -24,7 +24,7 @@ Voice SOP
 -> server-authoritative six-step demonstration
 -> W7900 Qwen3-ASR and Qwen3 skill compilation
 -> typed constraints, policy, and permissions
--> Sandbox Replay v1
+-> Sandbox Replay
 -> Promotion Impact Review
 -> proof-hash-checked promotion
 -> Governance Audit Ledger
@@ -71,7 +71,7 @@ unless it is already backed by repository evidence.
 - Demo-only behavior that does not exist in the production path.
 
 Any allowed change must record the reason, affected evidence, verification
-commands, and whether Demo V3 must be re-recorded.
+commands, and whether the final Demo must be re-recorded.
 
 ## Release Checks
 
@@ -89,7 +89,7 @@ Tunnel origin changed, the W7900 registrar and remote KV converged to the new
 origin, the stable Pages health and Governance Ledger endpoints recovered, and
 the Pages deployment remained `fd2aa5ad` on source commit `8950009`.
 
-## Demo V3 Contract
+## Demo Contract
 
 - Use a male TTS voice.
 - Burn captions into the video and include an embedded subtitle track.
@@ -99,7 +99,7 @@ the Pages deployment remained `fd2aa5ad` on source commit `8950009`.
 - Show the complete frozen path once, continuously, with the Governance Audit
   Ledger and exact reuse as the closing proof.
 
-## Demo V3 Completion
+## Demo Completion
 
 Recorded on 2026-07-20 after the frozen release gate passed. A terminology
 boundary card was appended and validated on 2026-07-21 without changing the

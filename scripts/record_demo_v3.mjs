@@ -10,11 +10,13 @@ import path from "node:path";
 
 const root = process.cwd();
 const baseUrl =
+  process.env.DEMO_URL ||
   process.env.DEMO_V3_URL ||
   "https://radeon-voice-skill-foundry.pages.dev/";
 const outputDir = path.join(root, "tmp", "demo-v3", "recording");
 const rawDir = path.join(outputDir, "raw");
 const audioPath =
+  process.env.DEMO_AUDIO ||
   process.env.DEMO_V3_AUDIO ||
   path.join(root, "outputs", "audio", "voice-sop-zh.wav");
 const timingPath = path.join(
@@ -25,7 +27,9 @@ const timingPath = path.join(
   "timings.json"
 );
 const projectName =
-  process.env.DEMO_V3_PROJECT || "review-followup-final-demo-v3";
+  process.env.DEMO_PROJECT ||
+  process.env.DEMO_V3_PROJECT ||
+  "review-followup-final-demo";
 const labels = [
   "Open the frozen public product",
   "Capture voice and trusted actions",
@@ -77,7 +81,7 @@ try {
         "background:#202224e8;border-left:4px solid #c23a35;" +
         "font:600 16px 'Geist Mono',monospace;letter-spacing:0;" +
         "box-shadow:0 12px 32px #0007;pointer-events:none;";
-      label.textContent = "FINAL DEMO V3 · LIVE CLOUDFLARE + W7900";
+      label.textContent = "FINAL DEMO · LIVE CLOUDFLARE + W7900";
 
       const cursor = document.createElement("div");
       cursor.id = "demo-v3-cursor";
