@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "evidence:multi-turn": "node scripts/capture_multi_turn_evidence.mjs",
     "submission:checksums": "python3 scripts/generate_submission_checksums.py",
     "benchmark:optimization": "node scripts/benchmark_optimizations.mjs",
     "deploy:pages": "npm run build && wrangler pages deploy dist --project-name radeon-voice-skill-foundry --branch main"

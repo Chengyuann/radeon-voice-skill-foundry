@@ -1,1 +1,1 @@
-await import("./record_demo_v3.mjs");
+await import("./record_product_demo.mjs");

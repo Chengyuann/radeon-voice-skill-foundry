@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "submission" / "DEMO_NARRATION.md"
-OUTPUT = ROOT / "tmp" / "demo-v3" / "narration"
+OUTPUT = ROOT / "tmp" / "product-demo" / "narration"
 MODEL = "gemini-3.1-flash-tts-preview"
 VOICE = os.environ.get("AIDP_TTS_VOICE", "Charon")
 ENDPOINT = "https://aidp.bytedance.net/api/modelhub/online/multimodal/crawl"

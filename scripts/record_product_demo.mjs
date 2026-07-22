@@ -11,25 +11,22 @@ import path from "node:path";
 const root = process.cwd();
 const baseUrl =
   process.env.DEMO_URL ||
-  process.env.DEMO_V3_URL ||
   "https://radeon-voice-skill-foundry.pages.dev/";
-const outputDir = path.join(root, "tmp", "demo-v3", "recording");
+const outputDir = path.join(root, "tmp", "product-demo", "recording");
 const rawDir = path.join(outputDir, "raw");
 const audioPath =
   process.env.DEMO_AUDIO ||
-  process.env.DEMO_V3_AUDIO ||
   path.join(root, "outputs", "audio", "voice-sop-zh.wav");
 const timingPath = path.join(
   root,
   "tmp",
-  "demo-v3",
+  "product-demo",
   "narration",
   "timings.json"
 );
 const projectName =
   process.env.DEMO_PROJECT ||
-  process.env.DEMO_V3_PROJECT ||
-  "review-followup-final-demo";
+  "review-followup-workflow";
 const labels = [
   "Open the frozen public product",
   "Capture voice and trusted actions",
@@ -74,7 +71,7 @@ try {
   await context.addInitScript(() => {
     window.addEventListener("DOMContentLoaded", () => {
       const label = document.createElement("div");
-      label.id = "demo-v3-label";
+      label.id = "product-demo-label";
       label.style.cssText =
         "position:fixed;z-index:2147483646;left:30px;top:88px;" +
         "max-width:680px;padding:11px 15px;color:#f7f9fa;" +
@@ -84,7 +81,7 @@ try {
       label.textContent = "FINAL DEMO · LIVE CLOUDFLARE + W7900";
 
       const cursor = document.createElement("div");
-      cursor.id = "demo-v3-cursor";
+      cursor.id = "product-demo-cursor";
       cursor.style.cssText =
         "position:fixed;z-index:2147483647;width:20px;height:20px;" +
         "border:2px solid #fff;border-radius:50%;background:#c23a3577;" +
@@ -168,7 +165,7 @@ try {
       page.getByText("Download proof package", { exact: true })
     );
     const download = await downloadPromise;
-    await download.saveAs(path.join(outputDir, "demo-v3-proof.zip"));
+    await download.saveAs(path.join(outputDir, "product-demo-proof.zip"));
     await show(page, page.locator(".proof-panel"));
   });
 
@@ -255,10 +252,10 @@ try {
     await click(page, page.getByRole("button", { name: "Cover", exact: true }));
     await page.waitForSelector(".cinematic-hero", { timeout: 20_000 });
     await page.evaluate(() => {
-      const label = document.getElementById("demo-v3-label");
+      const label = document.getElementById("product-demo-label");
       if (label) {
         label.textContent =
-          "FINAL DEMO V3 · radeon-voice-skill-foundry.pages.dev";
+          "PRODUCT DEMO · radeon-voice-skill-foundry.pages.dev";
       }
     });
     await page.mouse.move(1520, 430, { steps: 24 });
@@ -267,7 +264,7 @@ try {
   await context.close();
   await browser.close();
   const rawVideo = await video.path();
-  await copyFile(rawVideo, path.join(outputDir, "demo-v3-raw.webm"));
+  await copyFile(rawVideo, path.join(outputDir, "product-demo-raw.webm"));
   await writeFile(
     path.join(outputDir, "events.json"),
     JSON.stringify(events, null, 2)
@@ -276,9 +273,9 @@ try {
     JSON.stringify(
       {
         projectName,
-        video: path.join(outputDir, "demo-v3-raw.webm"),
+        video: path.join(outputDir, "product-demo-raw.webm"),
         events: path.join(outputDir, "events.json"),
-        proof: path.join(outputDir, "demo-v3-proof.zip"),
+        proof: path.join(outputDir, "product-demo-proof.zip"),
         ledger: path.join(outputDir, "governance-ledger.jsonl")
       },
       null,
@@ -317,10 +314,10 @@ async function runStep(page, index, action) {
   const started = elapsed();
   await page.evaluate(
     ({ current, total, text }) => {
-      const label = document.getElementById("demo-v3-label");
+      const label = document.getElementById("product-demo-label");
       if (label) {
         label.textContent =
-          `FINAL DEMO V3 · LIVE CLOUDFLARE + W7900 · ${current}/${total} · ${text}`;
+          `PRODUCT DEMO · LIVE CLOUDFLARE + W7900 · ${current}/${total} · ${text}`;
       }
     },
     { current: index + 1, total: labels.length, text: labels[index] }

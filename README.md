@@ -1,5 +1,7 @@
 # Radeon Voice Skill Foundry
 
+[![CI](https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/workflows/ci.yml/badge.svg)](https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/workflows/ci.yml)
+
 Radeon Voice Skill Foundry is a Track 2 submission for the AMD AI DevMaster
 Hackathon. It converts a spoken operating procedure and a six-step workflow
 demonstration into a verified, reusable Agent Skill package.
@@ -11,14 +13,15 @@ adversarial tests, and requires explicit human promotion before reuse.
 
 ## Project Materials
 
+- Submission evidence map: `submission/SUBMISSION_EVIDENCE_MAP.md`
 - Live product:
   `https://radeon-voice-skill-foundry.pages.dev/`
-- Final 4:49 Demo:
+- Product Demo (4:49):
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
 - Demo captions:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt`
-- Demo proof:
-  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/PRODUCT_DEMO_PROOF.zip`
+- Verified workflow proof:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/VERIFIED_WORKFLOW_PROOF.zip`
 - Performance Demo:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_PERFORMANCE_DEMO.mp4`
 - Continuous Operation Demo:
@@ -27,6 +30,11 @@ adversarial tests, and requires explicit human promotion before reuse.
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/SHA256SUMS.txt`
 - Project Specification: `submission/PROJECT_SPECIFICATION.pdf`
 - Technical evidence: `submission/TECHNICAL_EVIDENCE_INDEX.md`
+- Multi-turn refinement:
+  `submission/MULTI_TURN_REFINEMENT.png` and
+  `submission/MULTI_TURN_REFINEMENT.json`
+- Multi-turn proof:
+  `submission/MULTI_TURN_REFINEMENT_PROOF.zip`
 - Official submission:
   `https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07/pull/7`
 
@@ -67,6 +75,9 @@ calendar invitations, or perform external network writes.
   capabilities.
 - **Multi-step planning:** spoken intent and action evidence compile into an
   ordered procedure, constraints, permissions, tests, and proof artifacts.
+- **Multi-turn interaction:** natural-language corrections create child
+  revisions with explicit `parentRunId` lineage and regenerated constraints
+  and tests.
 - **Local memory:** versioned skill records with candidate, promoted,
   superseded, and revoked states.
 - **Permission and privacy controls:** redaction, confirmation requirements,
@@ -230,8 +241,8 @@ npm run benchmark:optimization -- benchmarks/optimization-latest.json
 - The governance ledger checks sequence, previous-entry hashes, payload hashes,
   entry hashes, and consistency with skill memory. It is not externally
   anchored or Byzantine-resistant.
-- The bundled governance ledger is the Product Demo sample and contains two
-  promotion events. Supersede, revoke, and rollback remain implemented product
+- The bundled governance ledger is a verified workflow sample with one
+  promotion event. Supersede, revoke, and rollback remain implemented product
   lifecycle actions covered by the regression suite.
 - The Product Demo's recorded `GAIA-compatible` phrase refers only to portable
   Agent Skill Markdown. No external GAIA conformance or certification is
@@ -239,17 +250,3 @@ npm run benchmark:optimization -- benchmarks/optimization-latest.json
 - Raw audio is excluded from proof downloads.
 - Changed intent must compile and verify again; only an identical promoted
   skill can use the reuse fast path.
-
-## Demo Reproduction
-
-```bash
-AIDP_TTS_AK=... AIDP_TTS_VOICE=Charon \
-  python3 scripts/generate_demo_tts.py
-DEMO_PROJECT=review-followup-final-demo \
-  node scripts/record_demo.mjs
-python3 scripts/build_demo_video.py
-```
-
-Narration uses AIDP `gemini-3.1-flash-tts-preview`, voice `Charon`. Campaign
-backgrounds use GPT Image 2. These tools are used only for presentation assets,
-not for the product's core Agent or speech functions.

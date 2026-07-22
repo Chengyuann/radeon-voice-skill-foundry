@@ -11,10 +11,10 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW = ROOT / "tmp" / "demo-v3" / "recording" / "demo-v3-raw.webm"
-EVENTS = ROOT / "tmp" / "demo-v3" / "recording" / "events.json"
-AUDIO_DIR = ROOT / "tmp" / "demo-v3" / "narration"
-WORK = ROOT / "tmp" / "demo-v3" / "build"
+RAW = ROOT / "tmp" / "product-demo" / "recording" / "product-demo-raw.webm"
+EVENTS = ROOT / "tmp" / "product-demo" / "recording" / "events.json"
+AUDIO_DIR = ROOT / "tmp" / "product-demo" / "narration"
+WORK = ROOT / "tmp" / "product-demo" / "build"
 OUTPUT = ROOT / "submission" / "RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4"
 SRT = ROOT / "submission" / "RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt"
 SOURCE = ROOT / "submission" / "DEMO_NARRATION.md"
