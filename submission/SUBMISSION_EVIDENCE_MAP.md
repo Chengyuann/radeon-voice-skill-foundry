@@ -13,10 +13,11 @@ reproducible evidence.
 6. [Source repository](https://github.com/Chengyuann/radeon-voice-skill-foundry)
 7. [Continuous integration](https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/workflows/ci.yml)
 
-Live runtime checks:
+Runtime and integrity checks:
 
 - [Radeon health](https://radeon-voice-skill-foundry.pages.dev/api/health)
-- [Governance ledger](https://radeon-voice-skill-foundry.pages.dev/api/governance/ledger)
+- [Governance sample](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/GOVERNANCE_LEDGER.jsonl)
+- [Release checksums](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/SHA256SUMS.txt)
 
 ## Product Demo Chapters
 
