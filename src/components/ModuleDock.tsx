@@ -24,7 +24,7 @@ const modules = [
   {
     id: "policy",
     label: "Policy",
-    detail: "Compile",
+    detail: "Refine",
     icon: Braces
   },
   {

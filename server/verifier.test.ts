@@ -181,7 +181,22 @@ describe("proof verifier", () => {
       ...parent,
       runId: "revalidate_lineage_test",
       parentRunId: parent.runId,
-      revision: 2
+      revision: 2,
+      revisionHistory: [
+        ...(parent.revisionHistory || []),
+        {
+          revision: 2,
+          runId: "revalidate_lineage_test",
+          parentRunId: parent.runId,
+          createdAt: new Date().toISOString(),
+          instruction: "Always require confirmation before calendar holds.",
+          status: "compiled" as const,
+          addedConstraints: ["Require confirmation before calendar holds"],
+          removedConstraints: [],
+          permissionChanges: [],
+          fixtureCount: parent.fixtures.length
+        }
+      ]
     };
     const result = await verifyCompilation(
       child,
@@ -191,7 +206,17 @@ describe("proof verifier", () => {
     expect(result.proofBundle).toMatchObject({
       runId: "revalidate_lineage_test",
       parentRunId: parent.runId,
-      revision: 2
+      revision: 2,
+      revisionHistory: [
+        expect.objectContaining({
+          revision: 1,
+          status: "compiled"
+        }),
+        expect.objectContaining({
+          revision: 2,
+          status: "verified"
+        })
+      ]
     });
   });
 });

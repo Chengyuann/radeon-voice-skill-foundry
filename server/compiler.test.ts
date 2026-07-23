@@ -254,12 +254,32 @@ describe("SOP compiler", () => {
     const refined = await refineCompilation({
       compilation,
       message: "Always require confirmation before calendar holds.",
-      actions: reviewFollowupDemo.actions
+      actions: reviewFollowupDemo.actions,
+      priorVerificationStatus: "verified"
     });
 
     expect(compilation.ragMatches?.length).toBeGreaterThan(0);
     expect(refined.revision).toBe(2);
     expect(refined.parentRunId).toBe(compilation.runId);
+    expect(refined.revisionHistory).toHaveLength(2);
+    expect(refined.revisionHistory?.[0]).toMatchObject({
+      revision: 1,
+      runId: compilation.runId,
+      status: "verified"
+    });
+    expect(refined.revisionHistory?.[1]).toMatchObject({
+      revision: 2,
+      runId: refined.runId,
+      parentRunId: compilation.runId,
+      instruction: "Always require confirmation before calendar holds.",
+      status: "compiled",
+      fixtureCount: refined.fixtures.length
+    });
+    expect(
+      refined.revisionHistory?.[1].addedConstraints.some((statement) =>
+        /calendar holds/i.test(statement)
+      )
+    ).toBe(true);
     expect(
       refined.constraints.some(
         (constraint) =>

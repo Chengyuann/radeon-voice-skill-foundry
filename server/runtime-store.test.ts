@@ -33,13 +33,20 @@ describe("trusted runtime store", () => {
       compilation,
       reviewFollowupDemo.actions
     );
+    const verifiedCompilation = {
+      ...compilation,
+      revisionHistory: compilation.revisionHistory?.map((turn) => ({
+        ...turn,
+        status: verification.status
+      }))
+    };
     const firstStore = await import("./runtime-store.js");
     await firstStore.storeCompileRun(
-      compilation,
+      verifiedCompilation,
       reviewFollowupDemo.actions
     );
     await firstStore.storeVerificationRun({
-      compilation,
+      compilation: verifiedCompilation,
       actions: reviewFollowupDemo.actions,
       verification
     });
@@ -54,6 +61,9 @@ describe("trusted runtime store", () => {
 
     expect(restoredCompile.compilation.projectName).toBe(
       compilation.projectName
+    );
+    expect(restoredCompile.compilation.revisionHistory?.[0].status).toBe(
+      "verified"
     );
     expect(restoredVerification.verification.status).toBe("verified");
     expect(await reloadedStore.runtimeRecordCounts()).toEqual({

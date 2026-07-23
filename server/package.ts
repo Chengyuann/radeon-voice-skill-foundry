@@ -29,6 +29,17 @@ export async function buildSubmissionPackage(
     "rag_evidence.json",
     JSON.stringify(compilation.ragMatches || [], null, 2)
   );
+  if (compilation.revisionHistory?.length) {
+    root.file(
+      "revision_history.json",
+      JSON.stringify(
+        verification.proofBundle.revisionHistory ||
+          compilation.revisionHistory,
+        null,
+        2
+      )
+    );
+  }
   const actionContract = verification.proofBundle.actionContract;
   if (actionContract) {
     root.file(
@@ -75,6 +86,7 @@ Status: ${verification.status}
 - \`proof_bundle.json\`: hashes, runtime metadata, and verification evidence
 - \`action_contract.json\`: server-authoritative demonstration events and hash
 - \`sandbox_replay.json\`: step-by-step state hashes, diffs, and adversarial probes
+${compilation.revisionHistory?.length ? "- `revision_history.json`: natural-language turns, parent-child run lineage, policy deltas, and verification state" : ""}
 ${compilation.voiceEvidence ? "- `voice_evidence.json`: derived audio-quality evidence and source hash" : ""}
 - \`proof_bundle.json.compatibility\`: verifier, runtime, tool, policy, and skill compatibility manifest
 `

@@ -96,6 +96,25 @@ export type KnowledgeMatch = {
   score: number;
 };
 
+export type RevisionPermissionChange = {
+  permission: string;
+  from?: Permission["state"];
+  to: Permission["state"];
+};
+
+export type RevisionTurn = {
+  revision: number;
+  runId: string;
+  parentRunId?: string;
+  createdAt: string;
+  instruction: string;
+  status: "compiled" | "verified" | "quarantined";
+  addedConstraints: string[];
+  removedConstraints: string[];
+  permissionChanges: RevisionPermissionChange[];
+  fixtureCount: number;
+};
+
 export type CompileRequest = {
   projectName: string;
   scenario: string;
@@ -182,6 +201,7 @@ export type CompileResult = {
   voiceTranscriptModified?: boolean;
   revision?: number;
   parentRunId?: string;
+  revisionHistory?: RevisionTurn[];
   demonstrationSessionId?: string;
 };
 

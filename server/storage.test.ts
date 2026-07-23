@@ -331,7 +331,20 @@ describe("local RAG and skill memory", () => {
       policyYaml: "version: 1",
       compileDurationMs: 1,
       runtime: getRuntimeInfo(),
-      demonstrationSessionId: "demo_123456789abc"
+      demonstrationSessionId: "demo_123456789abc",
+      revisionHistory: [
+        {
+          revision: 1,
+          runId: "run-package",
+          createdAt: new Date().toISOString(),
+          instruction: "Initial spoken SOP",
+          status: "verified" as const,
+          addedConstraints: [],
+          removedConstraints: [],
+          permissionChanges: [],
+          fixtureCount: 0
+        }
+      ]
     };
     const verification = {
       runId: compilation.runId,
@@ -346,6 +359,7 @@ describe("local RAG and skill memory", () => {
           eventCount: actions.length,
           events: actions
         },
+        revisionHistory: compilation.revisionHistory,
         sandboxReplay: {
           schemaVersion: "0.1.0",
           status: "passed",
@@ -383,9 +397,13 @@ describe("local RAG and skill memory", () => {
     const replayFile = zip.file(
       "action-contract-package/sandbox_replay.json"
     );
+    const revisionHistoryFile = zip.file(
+      "action-contract-package/revision_history.json"
+    );
 
     expect(contractFile).not.toBeNull();
     expect(replayFile).not.toBeNull();
+    expect(revisionHistoryFile).not.toBeNull();
     expect(JSON.parse(await contractFile!.async("string"))).toMatchObject({
       sessionId: "demo_123456789abc",
       eventCount: 1,
@@ -395,5 +413,14 @@ describe("local RAG and skill memory", () => {
       schemaVersion: "0.1.0",
       status: "passed"
     });
+    expect(
+      JSON.parse(await revisionHistoryFile!.async("string"))
+    ).toMatchObject([
+      {
+        revision: 1,
+        runId: "run-package",
+        status: "verified"
+      }
+    ]);
   });
 });

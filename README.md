@@ -9,13 +9,26 @@ demonstration into a verified, reusable Agent Skill package.
 Core speech recognition and Agent inference run on a dedicated Radeon Cloud
 W7900-class GPU with ROCm. The application retrieves local policy evidence,
 compiles typed constraints and permissions, runs deterministic positive and
-adversarial tests, and requires explicit human promotion before reuse.
+adversarial tests, and requires explicit human promotion before reuse. A
+natural-language correction creates a traceable child run and must pass
+verification again before it can be promoted.
 
 ## Project Materials
 
-- Submission evidence map: `submission/SUBMISSION_EVIDENCE_MAP.md`
 - Live product:
   `https://radeon-voice-skill-foundry.pages.dev/`
+- Multi-turn interaction:
+  [`submission/MULTI_TURN_INTERACTION.md`](submission/MULTI_TURN_INTERACTION.md)
+- Multi-turn Director Cut (35.5 seconds):
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4`
+- Raw multi-turn product capture (32 seconds):
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DEMO.mp4`
+- Multi-turn supplement screenshot:
+  [`submission/MULTI_TURN_INTERACTION_DEMO.png`](submission/MULTI_TURN_INTERACTION_DEMO.png)
+- Parent-child lineage:
+  [`submission/MULTI_TURN_LINEAGE.png`](submission/MULTI_TURN_LINEAGE.png)
+- Submission evidence map:
+  [`submission/SUBMISSION_EVIDENCE_MAP.md`](submission/SUBMISSION_EVIDENCE_MAP.md)
 - Product Demo (4:49):
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
 - Demo captions:
@@ -37,6 +50,36 @@ adversarial tests, and requires explicit human promotion before reuse.
   `submission/MULTI_TURN_REFINEMENT_PROOF.zip`
 - Official submission:
   `https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07/pull/7`
+
+## Traceable Multi-Turn Interaction
+
+The interaction is more than retaining chat history. Each correction becomes
+a governed child compile. The Policy module keeps the full revision
+conversation in view: the instruction, parent and child run IDs, rules added
+or removed, capability changes, regenerated test count, and proof state.
+
+```text
+verified revision 1
+        |
+        |  "Always require confirmation before creating calendar holds."
+        v
+child revision 2 -> regenerated rules and fixtures -> verified child proof
+        |
+        |  next natural-language correction
+        v
+child revision 3 -> new policy delta -> verification required again
+```
+
+The submitted live capture binds child run `run_79b986c46400` to parent run
+`run_dbc1a6e2c6b5`, adds the requested confirmation rule, regenerates seven
+fixtures, and produces a distinct proof hash. The parent proof remains
+unchanged. See the
+[multi-turn interaction brief](submission/MULTI_TURN_INTERACTION.md).
+
+Newly generated proof packages also include `revision_history.json`, which
+serializes the governed conversation and its per-turn policy delta. A child is
+never shown as verified merely because its parent passed; every correction
+reopens the verification gate.
 
 ## What It Does
 

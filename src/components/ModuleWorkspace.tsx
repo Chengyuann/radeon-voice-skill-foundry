@@ -34,10 +34,10 @@ const moduleMeta = {
   },
   policy: {
     index: "02",
-    eyebrow: "Constraint compiler",
+    eyebrow: "Multi-turn policy compiler",
     title: "Policy forge",
     description:
-      "Turn intent into enforceable rules, least-privilege permissions and tests.",
+      "Correct intent in plain language and preserve every parent-child revision.",
     icon: Braces
   },
   proof: {

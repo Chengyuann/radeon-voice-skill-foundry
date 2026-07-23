@@ -1,19 +1,26 @@
 import {
   AlertTriangle,
+  ArrowRight,
   Ban,
   Check,
+  CheckCircle2,
   CircleDot,
+  CornerDownRight,
   FileWarning,
   Filter,
+  GitBranch,
   LockKeyhole,
   MessageSquareText,
   Save,
+  ShieldAlert,
+  Sparkles,
   TestTubeDiagonal
 } from "lucide-react";
 import { useState } from "react";
 import type {
   CompileResult,
   ConstraintKind,
+  RevisionTurn,
   VerifyResult
 } from "../../shared/types";
 import { SpotlightCard } from "../react-bits/SpotlightCard";
@@ -27,6 +34,12 @@ const constraintIcons: Record<ConstraintKind, typeof Ban> = {
   redact: FileWarning,
   requires_confirmation: LockKeyhole
 };
+
+const suggestedCorrections = [
+  "Always require confirmation before creating calendar holds.",
+  "Never send drafted emails without explicit human approval.",
+  "Redact customer identifiers from every external report."
+];
 
 type ConstraintPanelProps = {
   compilation?: CompileResult;
@@ -52,6 +65,10 @@ export function ConstraintPanel({
   savedSkillId
 }: ConstraintPanelProps) {
   const [revision, setRevision] = useState("");
+  const revisionNumber = compilation?.revision || 1;
+  const revisionHistory = compilation
+    ? resolveRevisionHistory(compilation, verification)
+    : [];
 
   const submitRevision = async () => {
     const message = revision.trim();
@@ -68,11 +85,11 @@ export function ConstraintPanel({
     >
       <div className="panel-heading">
         <div>
-          <p className="eyebrow">Policy compiler</p>
-          <h2>Learned constraints</h2>
+          <p className="eyebrow">Governed revision session</p>
+          <h2>Multi-turn policy conversation</h2>
         </div>
         <Badge tone={compilation ? "blue" : "neutral"}>
-          {compilation?.constraints.length || 0} rules
+          {compilation ? `${revisionNumber} turns` : "not started"}
         </Badge>
       </div>
 
@@ -84,6 +101,175 @@ export function ConstraintPanel({
         </div>
       ) : (
         <>
+          <div className="revision-session">
+            <div className="revision-session-summary">
+              <div>
+                <GitBranch size={17} />
+                <span>
+                  <strong>{revisionHistory.length} governed turns</strong>
+                  <small>Each correction creates an immutable child run</small>
+                </span>
+              </div>
+              <div className="revision-session-route" aria-label="Revision route">
+                {revisionHistory.map((turn, index) => (
+                  <span
+                    className={
+                      index === revisionHistory.length - 1
+                        ? "revision-route-current"
+                        : ""
+                    }
+                    key={turn.runId}
+                  >
+                    v{turn.revision}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <ol className="revision-thread" aria-live="polite">
+              {revisionHistory.map((turn, index) => {
+                const isCurrent = index === revisionHistory.length - 1;
+                return (
+                  <li
+                    className={`revision-turn ${
+                      isCurrent ? "revision-turn-current" : ""
+                    }`}
+                    key={turn.runId}
+                  >
+                    <span className="revision-turn-rail" aria-hidden="true">
+                      <i>{turn.revision}</i>
+                    </span>
+                    <div className="revision-turn-body">
+                      <div className="revision-turn-heading">
+                        <span>
+                          <strong>
+                            {turn.revision === 1
+                              ? "Spoken baseline"
+                              : `Operator correction ${turn.revision - 1}`}
+                          </strong>
+                          <small>
+                            {turn.revision === 1
+                              ? "Voice + demonstrated actions"
+                              : "Natural-language policy instruction"}
+                          </small>
+                        </span>
+                        <Badge tone={revisionStatusTone(turn.status)}>
+                          {turn.status}
+                        </Badge>
+                      </div>
+
+                      <p className="revision-message">{turn.instruction}</p>
+
+                      <div className="revision-run-line">
+                        {turn.parentRunId ? (
+                          <>
+                            <code>{shortRunId(turn.parentRunId)}</code>
+                            <ArrowRight size={13} />
+                          </>
+                        ) : (
+                          <span>root</span>
+                        )}
+                        <code>{shortRunId(turn.runId)}</code>
+                        <strong>revision {turn.revision}</strong>
+                      </div>
+
+                      <div className="revision-delta-row">
+                        <span className="revision-delta-add">
+                          +{turn.addedConstraints.length} rules
+                        </span>
+                        <span>
+                          -{turn.removedConstraints.length} rules
+                        </span>
+                        <span>
+                          {turn.permissionChanges.length} capability changes
+                        </span>
+                        <span>{turn.fixtureCount} tests regenerated</span>
+                      </div>
+
+                      {isCurrent && turn.addedConstraints.length ? (
+                        <div className="revision-result">
+                          <CornerDownRight size={14} />
+                          <span>
+                            <small>Compiler response</small>
+                            {turn.addedConstraints
+                              .slice(0, 3)
+                              .map((statement) => (
+                                <strong key={statement}>{statement}</strong>
+                              ))}
+                          </span>
+                        </div>
+                      ) : null}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+
+            <div className="revision-composer">
+              <div className="revision-composer-heading">
+                <span>
+                  <MessageSquareText size={15} />
+                  <strong>Continue the conversation</strong>
+                </span>
+                <small>creates revision {revisionNumber + 1}</small>
+              </div>
+              <textarea
+                aria-label="Policy correction"
+                placeholder="Correct or extend the policy in plain language..."
+                value={revision}
+                onChange={(event) => setRevision(event.target.value)}
+                onKeyDown={(event) => {
+                  if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+                    event.preventDefault();
+                    void submitRevision();
+                  }
+                }}
+              />
+              <div className="revision-suggestions" aria-label="Suggested corrections">
+                {suggestedCorrections.map((suggestion) => (
+                  <button
+                    type="button"
+                    key={suggestion}
+                    onClick={() => setRevision(suggestion)}
+                  >
+                    <Sparkles size={12} />
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+              <div className="revision-composer-actions">
+                <span>
+                  {verification ? (
+                    <CheckCircle2 size={14} />
+                  ) : (
+                    <ShieldAlert size={14} />
+                  )}
+                  {verification
+                    ? "Current revision has a proof"
+                    : "Child revisions must be verified before use"}
+                </span>
+                <button
+                  className="memory-reuse revision-submit"
+                  disabled={!revision.trim() || isRefining}
+                  onClick={submitRevision}
+                >
+                  <GitBranch size={14} />
+                  {isRefining
+                    ? "Compiling child revision"
+                    : `Create revision ${revisionNumber + 1}`}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="policy-evidence-heading">
+            <div>
+              <p className="eyebrow">Current revision output</p>
+              <h3>Learned constraints</h3>
+            </div>
+            <Badge tone="blue">{compilation.constraints.length} rules</Badge>
+          </div>
+
           <div className="constraint-list">
             {compilation.constraints.map((constraint) => {
               const Icon = constraintIcons[constraint.kind];
@@ -136,26 +322,6 @@ export function ConstraintPanel({
                 </div>
               ))}
             </div>
-          </div>
-
-          <div className="revision-section">
-            <div className="subheading-row">
-              <h3>Multi-turn refinement</h3>
-              <span>revision {compilation.revision || 1}</span>
-            </div>
-            <textarea
-              placeholder="Add or correct a rule, e.g. Always ask before creating calendar holds."
-              value={revision}
-              onChange={(event) => setRevision(event.target.value)}
-            />
-            <button
-              className="memory-reuse"
-              disabled={!revision.trim() || isRefining}
-              onClick={submitRevision}
-            >
-              <MessageSquareText size={14} />
-              {isRefining ? "Recompiling" : "Apply revision"}
-            </button>
           </div>
 
           <div className="test-section">
@@ -218,4 +384,70 @@ export function ConstraintPanel({
       )}
     </SpotlightCard>
   );
+}
+
+function resolveRevisionHistory(
+  compilation: CompileResult,
+  verification?: VerifyResult
+): RevisionTurn[] {
+  const storedHistory = compilation.revisionHistory?.length
+    ? compilation.revisionHistory
+    : [
+        {
+          revision: compilation.revision || 1,
+          runId: compilation.runId,
+          parentRunId: compilation.parentRunId,
+          createdAt: compilation.createdAt,
+          instruction:
+            (compilation.revision || 1) === 1
+              ? "Initial spoken SOP"
+              : "Imported policy revision",
+          status: "compiled" as const,
+          addedConstraints: compilation.constraints.map(
+            (constraint) => constraint.statement
+          ),
+          removedConstraints: [],
+          permissionChanges: compilation.permissions.map((permission) => ({
+            permission: permission.permission,
+            to: permission.state
+          })),
+          fixtureCount: compilation.fixtures.length
+        }
+      ];
+  const history = storedHistory.some((turn) => turn.runId === compilation.runId)
+    ? storedHistory
+    : [
+        ...storedHistory,
+        {
+          revision: compilation.revision || storedHistory.length + 1,
+          runId: compilation.runId,
+          parentRunId: compilation.parentRunId,
+          createdAt: compilation.createdAt,
+          instruction: "System revalidation or governance revision",
+          status: "compiled" as const,
+          addedConstraints: [],
+          removedConstraints: [],
+          permissionChanges: [],
+          fixtureCount: compilation.fixtures.length
+        }
+      ];
+
+  return history.map((turn) =>
+    turn.runId === compilation.runId && verification
+      ? { ...turn, status: verification.status }
+      : turn
+  );
+}
+
+function revisionStatusTone(
+  status: RevisionTurn["status"]
+): "neutral" | "green" | "red" | "blue" {
+  if (status === "verified") return "green";
+  if (status === "quarantined") return "red";
+  return "blue";
+}
+
+function shortRunId(runId: string): string {
+  if (runId.length <= 18) return runId;
+  return `${runId.slice(0, 10)}...${runId.slice(-5)}`;
 }

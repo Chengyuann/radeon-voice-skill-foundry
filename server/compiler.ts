@@ -5,6 +5,7 @@ import type {
   Constraint,
   ConstraintKind,
   Permission,
+  RevisionTurn,
   TestFixture,
   VoiceEvidence
 } from "../shared/types.js";
@@ -178,9 +179,27 @@ export async function compileSop(
   const runId = id("run");
   const runtime = getRuntimeInfo();
 
+  const createdAt = new Date().toISOString();
+  const revisionHistory: RevisionTurn[] = [
+    {
+      revision: 1,
+      runId,
+      createdAt,
+      instruction: "Initial spoken SOP",
+      status: "compiled",
+      addedConstraints: constraints.map((constraint) => constraint.statement),
+      removedConstraints: [],
+      permissionChanges: permissions.map((permission) => ({
+        permission: permission.permission,
+        to: permission.state
+      })),
+      fixtureCount: fixtures.length
+    }
+  ];
+
   return {
     runId,
-    createdAt: new Date().toISOString(),
+    createdAt,
     projectName: input.projectName,
     scenario: input.scenario,
     constraints,
@@ -205,6 +224,7 @@ export async function compileSop(
       ? { demonstrationSessionId: input.demonstrationSessionId }
       : {}),
     revision: 1,
+    revisionHistory,
     ...(modelMetrics ? { modelMetrics } : {}),
     ...(modelRoute ? { modelRoute } : {})
   };
@@ -216,6 +236,7 @@ export async function refineCompilation(
     message: string;
     actions: ActionEvent[];
     useModel?: boolean;
+    priorVerificationStatus?: "verified" | "quarantined";
   }
 ): Promise<CompileResult> {
   const prior = input.compilation;
@@ -240,11 +261,117 @@ export async function refineCompilation(
     voiceTranscriptModified: prior.voiceTranscriptModified,
     demonstrationSessionId: prior.demonstrationSessionId
   });
+  const revision = (prior.revision || 1) + 1;
+  const revisionHistory = normalizeRevisionHistory(
+    prior,
+    input.priorVerificationStatus
+  );
   return {
     ...refined,
     parentRunId: prior.runId,
-    revision: (prior.revision || 1) + 1
+    revision,
+    revisionHistory: [
+      ...revisionHistory,
+      {
+        revision,
+        runId: refined.runId,
+        parentRunId: prior.runId,
+        createdAt: refined.createdAt,
+        instruction: input.message.trim(),
+        status: "compiled",
+        addedConstraints: constraintStatementsAdded(
+          prior.constraints,
+          refined.constraints
+        ),
+        removedConstraints: constraintStatementsAdded(
+          refined.constraints,
+          prior.constraints
+        ),
+        permissionChanges: permissionChanges(
+          prior.permissions,
+          refined.permissions
+        ),
+        fixtureCount: refined.fixtures.length
+      }
+    ]
   };
+}
+
+function normalizeRevisionHistory(
+  compilation: CompileResult,
+  currentStatus?: "verified" | "quarantined"
+): RevisionTurn[] {
+  const history = compilation.revisionHistory?.length
+    ? structuredClone(compilation.revisionHistory)
+    : [
+        {
+          revision: compilation.revision || 1,
+          runId: compilation.runId,
+          parentRunId: compilation.parentRunId,
+          createdAt: compilation.createdAt,
+          instruction:
+            (compilation.revision || 1) === 1
+              ? "Initial spoken SOP"
+              : "Imported policy revision",
+          status: "compiled" as const,
+          addedConstraints: compilation.constraints.map(
+            (constraint) => constraint.statement
+          ),
+          removedConstraints: [],
+          permissionChanges: compilation.permissions.map((permission) => ({
+            permission: permission.permission,
+            to: permission.state
+          })),
+          fixtureCount: compilation.fixtures.length
+        }
+      ];
+
+  if (currentStatus) {
+    const current = history.find(
+      (turn) => turn.runId === compilation.runId
+    );
+    if (current) current.status = currentStatus;
+  }
+  return history;
+}
+
+function constraintStatementsAdded(
+  baseline: Constraint[],
+  candidate: Constraint[]
+): string[] {
+  const baselineKeys = new Set(baseline.map(constraintComparisonKey));
+  return candidate
+    .filter((constraint) => !baselineKeys.has(constraintComparisonKey(constraint)))
+    .map((constraint) => constraint.statement);
+}
+
+function constraintComparisonKey(constraint: Constraint): string {
+  return [
+    constraint.kind,
+    normalizeConstraintText(constraint.statement),
+    [...constraint.appliesTo].sort().join(",")
+  ].join("|");
+}
+
+function permissionChanges(
+  baseline: Permission[],
+  candidate: Permission[]
+): RevisionTurn["permissionChanges"] {
+  const baselineByPermission = new Map(
+    baseline.map((permission) => [permission.permission, permission.state])
+  );
+  return candidate
+    .filter(
+      (permission) =>
+        baselineByPermission.get(permission.permission) !== permission.state
+    )
+    .map((permission) => ({
+      permission: permission.permission,
+      ...(baselineByPermission.has(permission.permission)
+        ? { from: baselineByPermission.get(permission.permission) }
+        : {}),
+      to: permission.state
+    }));
 }
 
 export function mergeModelConstraintsWithGuardrails(

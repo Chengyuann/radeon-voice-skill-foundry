@@ -34,7 +34,7 @@ export function CinematicHero({ onOpenModule }: CinematicHeroProps) {
             <Cpu size={14} />
             AMD Radeon · ROCm 7.2.1
           </span>
-          <span>Track 2 · Private AI Agents</span>
+          <span>Track 2 · Traceable multi-turn agents</span>
         </AnimatedContent>
 
         <div className="hero-title-stage">
@@ -54,8 +54,8 @@ export function CinematicHero({ onOpenModule }: CinematicHeroProps) {
               <AudioWaveform size={18} />
             </span>
             <p>
-              Speak a private SOP. Compile its hidden rules. Verify every unsafe
-              path before the Agent can act.
+              Speak a private SOP. Correct it in plain language. Verify every
+              child revision before the Agent can act.
             </p>
           </div>
 

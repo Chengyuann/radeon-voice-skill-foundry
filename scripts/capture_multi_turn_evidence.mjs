@@ -87,14 +87,14 @@ try {
     path.join(outputDir, "VERIFIED_WORKFLOW_PROOF.zip")
   );
 
-  await page.locator(".revision-section textarea").fill(revisionMessage);
+  await page.getByLabel("Policy correction").fill(revisionMessage);
   const responsePromise = page.waitForResponse(
     (response) =>
       response.url().includes("/api/refine") &&
       response.request().method() === "POST"
   );
   await page.getByRole("button", {
-    name: "Apply revision",
+    name: "Create revision 2",
     exact: true
   }).click();
   const response = await responsePromise;
@@ -117,7 +117,7 @@ try {
     timeout: 30_000
   });
 
-  await page.locator(".revision-section").scrollIntoViewIfNeeded();
+  await page.locator(".revision-session").scrollIntoViewIfNeeded();
   await page.waitForTimeout(1_000);
   await page.screenshot({
     path: path.join(outputDir, "MULTI_TURN_REFINEMENT.png"),
@@ -125,7 +125,7 @@ try {
   });
 
   const evidence = {
-    schemaVersion: "0.1.0",
+    schemaVersion: "0.2.0",
     capturedAt: new Date().toISOString(),
     publicProduct: baseUrl,
     projectName,
@@ -133,6 +133,7 @@ try {
     revision: refined.revision,
     parentRunId: refined.parentRunId,
     runId: refined.runId,
+    revisionHistory: refined.revisionHistory,
     runtime: refined.runtime,
     constraints: refined.constraints.map((constraint) => ({
       kind: constraint.kind,

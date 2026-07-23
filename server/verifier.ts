@@ -121,12 +121,16 @@ export async function verifyCompilation(
     failed.length || sandboxReplay.status === "failed"
       ? "quarantined"
       : "verified";
+  const revisionHistory = compilation.revisionHistory?.map((turn) =>
+    turn.runId === compilation.runId ? { ...turn, status } : turn
+  );
 
   const proofCore = {
     schemaVersion: "0.4.0",
     runId: compilation.runId,
     parentRunId: compilation.parentRunId,
     revision: compilation.revision || 1,
+    revisionHistory,
     projectName: compilation.projectName,
     status,
     runtime: compilation.runtime,

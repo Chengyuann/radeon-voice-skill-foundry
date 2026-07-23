@@ -240,11 +240,17 @@ app.post("/api/refine", async (request, response) => {
   try {
     const input = refineRequestSchema.parse(request.body);
     const priorRun = await resolveCompileRun(input.compilation.runId);
+    const priorVerificationStatus = await resolveVerificationRun(
+      input.compilation.runId
+    )
+      .then((record) => record.verification.status)
+      .catch(() => undefined);
     const compilation = await refineCompilation({
       compilation: priorRun.compilation,
       message: input.message,
       actions: priorRun.actions,
-      useModel: input.useModel
+      useModel: input.useModel,
+      priorVerificationStatus
     });
     await storeCompileRun(compilation, priorRun.actions);
     response.json(compilation);
@@ -284,8 +290,22 @@ app.post("/api/verify", async (request, response) => {
       trustedRun.compilation,
       trustedRun.actions
     );
+    const verifiedCompilation: CompileResult = {
+      ...trustedRun.compilation,
+      ...(trustedRun.compilation.revisionHistory
+        ? {
+            revisionHistory: trustedRun.compilation.revisionHistory.map(
+              (turn) =>
+                turn.runId === trustedRun.compilation.runId
+                  ? { ...turn, status: verification.status }
+                  : turn
+            )
+          }
+        : {})
+    };
+    await storeCompileRun(verifiedCompilation, trustedRun.actions);
     await storeVerificationRun({
-      compilation: trustedRun.compilation,
+      compilation: verifiedCompilation,
       actions: trustedRun.actions,
       verification
     });
