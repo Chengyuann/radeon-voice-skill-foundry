@@ -11,6 +11,7 @@ import type {
   SkillPromotionReview,
   StoredSkill,
   TranscribeResult,
+  VerificationRepairResult,
   VerifyResult
 } from "../shared/types";
 import type { DemonstrationCommandType } from "../shared/demonstration";
@@ -91,6 +92,17 @@ export function verifySop(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ compilation, actions })
+  });
+}
+
+export function repairAndReverify(
+  runId: string,
+  input: { maxAttempts?: number; useModel?: boolean } = {}
+): Promise<VerificationRepairResult> {
+  return requestJson(apiUrl(`/api/verify/${runId}/repair`), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input)
   });
 }
 

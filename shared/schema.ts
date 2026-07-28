@@ -135,3 +135,8 @@ export const refineRequestSchema = z.object({
   actions: z.array(actionEventSchema).min(1).max(50),
   useModel: z.boolean().optional()
 });
+
+export const verificationRepairRequestSchema = z.object({
+  maxAttempts: z.number().int().min(1).max(2).default(2),
+  useModel: z.boolean().optional()
+});

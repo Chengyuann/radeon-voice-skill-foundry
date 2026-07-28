@@ -1,5 +1,6 @@
 import JSZip from "jszip";
 import type { CompileResult, VerifyResult } from "../shared/types.js";
+import { ensureAgentContracts } from "./agent-contracts.js";
 
 export async function buildSubmissionPackage(
   compilation: CompileResult,
@@ -28,6 +29,52 @@ export async function buildSubmissionPackage(
   root.file(
     "rag_evidence.json",
     JSON.stringify(compilation.ragMatches || [], null, 2)
+  );
+  const proofActions =
+    verification.proofBundle.actionContract &&
+    typeof verification.proofBundle.actionContract === "object" &&
+    "events" in verification.proofBundle.actionContract &&
+    Array.isArray(verification.proofBundle.actionContract.events)
+      ? verification.proofBundle.actionContract.events
+      : [];
+  const contracts = ensureAgentContracts({
+    actions: proofActions,
+    fixtures: compilation.fixtures,
+    harnessContract:
+      (verification.proofBundle.harnessContract as
+        | CompileResult["harnessContract"]
+        | undefined) || compilation.harnessContract,
+    verifierContract:
+      (verification.proofBundle.verifierContract as
+        | CompileResult["verifierContract"]
+        | undefined) || compilation.verifierContract
+  });
+  const harnessContract = contracts.harnessContract;
+  const verifierContract = contracts.verifierContract;
+  if (harnessContract) {
+    root.file(
+      "harness.json",
+      JSON.stringify(harnessContract, null, 2)
+    );
+  }
+  if (verifierContract) {
+    root.file(
+      "verifier.json",
+      JSON.stringify(verifierContract, null, 2)
+    );
+  }
+  root.file(
+    "verifier_feedback.json",
+    JSON.stringify(
+      verification.feedback || {
+        schemaVersion: "0.1.0",
+        findings: [],
+        autoRepairEligible: false,
+        generatedAt: verification.proofBundle.createdAt || "legacy"
+      },
+      null,
+      2
+    )
   );
   if (compilation.revisionHistory?.length) {
     root.file(
@@ -84,6 +131,9 @@ Status: ${verification.status}
 - \`fixtures.json\`: positive and negative verification fixtures
 - \`receipts.jsonl\`: append-only governance decisions
 - \`proof_bundle.json\`: hashes, runtime metadata, and verification evidence
+- \`harness.json\`: server-authoritative tools, context, memory, sandbox, and execution budgets
+- \`verifier.json\`: independent completion criteria and repair policy
+- \`verifier_feedback.json\`: structured findings and bounded repair guidance
 - \`action_contract.json\`: server-authoritative demonstration events and hash
 - \`sandbox_replay.json\`: step-by-step state hashes, diffs, and adversarial probes
 ${compilation.revisionHistory?.length ? "- `revision_history.json`: natural-language turns, parent-child run lineage, policy deltas, and verification state" : ""}

@@ -22,6 +22,7 @@
 - [x] Performance and continuous-operation proof ZIPs are included
 - [x] Multi-turn interaction has a dedicated brief and lineage diagram
 - [x] Live multi-turn screenshot, API lineage JSON, and proof ZIP are included
+- [x] Agent harness, verifier, structured feedback, and bounded repair evidence are included
 
 ## Radeon and ROCm
 
@@ -43,10 +44,12 @@
 - [x] Governance ledger verifies sequence, payload, and previous-entry hashes
 - [x] Exact reuse applies only to an identical promoted skill
 - [x] Runtime drift requires child-run revalidation
+- [x] Repairable verifier findings create bounded child revisions
+- [x] Voice, runtime, and unmapped sandbox failures remain manual-only
 
 ## Quality and Integrity
 
-- [x] Submission regression suite passes 63/63
+- [x] Submission regression suite passes 66/66
 - [x] Typecheck and production build pass
 - [x] Synthetic SOP audio is disclosed as a reproducible fixture
 - [x] Voice Evidence is described as an internal deterministic gate

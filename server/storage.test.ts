@@ -400,10 +400,22 @@ describe("local RAG and skill memory", () => {
     const revisionHistoryFile = zip.file(
       "action-contract-package/revision_history.json"
     );
+    const harnessFile = zip.file(
+      "action-contract-package/harness.json"
+    );
+    const verifierFile = zip.file(
+      "action-contract-package/verifier.json"
+    );
+    const feedbackFile = zip.file(
+      "action-contract-package/verifier_feedback.json"
+    );
 
     expect(contractFile).not.toBeNull();
     expect(replayFile).not.toBeNull();
     expect(revisionHistoryFile).not.toBeNull();
+    expect(harnessFile).not.toBeNull();
+    expect(verifierFile).not.toBeNull();
+    expect(feedbackFile).not.toBeNull();
     expect(JSON.parse(await contractFile!.async("string"))).toMatchObject({
       sessionId: "demo_123456789abc",
       eventCount: 1,

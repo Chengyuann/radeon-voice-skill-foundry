@@ -145,12 +145,16 @@ export function ConstraintPanel({
                           <strong>
                             {turn.revision === 1
                               ? "Spoken baseline"
-                              : `Operator correction ${turn.revision - 1}`}
+                              : turn.source === "verifier"
+                                ? `Verifier repair ${turn.revision - 1}`
+                                : `Operator correction ${turn.revision - 1}`}
                           </strong>
                           <small>
                             {turn.revision === 1
                               ? "Voice + demonstrated actions"
-                              : "Natural-language policy instruction"}
+                              : turn.source === "verifier"
+                                ? "Structured verifier feedback"
+                                : "Natural-language policy instruction"}
                           </small>
                         </span>
                         <Badge tone={revisionStatusTone(turn.status)}>

@@ -1116,6 +1116,95 @@ h3 {
   font-size: 8px;
 }
 
+.contract-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--line);
+  background: #f5f7f7;
+}
+
+.contract-strip > div {
+  min-width: 0;
+  padding: 10px 14px;
+  display: grid;
+  gap: 4px;
+  border-right: 1px solid var(--line);
+}
+
+.contract-strip > div:last-child {
+  border-right: 0;
+}
+
+.contract-strip span {
+  color: var(--muted);
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+.contract-strip code,
+.contract-strip strong {
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.verifier-feedback {
+  padding: 16px;
+  border-top: 1px solid var(--line);
+  background: #fff8ed;
+}
+
+.feedback-list {
+  display: grid;
+  gap: 7px;
+}
+
+.feedback-row {
+  min-width: 0;
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 7px;
+  border: 1px solid #e5d0ad;
+  background: white;
+  color: var(--amber);
+}
+
+.feedback-row > span {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.feedback-row strong {
+  color: var(--text);
+  font-size: 9px;
+}
+
+.feedback-row small {
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.repair-button {
+  width: 100%;
+  margin-top: 10px;
+  justify-content: center;
+  color: white;
+  border-color: var(--amber);
+  background: var(--amber);
+}
+
+.repair-button:hover:not(:disabled) {
+  border-color: #684716;
+  background: #684716;
+}
+
 .subheading-row {
   margin-bottom: 9px;
   display: flex;

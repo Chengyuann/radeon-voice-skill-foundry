@@ -84,7 +84,7 @@ describe("proof compatibility", () => {
         compilation,
         reviewFollowupDemo.actions
       ).schemaVersion
-    ).toBe("0.4.0");
+    ).toBe("0.5.0");
   });
 
   it("invalidates proofs created before Voice Evidence v0.3", async () => {

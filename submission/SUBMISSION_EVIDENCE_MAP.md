@@ -11,12 +11,14 @@ reproducible evidence.
 4. [Multi-turn supplement screenshot](MULTI_TURN_INTERACTION_DEMO.png)
 5. [Multi-turn interaction brief](MULTI_TURN_INTERACTION.md)
 6. [Parent-child lineage](MULTI_TURN_LINEAGE.png)
-7. [Product Demo](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4)
-8. [Project Specification](PROJECT_SPECIFICATION.pdf)
-9. [Technical Evidence Index](TECHNICAL_EVIDENCE_INDEX.md)
-10. [Poster](POSTER.pdf)
-11. [Source repository](https://github.com/Chengyuann/radeon-voice-skill-foundry)
-12. [Continuous integration](https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/workflows/ci.yml)
+7. [Agent harness repair evidence](AGENT_HARNESS_REPAIR_EVIDENCE.json)
+8. [Agent harness repair proof](AGENT_HARNESS_REPAIR_PROOF.zip)
+9. [Product Demo](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4)
+10. [Project Specification](PROJECT_SPECIFICATION.pdf)
+11. [Technical Evidence Index](TECHNICAL_EVIDENCE_INDEX.md)
+12. [Poster](POSTER.pdf)
+13. [Source repository](https://github.com/Chengyuann/radeon-voice-skill-foundry)
+14. [Continuous integration](https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/workflows/ci.yml)
 
 Runtime and integrity checks:
 
@@ -48,12 +50,25 @@ Runtime and integrity checks:
 | `03:45-04:15` | Exact promoted-skill reuse |
 | `04:15-04:48` | End-to-end summary and terminology boundary |
 
+## Agent Harness and Verify-in-the-Loop Snapshot
+
+| Stage | Result |
+|---|---|
+| Harness | server-authoritative tools, context, memory, sandbox, and execution budgets |
+| Verifier | independent completion criteria, server-side isolation, structured findings |
+| Injected failure | `mail:send = allow` |
+| Attempt 0 | revision 1 quarantined with a repairable critical permission finding |
+| Repair | server-generated instruction; parent guardrails preserved |
+| Attempt 1 | verifier child revision 2 passes with `mail:send = deny` |
+| Budget | at most 2 repair attempts |
+| Evidence | `AGENT_HARNESS_REPAIR_EVIDENCE.json` and `AGENT_HARNESS_REPAIR_PROOF.zip` |
+
 ## Track 2 Requirement Coverage
 
 | Track 2 requirement | Submitted evidence |
 |---|---|
 | Clear task positioning and creative scenario | Voice captures conditions, exceptions, and prohibited side effects that are absent from an action trace. See Product Demo `00:00-01:17` and Project Specification sections 1-3. |
-| Task decomposition, tools, RAG, and memory | Six typed actions compile into an ordered procedure, deterministic local retrieval, least-privilege permissions, fixtures, proof artifacts, and versioned procedural memory. See Product Demo `00:29-04:15`. |
+| Task decomposition, tools, RAG, and memory | Six typed actions compile into an ordered procedure, deterministic local retrieval, least-privilege permissions, fixtures, proof artifacts, and versioned procedural memory. New proofs also bind a typed agent harness and independent verifier contract. See Product Demo `00:29-04:15` and `AGENT_HARNESS_REPAIR_PROOF.zip`. |
 | Smooth multi-turn interaction | **Watch the [Director Cut](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4):** revision 1 baseline -> correction creates revision 2 -> revision 2 is verified -> another correction creates revision 3 -> verification is required again. It uses real product footage, hard captions, locally generated VoxCPM2 narration, and a project-owned original soundtrack. The raw product capture remains available as primary evidence. |
 | Core inference on Radeon and ROCm | Qwen3-ASR-0.6B and Qwen3-4B-Instruct-2507 run on a W7900-class `gfx1100` instance with ROCm 7.2.1. See live health, Product Demo, and `evidence/HARDWARE_BENCHMARK.json`. |
 | Targeted inference-speed optimization | Compact output reduces model output tokens by 29.42% and generation latency by 30.03%; vLLM graph serving reaches 257.65 aggregate output tokens/s at concurrency 8; native ASR batch 8 reaches 85.35x aggregate real-time. |
@@ -61,7 +76,7 @@ Runtime and integrity checks:
 
 ## Verification Snapshot
 
-- Submission regression suite: `63/63`
+- Submission regression suite: `66/66`
 - TypeScript typecheck: passed
 - Production build: passed
 - Audio-backed workflow: `7/7`
@@ -71,6 +86,8 @@ Runtime and integrity checks:
 - Multi-turn interaction brief: `MULTI_TURN_INTERACTION.md`
 - Parent-child lineage: `MULTI_TURN_LINEAGE.png`
 - Multi-turn refinement proof: `MULTI_TURN_REFINEMENT_PROOF.zip`
+- Agent harness repair evidence: `AGENT_HARNESS_REPAIR_EVIDENCE.json`
+- Agent harness repair proof: `AGENT_HARNESS_REPAIR_PROOF.zip`
 - Governance sample: `GOVERNANCE_LEDGER.jsonl`
 - Release integrity: `SHA256SUMS.txt`
 

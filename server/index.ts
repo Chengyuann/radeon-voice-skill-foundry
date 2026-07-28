@@ -11,6 +11,7 @@ import {
   knowledgeDocumentInputSchema,
   knowledgeSearchSchema,
   refineRequestSchema,
+  verificationRepairRequestSchema,
   skillPromotionApprovalSchema,
   skillGovernanceReasonSchema
 } from "../shared/schema.js";
@@ -39,6 +40,10 @@ import {
   storeVerificationRun
 } from "./runtime-store.js";
 import { verifyCompilation } from "./verifier.js";
+import {
+  runVerificationRepairLoop,
+  verifyAndStoreTrustedRun
+} from "./verification-loop.js";
 import { transcribeAudioBuffer } from "./transcriber.js";
 import {
   resolveVoiceEvidence,
@@ -286,33 +291,32 @@ app.post("/api/verify", async (request, response) => {
       throw new Error("Invalid verification payload");
     }
     const trustedRun = await resolveCompileRun(payload.compilation.runId);
-    const verification = await verifyCompilation(
-      trustedRun.compilation,
-      trustedRun.actions
-    );
-    const verifiedCompilation: CompileResult = {
-      ...trustedRun.compilation,
-      ...(trustedRun.compilation.revisionHistory
-        ? {
-            revisionHistory: trustedRun.compilation.revisionHistory.map(
-              (turn) =>
-                turn.runId === trustedRun.compilation.runId
-                  ? { ...turn, status: verification.status }
-                  : turn
-            )
-          }
-        : {})
-    };
-    await storeCompileRun(verifiedCompilation, trustedRun.actions);
-    await storeVerificationRun({
-      compilation: verifiedCompilation,
-      actions: trustedRun.actions,
-      verification
-    });
-    response.json(verification);
+    const result = await verifyAndStoreTrustedRun(trustedRun);
+    response.json(result.verification);
   } catch (error) {
     response.status(400).json({
       error: error instanceof Error ? error.message : "Verification failed"
+    });
+  }
+});
+
+app.post("/api/verify/:runId/repair", async (request, response) => {
+  try {
+    const input = verificationRepairRequestSchema.parse(request.body || {});
+    const trustedRun = await resolveCompileRun(request.params.runId);
+    response.json(
+      await runVerificationRepairLoop({
+        trustedRun,
+        maxAttempts: input.maxAttempts,
+        useModel: input.useModel
+      })
+    );
+  } catch (error) {
+    response.status(400).json({
+      error:
+        error instanceof Error
+          ? error.message
+          : "Verification repair loop failed"
     });
   }
 });

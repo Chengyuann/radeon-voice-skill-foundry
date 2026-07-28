@@ -288,6 +288,15 @@ describe("SOP compiler", () => {
       )
     ).toBe(true);
     expect(
+      compilation.constraints.every((parentConstraint) =>
+        refined.constraints.some(
+          (childConstraint) =>
+            childConstraint.kind === parentConstraint.kind &&
+            childConstraint.statement === parentConstraint.statement
+        )
+      )
+    ).toBe(true);
+    expect(
       refined.constraints.every(
         (constraint) =>
           !constraint.statement.includes("[existing") &&

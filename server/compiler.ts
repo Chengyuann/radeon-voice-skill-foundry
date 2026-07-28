@@ -13,6 +13,10 @@ import { id } from "./hash.js";
 import { extractConstraintsWithModel } from "./model-adapter.js";
 import { getRuntimeInfo } from "./runtime.js";
 import { searchKnowledge } from "./storage.js";
+import {
+  createAgentHarnessContract,
+  createAgentVerifierContract
+} from "./agent-contracts.js";
 
 type Pattern = {
   kind: ConstraintKind;
@@ -178,6 +182,8 @@ export async function compileSop(
   );
   const runId = id("run");
   const runtime = getRuntimeInfo();
+  const harnessContract = createAgentHarnessContract(input.actions);
+  const verifierContract = createAgentVerifierContract(fixtures);
 
   const createdAt = new Date().toISOString();
   const revisionHistory: RevisionTurn[] = [
@@ -225,6 +231,8 @@ export async function compileSop(
       : {}),
     revision: 1,
     revisionHistory,
+    harnessContract,
+    verifierContract,
     ...(modelMetrics ? { modelMetrics } : {}),
     ...(modelRoute ? { modelRoute } : {})
   };
@@ -237,9 +245,18 @@ export async function refineCompilation(
     actions: ActionEvent[];
     useModel?: boolean;
     priorVerificationStatus?: "verified" | "quarantined";
+    revisionSource?: "user" | "verifier";
+    findingIds?: string[];
   }
 ): Promise<CompileResult> {
   const prior = input.compilation;
+  const maxRevisions =
+    prior.harnessContract?.components.context.maxRevisions || 20;
+  if ((prior.revision || 1) >= maxRevisions) {
+    throw new Error(
+      `Revision budget exhausted at ${maxRevisions}; start a new governed session`
+    );
+  }
   const combinedTranscript = [
     prior.constraints
       .map(
@@ -249,7 +266,7 @@ export async function refineCompilation(
       .join("\n"),
     `[user revision] ${input.message}`
   ].join("\n");
-  const refined = await compileSop({
+  const refinementInput = {
     projectName: prior.projectName,
     scenario: prior.scenario,
     transcript: combinedTranscript,
@@ -260,7 +277,24 @@ export async function refineCompilation(
     voiceEvidenceReviewed: prior.voiceEvidenceReviewed,
     voiceTranscriptModified: prior.voiceTranscriptModified,
     demonstrationSessionId: prior.demonstrationSessionId
-  });
+  };
+  const refined = await compileSop(refinementInput);
+  const constraints = mergeRevisionConstraints(
+    prior.constraints,
+    refined.constraints
+  );
+  const permissions = inferPermissions(
+    input.actions,
+    constraints,
+    prior.voiceEvidence,
+    prior.voiceTranscriptModified,
+    prior.voiceEvidenceReviewed
+  );
+  const fixtures = generateFixtures(
+    constraints,
+    permissions,
+    prior.voiceEvidence
+  );
   const revision = (prior.revision || 1) + 1;
   const revisionHistory = normalizeRevisionHistory(
     prior,
@@ -268,8 +302,19 @@ export async function refineCompilation(
   );
   return {
     ...refined,
+    constraints,
+    permissions,
+    fixtures,
+    skillMarkdown: renderSkillMarkdown(
+      refinementInput,
+      constraints,
+      permissions
+    ),
+    policyYaml: renderPolicyYaml(constraints, permissions),
     parentRunId: prior.runId,
     revision,
+    harnessContract: prior.harnessContract || refined.harnessContract,
+    verifierContract: createAgentVerifierContract(fixtures),
     revisionHistory: [
       ...revisionHistory,
       {
@@ -278,23 +323,42 @@ export async function refineCompilation(
         parentRunId: prior.runId,
         createdAt: refined.createdAt,
         instruction: input.message.trim(),
+        source: input.revisionSource || "user",
+        ...(input.findingIds?.length
+          ? { findingIds: [...new Set(input.findingIds)].sort() }
+          : {}),
         status: "compiled",
         addedConstraints: constraintStatementsAdded(
           prior.constraints,
-          refined.constraints
+          constraints
         ),
         removedConstraints: constraintStatementsAdded(
-          refined.constraints,
+          constraints,
           prior.constraints
         ),
         permissionChanges: permissionChanges(
           prior.permissions,
-          refined.permissions
+          permissions
         ),
-        fixtureCount: refined.fixtures.length
+        fixtureCount: fixtures.length
       }
     ]
   };
+}
+
+function mergeRevisionConstraints(
+  baseline: Constraint[],
+  candidate: Constraint[]
+): Constraint[] {
+  const merged = structuredClone(baseline);
+  const keys = new Set(merged.map(constraintComparisonKey));
+  for (const constraint of candidate) {
+    const key = constraintComparisonKey(constraint);
+    if (keys.has(key)) continue;
+    keys.add(key);
+    merged.push(constraint);
+  }
+  return merged.slice(0, 20);
 }
 
 function normalizeRevisionHistory(

@@ -27,6 +27,7 @@ import {
   getPromotionReview,
   listKnowledge,
   listSkills,
+  repairAndReverify,
   refineSop,
   revalidateSkill,
   revokeSkill,
@@ -72,6 +73,7 @@ export function App() {
     | "verify"
     | "transcribe"
     | "refine"
+    | "repair"
     | "memory"
     | null
   >(null);
@@ -439,6 +441,31 @@ export function App() {
     }
   };
 
+  const handleRepairAndReverify = async () => {
+    if (!compilation || !verification) return;
+    setBusy("repair");
+    setError(undefined);
+    setSavedSkillId(undefined);
+    try {
+      const result = await repairAndReverify(compilation.runId, {
+        maxAttempts: 2,
+        useModel
+      });
+      setCompilation(result.finalCompilation);
+      setVerification(result.finalVerification);
+      await refreshRuntime();
+      setActiveModule("proof");
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "Automated repair failed"
+      );
+    } finally {
+      setBusy(null);
+    }
+  };
+
   const handleDemonstrationCommand = async (
     type: DemonstrationCommandType
   ) => {
@@ -529,6 +556,8 @@ export function App() {
         runtime={runtime}
         compilation={compilation}
         verification={verification}
+        onRepairAndReverify={handleRepairAndReverify}
+        isRepairing={busy === "repair"}
         onSaveSkill={handleSaveSkill}
         isSaving={busy === "memory"}
         savedSkillId={savedSkillId}

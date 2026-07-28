@@ -24,26 +24,29 @@ requires explicit human promotion.
    [`MULTI_TURN_INTERACTION_DEMO.png`](MULTI_TURN_INTERACTION_DEMO.png)
 5. Parent-child lineage:
    [`MULTI_TURN_LINEAGE.png`](MULTI_TURN_LINEAGE.png)
-6. Live product:
+6. Agent harness and bounded repair evidence:
+   [`AGENT_HARNESS_REPAIR_EVIDENCE.json`](AGENT_HARNESS_REPAIR_EVIDENCE.json)
+   with [`AGENT_HARNESS_REPAIR_PROOF.zip`](AGENT_HARNESS_REPAIR_PROOF.zip)
+7. Live product:
    `https://radeon-voice-skill-foundry.pages.dev/`
-7. Submission evidence map:
+8. Submission evidence map:
    [`SUBMISSION_EVIDENCE_MAP.md`](SUBMISSION_EVIDENCE_MAP.md)
-8. Product Demo:
+9. Product Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
-9. Project Specification: [`PROJECT_SPECIFICATION.pdf`](PROJECT_SPECIFICATION.pdf)
-10. Technical evidence: [`TECHNICAL_EVIDENCE_INDEX.md`](TECHNICAL_EVIDENCE_INDEX.md)
-11. Architecture: [`ARCHITECTURE.png`](ARCHITECTURE.png)
-12. Poster: [`POSTER.pdf`](POSTER.pdf)
-13. Multi-turn evidence:
+10. Project Specification: [`PROJECT_SPECIFICATION.pdf`](PROJECT_SPECIFICATION.pdf)
+11. Technical evidence: [`TECHNICAL_EVIDENCE_INDEX.md`](TECHNICAL_EVIDENCE_INDEX.md)
+12. Architecture: [`ARCHITECTURE.png`](ARCHITECTURE.png)
+13. Poster: [`POSTER.pdf`](POSTER.pdf)
+14. Multi-turn evidence:
    [`MULTI_TURN_REFINEMENT.png`](MULTI_TURN_REFINEMENT.png) and
    [`MULTI_TURN_REFINEMENT.json`](MULTI_TURN_REFINEMENT.json), with
    [`MULTI_TURN_REFINEMENT_PROOF.zip`](MULTI_TURN_REFINEMENT_PROOF.zip)
-14. Performance Demo:
+15. Performance Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_PERFORMANCE_DEMO.mp4`
-15. Continuous Operation Demo:
+16. Continuous Operation Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/CONTINUOUS_OPERATION_DEMO.mp4`
-16. Package integrity: [`SHA256SUMS.txt`](SHA256SUMS.txt)
-17. Source:
+17. Package integrity: [`SHA256SUMS.txt`](SHA256SUMS.txt)
+18. Source:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry`
 
 Demo captions:
@@ -76,6 +79,22 @@ The submitted public workflow demonstrates:
 
 See [`MULTI_TURN_INTERACTION.md`](MULTI_TURN_INTERACTION.md) for the compact
 lineage and evidence links.
+
+## Governed Agent Harness and Repair Loop
+
+Every new proof binds a server-authoritative `harness.json` and an independent
+`verifier.json`. The harness records tools, context lineage, memory policy,
+sandbox authority, and execution budgets. The verifier records completion
+criteria, server-side isolation, repairable categories, manual-only failure
+categories, and a two-attempt repair budget.
+
+`AGENT_HARNESS_REPAIR_EVIDENCE.json` deliberately injects
+`mail:send = allow` into a trusted compile run. Verification quarantines
+revision 1 and emits one repairable permission finding. The server generates
+the repair instruction, creates revision 2 with `source: verifier` and the
+triggering finding ID, preserves all parent guardrails, restores
+`mail:send = deny`, and verifies the child. Voice, runtime, or unmapped sandbox
+failures remain manual-only and cannot enter this loop.
 
 ## Implemented Track 2 Capabilities
 
@@ -140,7 +159,7 @@ run on a private network without the public gateway.
 - The Product Demo ends with a terminology card clarifying the exact Agent Skill
   Markdown, proof-hash, and ledger integrity boundaries.
 - The Performance Demo's spoken `35/35` count belongs to its pinned recording
-  revision; the submission regression suite is `63/63`.
+  revision; the submission regression suite is `66/66`.
 - Proof ZIPs preserve immutable internal run and policy identifiers required
   for artifact verification; the submission exposes one canonical filename
   for each proof role.
@@ -157,7 +176,7 @@ run on a private network without the public gateway.
 - The Product Demo's recorded `GAIA-compatible` phrase refers only to portable
   Agent Skill Markdown. No external GAIA conformance or certification is
   claimed.
-- Test counts belong to pinned revisions. The submission regression suite
-  passes 63/63; Radeon benchmark snapshots retain their recorded counts.
+- Test counts belong to pinned revisions. The current submission regression
+  suite passes 66/66; Radeon benchmark snapshots retain their recorded counts.
 - The synthetic Chinese SOP WAV is a reproducible fixture, not a claimed human
   recording.

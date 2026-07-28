@@ -6,6 +6,7 @@ import {
   Gauge,
   ListChecks,
   ReceiptText,
+  RotateCcw,
   Save,
   ShieldAlert,
   ShieldCheck
@@ -26,6 +27,8 @@ type ProofPanelProps = {
   isSaving?: boolean;
   savedSkillId?: string;
   onSaveSkill?: () => Promise<void>;
+  onRepairAndReverify?: () => Promise<void>;
+  isRepairing?: boolean;
 };
 
 export function ProofPanel({
@@ -34,7 +37,9 @@ export function ProofPanel({
   verification,
   isSaving = false,
   savedSkillId,
-  onSaveSkill
+  onSaveSkill,
+  onRepairAndReverify,
+  isRepairing = false
 }: ProofPanelProps) {
   const sandboxReplay = verification?.proofBundle
     .sandboxReplay as SandboxReplay | undefined;
@@ -44,6 +49,14 @@ export function ProofPanel({
       : window.location.pathname.match(
             /^(\/instances\/[^/]+\/proxy\/\d+)/
           )?.[1] || "";
+  const compatibility = verification?.proofBundle.compatibility as
+    | {
+        verifierVersion?: string;
+        harnessContractHash?: string;
+        verifierContractHash?: string;
+      }
+    | undefined;
+  const feedback = verification?.feedback;
 
   return (
     <SpotlightCard
@@ -90,16 +103,33 @@ export function ProofPanel({
           <span>
             verifier{" "}
             {String(
-              (
-                verification.proofBundle.compatibility as
-                  | { verifierVersion?: string }
-                  | undefined
-              )?.verifierVersion || "legacy"
+              compatibility?.verifierVersion || "legacy"
             )}
           </span>
           <code>
             persistent run · {verification.runId.slice(0, 12)}
           </code>
+        </div>
+      ) : null}
+
+      {verification ? (
+        <div className="contract-strip">
+          <div>
+            <span>Harness</span>
+            <code>
+              {compatibility?.harnessContractHash?.slice(0, 12) || "legacy"}
+            </code>
+          </div>
+          <div>
+            <span>Verifier</span>
+            <code>
+              {compatibility?.verifierContractHash?.slice(0, 12) || "legacy"}
+            </code>
+          </div>
+          <div>
+            <span>Repair budget</span>
+            <strong>2 attempts</strong>
+          </div>
         </div>
       ) : null}
 
@@ -308,6 +338,45 @@ the portable Agent Skill Markdown artifact.`}
           )}
         </div>
       </div>
+
+      {verification?.status === "quarantined" ? (
+        <div className="verifier-feedback">
+          <div className="subheading-row">
+            <h3>Verifier feedback</h3>
+            <span>
+              {feedback?.autoRepairEligible
+                ? "bounded auto-repair available"
+                : "manual intervention required"}
+            </span>
+          </div>
+          <div className="feedback-list">
+            {(feedback?.findings || []).map((finding) => (
+              <div className="feedback-row" key={finding.id}>
+                <ShieldAlert size={14} />
+                <span>
+                  <strong>{finding.fixtureName || finding.category}</strong>
+                  <small>{finding.message}</small>
+                </span>
+                <Badge tone={finding.repairable ? "amber" : "red"}>
+                  {finding.repairable ? "repairable" : "manual"}
+                </Badge>
+              </div>
+            ))}
+          </div>
+          {feedback?.autoRepairEligible && onRepairAndReverify ? (
+            <button
+              className="secondary-button repair-button"
+              disabled={isRepairing}
+              onClick={onRepairAndReverify}
+            >
+              <RotateCcw size={16} />
+              {isRepairing
+                ? "Repairing child revision"
+                : "Repair and reverify"}
+            </button>
+          ) : null}
+        </div>
+      ) : null}
 
       <a
         className={`download-button ${verification ? "" : "download-disabled"}`}

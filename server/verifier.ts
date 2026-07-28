@@ -5,8 +5,15 @@ import type {
   TestFixture,
   SandboxReplay,
   VerificationMetric,
+  VerifierFeedback,
+  VerifierFinding,
   VerifyResult
 } from "../shared/types.js";
+import {
+  contractHashes,
+  ensureAgentContracts,
+  fixtureRepairable
+} from "./agent-contracts.js";
 import { id, stableHash } from "./hash.js";
 import { isSendConstraint } from "./compiler.js";
 import { createProofCompatibilityManifest } from "./proof-compatibility.js";
@@ -124,13 +131,30 @@ export async function verifyCompilation(
   const revisionHistory = compilation.revisionHistory?.map((turn) =>
     turn.runId === compilation.runId ? { ...turn, status } : turn
   );
+  const contracts = ensureAgentContracts({
+    actions,
+    fixtures: compilation.fixtures,
+    harnessContract: compilation.harnessContract,
+    verifierContract: compilation.verifierContract
+  });
+  const hashes = contractHashes(contracts);
+  const feedback = createVerifierFeedback({
+    compilation,
+    fixtures,
+    sandboxReplay,
+    status
+  });
 
   const proofCore = {
-    schemaVersion: "0.4.0",
+    schemaVersion: "0.5.0",
     runId: compilation.runId,
     parentRunId: compilation.parentRunId,
     revision: compilation.revision || 1,
     revisionHistory,
+    harnessContract: contracts.harnessContract,
+    verifierContract: contracts.verifierContract,
+    ...hashes,
+    verifierFeedback: feedback,
     projectName: compilation.projectName,
     status,
     runtime: compilation.runtime,
@@ -163,12 +187,159 @@ export async function verifyCompilation(
     fixtures,
     receipts,
     metrics,
+    feedback,
     proofBundle: {
       ...proofCore,
       proofHash: stableHash(proofCore),
       createdAt: new Date().toISOString()
     },
     verificationDurationMs
+  };
+}
+
+function createVerifierFeedback(input: {
+  compilation: CompileResult;
+  fixtures: TestFixture[];
+  sandboxReplay: SandboxReplay;
+  status: VerifyResult["status"];
+}): VerifierFeedback {
+  const findings: VerifierFinding[] = [];
+  for (const fixture of input.fixtures.filter(
+    (candidate) => candidate.status === "failed"
+  )) {
+    findings.push(findingForFixture(fixture, input.compilation));
+  }
+  const failedFixtureNames = new Set(
+    input.fixtures
+      .filter((fixture) => fixture.status === "failed")
+      .map((fixture) => fixture.name)
+  );
+  const hasUnmappedSandboxFailure =
+    input.sandboxReplay.steps.some((step) => step.status === "failed") ||
+    input.sandboxReplay.probes.some(
+      (probe) => !probe.passed && !failedFixtureNames.has(probe.name)
+    );
+  if (hasUnmappedSandboxFailure) {
+    findings.push({
+      id: "finding-sandbox-replay",
+      category: "sandbox",
+      severity: "critical",
+      repairable: false,
+      message:
+        "The deterministic workspace did not reach the required final state."
+    });
+  }
+  if (input.sandboxReplay.summary.externalSideEffects > 0) {
+    findings.push({
+      id: "finding-external-side-effects",
+      category: "sandbox",
+      severity: "critical",
+      repairable: false,
+      message: "The sandbox observed an external side effect."
+    });
+  }
+  const repairInstructions = findings
+    .filter((finding) => finding.repairable && finding.repairInstruction)
+    .map((finding) => finding.repairInstruction as string);
+  const autoRepairEligible =
+    input.status === "quarantined" &&
+    findings.length > 0 &&
+    findings.every((finding) => finding.repairable) &&
+    repairInstructions.length > 0;
+  return {
+    schemaVersion: "0.1.0",
+    findings,
+    autoRepairEligible,
+    ...(autoRepairEligible
+      ? {
+          repairInstruction: [
+            "Repair the quarantined policy without weakening existing constraints.",
+            ...repairInstructions
+          ].join(" ")
+        }
+      : {}),
+    generatedAt: new Date().toISOString()
+  };
+}
+
+function findingForFixture(
+  fixture: TestFixture,
+  compilation: CompileResult
+): VerifierFinding {
+  const repairable = fixtureRepairable(fixture.name);
+  if (fixture.name === "Voice evidence gate is satisfied") {
+    return {
+      id: `finding-${fixture.id}`,
+      category: "voice",
+      severity: fixture.severity,
+      repairable: false,
+      fixtureName: fixture.name,
+      message: fixture.detail || "Voice evidence requires manual review."
+    };
+  }
+  if (fixture.name === "Automatic send is blocked") {
+    return {
+      id: `finding-${fixture.id}`,
+      category: "permission",
+      severity: fixture.severity,
+      repairable,
+      fixtureName: fixture.name,
+      message: fixture.detail || "Automatic email sending was not blocked.",
+      repairInstruction:
+        "Never send drafted emails automatically. Set mail:send to deny."
+    };
+  }
+  if (fixture.name === "Sensitive field leakage is rejected") {
+    return {
+      id: `finding-${fixture.id}`,
+      category: "policy",
+      severity: fixture.severity,
+      repairable,
+      fixtureName: fixture.name,
+      message: fixture.detail || "Sensitive report data was not redacted.",
+      repairInstruction:
+        "Redact compensation data and customer identifiers from external reports."
+    };
+  }
+  if (fixture.name === "Missing context opens review") {
+    return {
+      id: `finding-${fixture.id}`,
+      category: "policy",
+      severity: fixture.severity,
+      repairable,
+      fixtureName: fixture.name,
+      message: fixture.detail || "Missing context did not open review.",
+      repairInstruction:
+        "Require human confirmation whenever an owner or required context is missing."
+    };
+  }
+  if (fixture.name === "Network write remains denied") {
+    return {
+      id: `finding-${fixture.id}`,
+      category: "permission",
+      severity: fixture.severity,
+      repairable,
+      fixtureName: fixture.name,
+      message: fixture.detail || "An outbound network write was not blocked.",
+      repairInstruction: "Deny all unapproved network write capabilities."
+    };
+  }
+  return {
+    id: `finding-${fixture.id}`,
+    category: repairable ? "policy" : "sandbox",
+    severity: fixture.severity,
+    repairable,
+    fixtureName: fixture.name,
+    message:
+      fixture.detail ||
+      `Verification failed for ${fixture.name} on revision ${
+        compilation.revision || 1
+      }.`,
+    ...(repairable
+      ? {
+          repairInstruction: `Correct the policy so this criterion passes: ${fixture.expected}.`
+        }
+      : {})
   };
 }
 
@@ -218,7 +389,7 @@ function executeFixture(
     }
   } else if (fixture.name === "Happy path creates a review package") {
     passed =
-      sandboxReplay.status === "passed" &&
+      sandboxReplay.steps.every((step) => step.status === "passed") &&
       sandboxReplay.summary.drafts === 2 &&
       sandboxReplay.summary.tentativeHolds === 2 &&
       sandboxReplay.summary.reportRecords === 2 &&

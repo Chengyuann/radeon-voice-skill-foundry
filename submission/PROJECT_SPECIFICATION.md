@@ -219,6 +219,44 @@ does not match the active runtime require revalidation. The proof ZIP exposes
 the machine-readable result as
 `sandbox_replay.json`.
 
+### 5.3.2 Agent Harness and Independent Verifier Contracts
+
+Each compile produces a server-authoritative harness contract. It declares the
+accepted typed tools, system-policy source, proof-preserving context strategy,
+versioned memory behavior, Agent Skill format, deterministic sandbox authority,
+disabled subagents, and hard budgets for actions, constraints, fixtures,
+revisions, and automated repairs.
+
+Verification independently produces a verifier contract. It declares every
+fixture, sandbox, and integrity criterion; whether a failure is policy
+repairable; manual-only voice, runtime, and sandbox categories; server-side
+verifier isolation; zero-external-side-effect requirements; and a maximum of
+two repair attempts. The harness and verifier SHA-256 hashes are bound into
+proof schema `0.5.0` and the compatibility manifest. Proof ZIPs expose
+`harness.json`, `verifier.json`, and `verifier_feedback.json`.
+
+### 5.3.3 Bounded Verify-Refine-Reverify
+
+Quarantined policy and permission failures may enter a user-triggered bounded
+repair loop. The API accepts only a trusted server run ID. It ignores
+browser-supplied compilation and action replacements, verifies the current
+run, and uses only structured verifier findings to produce a repair
+instruction.
+
+The repair creates an immutable child revision, records `source: verifier` and
+the triggering finding IDs, preserves every parent constraint, regenerates
+permissions and fixtures, and verifies the child. The loop stops when verified,
+when the two-attempt budget is exhausted, or when any finding requires manual
+intervention. Voice evidence, runtime failures, and unmapped sandbox failures
+are never silently rewritten.
+
+`AGENT_HARNESS_REPAIR_EVIDENCE.json` provides a reproducible failure-injection
+case: revision 1 is modified to allow `mail:send`, verification quarantines it,
+the verifier emits a critical repairable permission finding, and revision 2
+restores `mail:send = deny` and verifies. The accompanying
+`AGENT_HARNESS_REPAIR_PROOF.zip` contains both contracts, structured feedback,
+revision lineage, the complete repair cycle, and the final proof bundle.
+
 ### 5.4 Multi-Step Planning
 
 Spoken intent and action events are compiled into an ordered procedure,
@@ -420,7 +458,7 @@ The client verification payload was deliberately modified to claim
 returned `mail.send = deny`, demonstrating that browser-supplied proof fields
 are not trusted.
 
-The submission regression suite passes 63/63 locally, together with typecheck
+The submission regression suite passes 66/66 locally, together with typecheck
 and the production build. The Radeon experiment source commit was clean-cloned
 on Radeon and passed 33/33 plus the production build.
 
@@ -743,7 +781,7 @@ measured Radeon claims:
    burst-loss case is quarantined at 65/100. These remain deterministic
    measurements and do not claim learned acoustic diagnosis.
 
-The submission regression suite passes 63/63 tests locally, with typecheck and
+The submission regression suite passes 66/66 tests locally, with typecheck and
 production build. A single-take browser demo shows upload,
 voice-evidence analysis, compile, 7/7 verification, save, reuse, service
 restart recovery, runtime invalidation, one-click revalidation, and proof
@@ -791,6 +829,8 @@ presentation tools do not provide the product's core Agent or ASR functions.
 - Source: `https://github.com/Chengyuann/radeon-voice-skill-foundry`
 - Live product: `https://radeon-voice-skill-foundry.pages.dev/`
 - Technical evidence index: `TECHNICAL_EVIDENCE_INDEX.md`
+- Agent harness repair evidence: `AGENT_HARNESS_REPAIR_EVIDENCE.json`
+- Agent harness repair proof: `AGENT_HARNESS_REPAIR_PROOF.zip`
 - Multi-turn interaction brief: `MULTI_TURN_INTERACTION.md`
 - Parent-child lineage: `MULTI_TURN_LINEAGE.png`
 - Product Demo: `RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`

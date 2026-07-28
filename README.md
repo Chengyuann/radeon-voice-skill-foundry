@@ -99,6 +99,9 @@ action replacements when a trusted demonstration session is present.
 The generated package contains:
 
 - portable Agent Skill Markdown in `SKILL.md`
+- server-authoritative agent harness contract in `harness.json`
+- independent completion and repair criteria in `verifier.json`
+- structured verifier findings in `verifier_feedback.json`
 - typed SOP constraints
 - allow, review, and deny capability decisions
 - positive and adversarial fixtures
@@ -106,6 +109,21 @@ The generated package contains:
 - hashed governance receipts
 - a proof bundle with source, runtime, policy, and artifact hashes
 - versioned procedural memory
+
+## Governed Agent Harness
+
+Every compile now emits a typed harness contract covering the tool interface,
+context strategy, versioned memory, sandbox authority, and execution budgets.
+The verifier contract independently defines completion criteria and which
+failure categories may enter a bounded repair loop.
+
+When verification finds a repairable policy or permission failure, the user can
+run `verify -> refine -> reverify`. The server generates the repair instruction
+from verifier findings, creates an immutable child revision, preserves every
+parent guardrail, and retries at most twice. Voice, runtime, or unmapped
+sandbox failures stop for manual intervention instead of being silently
+rewritten. Repair revisions record `source: verifier` and the triggering
+finding IDs in `revision_history.json`.
 
 The demonstration workspace is isolated. It does not send email, commit
 calendar invitations, or perform external network writes.
@@ -141,7 +159,13 @@ Local policy retrieval + Qwen3 Agent compiler on Radeon
 Typed constraints + capability policy + Agent Skill Markdown
           |
           v
-Deterministic replay + adversarial tests + hashed receipts
+Harness contract + independent verifier contract
+          |
+          v
+Deterministic replay + adversarial tests + structured feedback
+          |
+          v
+Bounded child repair revision or manual intervention
           |
           v
 Human promotion review + versioned skill memory

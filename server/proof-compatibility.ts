@@ -6,20 +6,29 @@ import type {
   RuntimeInfo,
   VerifyResult
 } from "../shared/types.js";
+import { contractHashes, ensureAgentContracts } from "./agent-contracts.js";
 import { stableHash } from "./hash.js";
 
-export const VERIFIER_VERSION = "rvsf-verifier-0.4.0";
+export const VERIFIER_VERSION = "rvsf-verifier-0.5.0";
 
 export function createProofCompatibilityManifest(
   compilation: CompileResult,
   actions: ActionEvent[],
   runtime: RuntimeInfo = compilation.runtime
 ): ProofCompatibilityManifest {
+  const contracts = ensureAgentContracts({
+    actions,
+    fixtures: compilation.fixtures,
+    harnessContract: compilation.harnessContract,
+    verifierContract: compilation.verifierContract
+  });
+  const hashes = contractHashes(contracts);
   return {
-    schemaVersion: "0.4.0",
+    schemaVersion: "0.5.0",
     verifierVersion: VERIFIER_VERSION,
     runtimeHash: runtimeCompatibilityHash(runtime),
     toolContractHash: toolContractHash(actions),
+    ...hashes,
     policyHash: stableHash(compilation.policyYaml),
     skillHash: stableHash(compilation.skillMarkdown),
     ...(compilation.voiceEvidence
@@ -64,6 +73,18 @@ export function assessProofCompatibility(input: {
       expected.toolContractHash,
       actual.toolContractHash,
       "Tool contract changed."
+    );
+    compare(
+      reasons,
+      expected.harnessContractHash || "",
+      actual.harnessContractHash || "",
+      "Agent harness contract changed."
+    );
+    compare(
+      reasons,
+      expected.verifierContractHash || "",
+      actual.verifierContractHash || "",
+      "Verifier contract changed."
     );
     compare(
       reasons,

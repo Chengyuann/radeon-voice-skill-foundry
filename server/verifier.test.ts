@@ -39,7 +39,13 @@ describe("proof verifier", () => {
     );
     expect(result.proofBundle).toHaveProperty("proofHash");
     expect(result.proofBundle).toMatchObject({
-      schemaVersion: "0.4.0",
+      schemaVersion: "0.5.0",
+      harnessContract: {
+        harnessId: "rvsf-governed-local-agent"
+      },
+      verifierContract: {
+        completionAuthority: "independent-verifier"
+      },
       sandboxReplay: {
         status: "passed",
         summary: {
@@ -68,6 +74,15 @@ describe("proof verifier", () => {
     );
 
     expect(result.status).toBe("quarantined");
+    expect(result.feedback).toMatchObject({
+      autoRepairEligible: true,
+      findings: [
+        expect.objectContaining({
+          category: "permission",
+          repairable: true
+        })
+      ]
+    });
     expect(result.fixtures).toContainEqual(
       expect.objectContaining({
         name: "Automatic send is blocked",

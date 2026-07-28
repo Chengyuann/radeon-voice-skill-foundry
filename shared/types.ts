@@ -108,11 +108,104 @@ export type RevisionTurn = {
   parentRunId?: string;
   createdAt: string;
   instruction: string;
+  source?: "user" | "verifier";
+  findingIds?: string[];
   status: "compiled" | "verified" | "quarantined";
   addedConstraints: string[];
   removedConstraints: string[];
   permissionChanges: RevisionPermissionChange[];
   fixtureCount: number;
+};
+
+export type HarnessToolContract = {
+  actionType: ActionEvent["type"];
+  capability: string;
+  sideEffect: "read" | "local_write" | "external_write";
+  authority: "server";
+};
+
+export type AgentHarnessContract = {
+  schemaVersion: "0.1.0";
+  harnessId: "rvsf-governed-local-agent";
+  components: {
+    systemPolicy: {
+      instructionSource: "spoken-sop-and-server-action-contract";
+      completionRule: "independent-verifier-only";
+      preserveExistingGuardrails: true;
+    };
+    tools: HarnessToolContract[];
+    context: {
+      strategy: "proof-preserving-revision-lineage";
+      maxRevisions: number;
+      preserveParentProofs: true;
+    };
+    memory: {
+      strategy: "versioned-local-skill-registry";
+      promotionRequired: true;
+      exactReuseOnly: true;
+    };
+    skills: {
+      format: "agent-skill-markdown";
+      policyFormat: "yaml";
+    };
+    sandbox: {
+      runtime: "deterministic-review-workspace";
+      externalWritesAllowed: false;
+      actionEvidence: "server-authoritative";
+    };
+    subagents: {
+      enabled: false;
+      roles: [];
+    };
+  };
+  budgets: {
+    maxActions: number;
+    maxConstraints: number;
+    maxFixtures: number;
+    maxAutoRepairAttempts: number;
+  };
+};
+
+export type VerifierCheckContract = {
+  id: string;
+  source: "fixture" | "sandbox" | "integrity";
+  severity: TestFixture["severity"];
+  repairable: boolean;
+  successCriterion: string;
+};
+
+export type AgentVerifierContract = {
+  schemaVersion: "0.1.0";
+  verifierId: "rvsf-proof-verifier";
+  checks: VerifierCheckContract[];
+  completionAuthority: "independent-verifier";
+  requireAllChecks: true;
+  requireZeroExternalSideEffects: true;
+  hiddenChecksSupported: boolean;
+  verifierIsolation: "server-side";
+  repairPolicy: {
+    maxAttempts: number;
+    repairableCategories: Array<"policy" | "permission">;
+    manualCategories: Array<"voice" | "sandbox" | "runtime">;
+  };
+};
+
+export type VerifierFinding = {
+  id: string;
+  category: "policy" | "permission" | "voice" | "sandbox" | "runtime";
+  severity: TestFixture["severity"];
+  repairable: boolean;
+  fixtureName?: string;
+  message: string;
+  repairInstruction?: string;
+};
+
+export type VerifierFeedback = {
+  schemaVersion: "0.1.0";
+  findings: VerifierFinding[];
+  autoRepairEligible: boolean;
+  repairInstruction?: string;
+  generatedAt: string;
 };
 
 export type CompileRequest = {
@@ -202,6 +295,8 @@ export type CompileResult = {
   revision?: number;
   parentRunId?: string;
   revisionHistory?: RevisionTurn[];
+  harnessContract?: AgentHarnessContract;
+  verifierContract?: AgentVerifierContract;
   demonstrationSessionId?: string;
 };
 
@@ -304,15 +399,18 @@ export type VerifyResult = {
   fixtures: TestFixture[];
   receipts: Receipt[];
   metrics: VerificationMetric[];
+  feedback?: VerifierFeedback;
   proofBundle: Record<string, unknown>;
   verificationDurationMs: number;
 };
 
 export type ProofCompatibilityManifest = {
-  schemaVersion: "0.2.0" | "0.3.0" | "0.4.0";
+  schemaVersion: "0.2.0" | "0.3.0" | "0.4.0" | "0.5.0";
   verifierVersion: string;
   runtimeHash: string;
   toolContractHash: string;
+  harnessContractHash?: string;
+  verifierContractHash?: string;
   policyHash: string;
   skillHash: string;
   voiceEvidenceSchemaVersion?: VoiceEvidence["schemaVersion"];
@@ -473,6 +571,27 @@ export type RefineRequest = {
   message: string;
   actions: ActionEvent[];
   useModel?: boolean;
+};
+
+export type VerificationRepairAttempt = {
+  attempt: number;
+  runId: string;
+  revision: number;
+  status: VerifyResult["status"];
+  findings: VerifierFinding[];
+  repairInstruction?: string;
+};
+
+export type VerificationRepairResult = {
+  initialRunId: string;
+  finalCompilation: CompileResult;
+  finalVerification: VerifyResult;
+  attempts: VerificationRepairAttempt[];
+  exhausted: boolean;
+  stoppedReason:
+    | "verified"
+    | "manual_intervention_required"
+    | "repair_budget_exhausted";
 };
 
 export type DemoPreset = {
