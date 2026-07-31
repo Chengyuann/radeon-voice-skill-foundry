@@ -7,26 +7,28 @@ verification artifacts, and documented evidence boundaries.
 
 ## Project Materials
 
-1. Multi-turn interaction: `MULTI_TURN_INTERACTION.md`
-2. Multi-turn Director Cut:
+1. Judge quickstart: `JUDGE_QUICKSTART.md`
+2. Reproducibility: `REPRODUCIBILITY.md`
+3. Multi-turn interaction: `MULTI_TURN_INTERACTION.md`
+4. Multi-turn Director Cut:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4`
-3. Raw multi-turn product capture:
+5. Raw multi-turn product capture:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DEMO.mp4`
-4. Multi-turn supplement screenshot: `MULTI_TURN_INTERACTION_DEMO.png`
-5. Parent-child lineage: `MULTI_TURN_LINEAGE.png`
-6. Agent harness repair evidence: `AGENT_HARNESS_REPAIR_EVIDENCE.json`
-7. Agent harness repair proof: `AGENT_HARNESS_REPAIR_PROOF.zip`
-8. Submission evidence map: `SUBMISSION_EVIDENCE_MAP.md`
-9. Live product: `https://radeon-voice-skill-foundry.pages.dev/`
-10. Product Demo:
+6. Multi-turn supplement screenshot: `MULTI_TURN_INTERACTION_DEMO.png`
+7. Parent-child lineage: `MULTI_TURN_LINEAGE.png`
+8. Agent harness repair evidence: `AGENT_HARNESS_REPAIR_EVIDENCE.json`
+9. Agent harness repair proof: `AGENT_HARNESS_REPAIR_PROOF.zip`
+10. Submission evidence map: `SUBMISSION_EVIDENCE_MAP.md`
+11. Live product: `https://radeon-voice-skill-foundry.pages.dev/`
+12. Product Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
-11. Project Specification: `PROJECT_SPECIFICATION.pdf`
-12. Architecture: `ARCHITECTURE.png`
-13. Poster: `POSTER.pdf`
-14. Multi-turn refinement: `MULTI_TURN_REFINEMENT.png` and
+13. Project Specification: `PROJECT_SPECIFICATION.pdf`
+14. Architecture: `ARCHITECTURE.png`
+15. Poster: `POSTER.pdf`
+16. Multi-turn refinement: `MULTI_TURN_REFINEMENT.png` and
    `MULTI_TURN_REFINEMENT.json`, with
    `MULTI_TURN_REFINEMENT_PROOF.zip`
-15. Radeon evidence: `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json`
+17. Radeon evidence: `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json`
 
 ## System Capability Map
 

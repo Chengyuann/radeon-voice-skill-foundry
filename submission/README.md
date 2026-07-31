@@ -14,39 +14,43 @@ requires explicit human promotion.
 
 ## Project Materials
 
-1. Multi-turn interaction:
+1. Judge quickstart:
+   [`JUDGE_QUICKSTART.md`](JUDGE_QUICKSTART.md)
+2. Reproducibility:
+   [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md)
+3. Multi-turn interaction:
    [`MULTI_TURN_INTERACTION.md`](MULTI_TURN_INTERACTION.md)
-2. Multi-turn Director Cut (35.5 seconds):
+4. Multi-turn Director Cut (35.5 seconds):
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4`
-3. Raw multi-turn product capture (32 seconds):
+5. Raw multi-turn product capture (32 seconds):
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DEMO.mp4`
-4. Multi-turn supplement screenshot:
+6. Multi-turn supplement screenshot:
    [`MULTI_TURN_INTERACTION_DEMO.png`](MULTI_TURN_INTERACTION_DEMO.png)
-5. Parent-child lineage:
+7. Parent-child lineage:
    [`MULTI_TURN_LINEAGE.png`](MULTI_TURN_LINEAGE.png)
-6. Agent harness and bounded repair evidence:
+8. Agent harness and bounded repair evidence:
    [`AGENT_HARNESS_REPAIR_EVIDENCE.json`](AGENT_HARNESS_REPAIR_EVIDENCE.json)
    with [`AGENT_HARNESS_REPAIR_PROOF.zip`](AGENT_HARNESS_REPAIR_PROOF.zip)
-7. Live product:
+9. Live product:
    `https://radeon-voice-skill-foundry.pages.dev/`
-8. Submission evidence map:
+10. Submission evidence map:
    [`SUBMISSION_EVIDENCE_MAP.md`](SUBMISSION_EVIDENCE_MAP.md)
-9. Product Demo:
+11. Product Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
-10. Project Specification: [`PROJECT_SPECIFICATION.pdf`](PROJECT_SPECIFICATION.pdf)
-11. Technical evidence: [`TECHNICAL_EVIDENCE_INDEX.md`](TECHNICAL_EVIDENCE_INDEX.md)
-12. Architecture: [`ARCHITECTURE.png`](ARCHITECTURE.png)
-13. Poster: [`POSTER.pdf`](POSTER.pdf)
-14. Multi-turn evidence:
+12. Project Specification: [`PROJECT_SPECIFICATION.pdf`](PROJECT_SPECIFICATION.pdf)
+13. Technical evidence: [`TECHNICAL_EVIDENCE_INDEX.md`](TECHNICAL_EVIDENCE_INDEX.md)
+14. Architecture: [`ARCHITECTURE.png`](ARCHITECTURE.png)
+15. Poster: [`POSTER.pdf`](POSTER.pdf)
+16. Multi-turn evidence:
    [`MULTI_TURN_REFINEMENT.png`](MULTI_TURN_REFINEMENT.png) and
    [`MULTI_TURN_REFINEMENT.json`](MULTI_TURN_REFINEMENT.json), with
    [`MULTI_TURN_REFINEMENT_PROOF.zip`](MULTI_TURN_REFINEMENT_PROOF.zip)
-15. Performance Demo:
+17. Performance Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_PERFORMANCE_DEMO.mp4`
-16. Continuous Operation Demo:
+18. Continuous Operation Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/CONTINUOUS_OPERATION_DEMO.mp4`
-17. Package integrity: [`SHA256SUMS.txt`](SHA256SUMS.txt)
-18. Source:
+19. Package integrity: [`SHA256SUMS.txt`](SHA256SUMS.txt)
+20. Source:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry`
 
 Demo captions:
@@ -60,6 +64,17 @@ Demo governance ledger:
 
 Official submission:
 `https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07/pull/7`
+
+## One-command Verification
+
+```bash
+npm ci
+npm run verify:submission
+```
+
+This regenerates the agent-harness repair evidence, runs the 66-test suite,
+typechecks, builds the production frontend, verifies `SHA256SUMS.txt`, and
+checks that the Project Specification PDF contains the current P0 proof text.
 
 ## Traceable Multi-Turn Interaction
 

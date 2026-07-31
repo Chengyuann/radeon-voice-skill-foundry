@@ -6,25 +6,34 @@ reproducible evidence.
 ## Start Here
 
 1. [Live product](https://radeon-voice-skill-foundry.pages.dev/)
-2. [Multi-turn Director Cut, 35.5 seconds](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4)
-3. [Raw multi-turn product capture, 32 seconds](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DEMO.mp4)
-4. [Multi-turn supplement screenshot](MULTI_TURN_INTERACTION_DEMO.png)
-5. [Multi-turn interaction brief](MULTI_TURN_INTERACTION.md)
-6. [Parent-child lineage](MULTI_TURN_LINEAGE.png)
-7. [Agent harness repair evidence](AGENT_HARNESS_REPAIR_EVIDENCE.json)
-8. [Agent harness repair proof](AGENT_HARNESS_REPAIR_PROOF.zip)
-9. [Product Demo](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4)
-10. [Project Specification](PROJECT_SPECIFICATION.pdf)
-11. [Technical Evidence Index](TECHNICAL_EVIDENCE_INDEX.md)
-12. [Poster](POSTER.pdf)
-13. [Source repository](https://github.com/Chengyuann/radeon-voice-skill-foundry)
-14. [Continuous integration](https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/workflows/ci.yml)
+2. [Judge quickstart](JUDGE_QUICKSTART.md)
+3. [Reproducibility](REPRODUCIBILITY.md)
+4. [Multi-turn Director Cut, 35.5 seconds](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4)
+5. [Raw multi-turn product capture, 32 seconds](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DEMO.mp4)
+6. [Multi-turn supplement screenshot](MULTI_TURN_INTERACTION_DEMO.png)
+7. [Multi-turn interaction brief](MULTI_TURN_INTERACTION.md)
+8. [Parent-child lineage](MULTI_TURN_LINEAGE.png)
+9. [Agent harness repair evidence](AGENT_HARNESS_REPAIR_EVIDENCE.json)
+10. [Agent harness repair proof](AGENT_HARNESS_REPAIR_PROOF.zip)
+11. [Product Demo](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4)
+12. [Project Specification](PROJECT_SPECIFICATION.pdf)
+13. [Technical Evidence Index](TECHNICAL_EVIDENCE_INDEX.md)
+14. [Poster](POSTER.pdf)
+15. [Source repository](https://github.com/Chengyuann/radeon-voice-skill-foundry)
+16. [Continuous integration](https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/workflows/ci.yml)
 
 Runtime and integrity checks:
 
 - [Radeon health](https://radeon-voice-skill-foundry.pages.dev/api/health)
 - [Governance sample](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/GOVERNANCE_LEDGER.jsonl)
 - [Release checksums](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/SHA256SUMS.txt)
+
+One-command source verification:
+
+```bash
+npm ci
+npm run verify:submission
+```
 
 ## Multi-Turn Interaction Snapshot
 
@@ -88,6 +97,8 @@ Runtime and integrity checks:
 - Multi-turn refinement proof: `MULTI_TURN_REFINEMENT_PROOF.zip`
 - Agent harness repair evidence: `AGENT_HARNESS_REPAIR_EVIDENCE.json`
 - Agent harness repair proof: `AGENT_HARNESS_REPAIR_PROOF.zip`
+- Judge quickstart: `JUDGE_QUICKSTART.md`
+- Reproducibility: `REPRODUCIBILITY.md`
 - Governance sample: `GOVERNANCE_LEDGER.jsonl`
 - Release integrity: `SHA256SUMS.txt`
 

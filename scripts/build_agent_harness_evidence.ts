@@ -5,19 +5,21 @@ import JSZip from "jszip";
 import { reviewFollowupDemo } from "../shared/demo.js";
 
 const root = process.cwd();
-const submission = path.join(root, "submission");
+const outputDir =
+  process.env.RVSF_EVIDENCE_OUTPUT_DIR || path.join(root, "submission");
 const stateDir = path.join(root, "tmp", "agent-harness-evidence-state");
 const evidencePath = path.join(
-  submission,
+  outputDir,
   "AGENT_HARNESS_REPAIR_EVIDENCE.json"
 );
 const proofPath = path.join(
-  submission,
+  outputDir,
   "AGENT_HARNESS_REPAIR_PROOF.zip"
 );
 
 await rm(stateDir, { recursive: true, force: true });
 await mkdir(stateDir, { recursive: true });
+await mkdir(outputDir, { recursive: true });
 process.env.RVSF_DATA_DIR = stateDir;
 
 const [{ compileSop }, { buildSubmissionPackage }, { storeCompileRun }, loop] =

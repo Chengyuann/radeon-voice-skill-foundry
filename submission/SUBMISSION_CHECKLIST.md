@@ -9,6 +9,8 @@
 - [x] License: MIT
 - [x] Public product URL is documented
 - [x] Source repository and official submission URL are documented
+- [x] Judge quickstart gives the shortest scoring path
+- [x] Reproducibility guide lists local verification commands
 - [x] Submission evidence map covers all six Track 2 requirements
 - [x] GitHub Actions runs typecheck, tests, and production build
 
@@ -50,6 +52,7 @@
 ## Quality and Integrity
 
 - [x] Submission regression suite passes 66/66
+- [x] `npm run verify:submission` passes locally
 - [x] Typecheck and production build pass
 - [x] Synthetic SOP audio is disclosed as a reproducible fixture
 - [x] Voice Evidence is described as an internal deterministic gate

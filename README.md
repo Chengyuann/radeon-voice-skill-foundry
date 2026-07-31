@@ -17,6 +17,10 @@ verification again before it can be promoted.
 
 - Live product:
   `https://radeon-voice-skill-foundry.pages.dev/`
+- Judge quickstart:
+  [`submission/JUDGE_QUICKSTART.md`](submission/JUDGE_QUICKSTART.md)
+- Reproducibility:
+  [`submission/REPRODUCIBILITY.md`](submission/REPRODUCIBILITY.md)
 - Multi-turn interaction:
   [`submission/MULTI_TURN_INTERACTION.md`](submission/MULTI_TURN_INTERACTION.md)
 - Multi-turn Director Cut (35.5 seconds):
@@ -208,6 +212,12 @@ npm start
 ```
 
 Open `http://127.0.0.1:8791`.
+
+Verify the finalized submission package:
+
+```bash
+npm run verify:submission
+```
 
 ## Radeon Configuration
 

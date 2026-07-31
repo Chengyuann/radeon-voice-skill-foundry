@@ -13,6 +13,7 @@
     "evidence:agent-harness": "tsx scripts/build_agent_harness_evidence.ts",
     "evidence:multi-turn": "node scripts/capture_multi_turn_evidence.mjs",
     "submission:checksums": "python3 scripts/generate_submission_checksums.py",
+    "verify:submission": "node scripts/verify_submission.mjs",
     "benchmark:optimization": "node scripts/benchmark_optimizations.mjs",
     "deploy:pages": "npm run build && wrangler pages deploy dist --project-name radeon-voice-skill-foundry --branch main"
   },

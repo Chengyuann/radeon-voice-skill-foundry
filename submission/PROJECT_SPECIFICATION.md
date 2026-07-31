@@ -787,6 +787,19 @@ voice-evidence analysis, compile, 7/7 verification, save, reuse, service
 restart recovery, runtime invalidation, one-click revalidation, and proof
 download.
 
+The current submission also includes a reviewer-oriented quickstart and a
+single verification command:
+
+```bash
+npm ci
+npm run verify:submission
+```
+
+This command regenerates the governed agent-harness repair evidence, runs the
+66-test suite, typechecks, builds the production frontend, checks the finalized
+SHA-256 manifest, and verifies that the Project Specification PDF contains the
+current P0 proof text.
+
 The Product Demo preserves the real W7900 model wait and records the
 server-backed teaching and governance workflow. The Performance Demo is the
 optimization-oriented Radeon recording. The Continuous Operation Demo is the
@@ -828,6 +841,8 @@ presentation tools do not provide the product's core Agent or ASR functions.
 
 - Source: `https://github.com/Chengyuann/radeon-voice-skill-foundry`
 - Live product: `https://radeon-voice-skill-foundry.pages.dev/`
+- Judge quickstart: `JUDGE_QUICKSTART.md`
+- Reproducibility guide: `REPRODUCIBILITY.md`
 - Technical evidence index: `TECHNICAL_EVIDENCE_INDEX.md`
 - Agent harness repair evidence: `AGENT_HARNESS_REPAIR_EVIDENCE.json`
 - Agent harness repair proof: `AGENT_HARNESS_REPAIR_PROOF.zip`
