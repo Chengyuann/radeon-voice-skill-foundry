@@ -6,13 +6,23 @@ interval_seconds="${RVSF_HEALTH_INTERVAL_SECONDS:-60}"
 failure_threshold="${RVSF_HEALTH_FAILURE_THRESHOLD:-3}"
 log_file="${RVSF_HEALTH_LOG_FILE:-/workspace/rvsf-public-health.log}"
 restart_command="${RVSF_HEALTH_RESTART_COMMAND:-supervisorctl -c /workspace/rvsf-supervisord.conf restart rvsf-tunnel rvsf-origin-registrar}"
+watchdog_installer="${RVSF_WATCHDOG_INSTALLER:-/workspace/radeon-voice-skill-foundry-current/scripts/install_rvsf_supervisor_watchdog.sh}"
 failures=0
 
 log() {
   printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" | tee -a "$log_file"
 }
 
+ensure_supervisor_watchdog() {
+  if [[ ! -x "$watchdog_installer" ]]; then
+    log "independent Supervisor watchdog installer is unavailable"
+    return 1
+  fi
+  bash "$watchdog_installer" >>"$log_file" 2>&1
+}
+
 while true; do
+  ensure_supervisor_watchdog || true
   payload="$(
     curl --silent --show-error --fail --max-time 15 "$health_url" 2>/dev/null ||
       true

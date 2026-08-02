@@ -166,8 +166,10 @@ bash /workspace/radeon-voice-skill-foundry-current/scripts/install_rvsf_supervis
 The watchdog is intentionally not a Supervisor child. After three consecutive
 control-socket failures it removes stale pid/socket files, starts Supervisord,
 and lets Supervisord restore the model, ASR, API, tunnel, registrar, and public
-monitor. It refuses to start a duplicate Supervisord process when the recorded
-pid is still alive.
+monitor. The Supervisor-managed public monitor runs the idempotent watchdog
+installer once per minute, so the two processes recover each other: the
+watchdog restores Supervisor, and the monitor restores the watchdog. The
+installer validates the recorded process command before trusting its pid file.
 
 Production releases use immutable directories and one stable symlink:
 

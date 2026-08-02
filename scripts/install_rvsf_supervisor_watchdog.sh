@@ -5,6 +5,20 @@ watchdog_script="${RVSF_WATCHDOG_SCRIPT:-/workspace/radeon-voice-skill-foundry-c
 pid_file="${RVSF_WATCHDOG_PID_FILE:-/workspace/rvsf-supervisor-watchdog.pid}"
 log_file="${RVSF_WATCHDOG_LOG_FILE:-/workspace/rvsf-supervisor-watchdog.log}"
 
+is_watchdog_process() {
+  local pid="$1"
+  local command_line=""
+  if [[ -z "$pid" ]] || ! kill -0 "$pid" 2>/dev/null; then
+    return 1
+  fi
+  if [[ -r "/proc/$pid/cmdline" ]]; then
+    command_line="$(tr '\0' ' ' <"/proc/$pid/cmdline")"
+  else
+    command_line="$(ps -p "$pid" -o command= 2>/dev/null || true)"
+  fi
+  [[ "$command_line" == *"rvsf_supervisor_watchdog.sh watch"* ]]
+}
+
 if [[ ! -x "$watchdog_script" ]]; then
   echo "watchdog script is not executable: $watchdog_script" >&2
   exit 1
@@ -12,7 +26,7 @@ fi
 
 if [[ -f "$pid_file" ]]; then
   existing_pid="$(tr -cd '0-9' <"$pid_file")"
-  if [[ -n "$existing_pid" ]] && kill -0 "$existing_pid" 2>/dev/null; then
+  if is_watchdog_process "$existing_pid"; then
     echo "watchdog already running: pid=$existing_pid"
     "$watchdog_script" check
     exit 0
