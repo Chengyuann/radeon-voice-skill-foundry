@@ -72,12 +72,16 @@ npm ci
 npm run verify:submission
 ```
 
-This regenerates the agent-harness repair evidence, runs the 68-test suite,
-typechecks, builds the production frontend, verifies `SHA256SUMS.txt`, and
-checks that the Project Specification PDF contains the current P0 proof text.
+This regenerates the agent-harness repair evidence, runs the 68-test suite and
+the independent Supervisor-watchdog fault simulation, typechecks, builds the
+production frontend, verifies `SHA256SUMS.txt`, and checks that the Project
+Specification PDF contains the current P0 proof text.
 
 Current live Radeon recovery evidence:
 [`LIVE_RADEON_RECOVERY_EVIDENCE.json`](LIVE_RADEON_RECOVERY_EVIDENCE.json).
+The August 2 evidence includes a controlled Supervisord shutdown: a detached
+watchdog restored all six services and stable public Radeon health without
+operator intervention.
 
 ## Traceable Multi-Turn Interaction
 

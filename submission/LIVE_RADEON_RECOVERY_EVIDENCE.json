@@ -1,12 +1,16 @@
 {
   "schemaVersion": "0.1.0",
-  "capturedAt": "2026-08-02T05:13:44.604979+00:00",
-  "sourceCommit": "6760774c2e67b5e58dae5f9e3dfcf66aaf4ea730",
+  "capturedAt": "2026-08-02T07:16:25.520900+00:00",
+  "sourceCommit": "8aa924f1f239b7fd645482eb5f0c952c01a7f98e",
   "instance": {
     "id": "u-8159-8576a2be",
     "gpuCount": 1,
     "creditRate": "1 credit/GPU/hour",
-    "creditsObserved": 5
+    "creditsObserved": 5,
+    "creditsConsumedObserved": 0,
+    "runtimeHoursObserved": 2.06,
+    "runtimeMinutesObserved": 123,
+    "creditObservationAt": "2026-08-02T06:41:31Z"
   },
   "publicHealth": {
     "ok": true,
@@ -40,13 +44,24 @@
     "issues": []
   },
   "services": [
-    "rvsf-api                         RUNNING   pid 3538, uptime 0:06:44",
-    "rvsf-asr                         RUNNING   pid 3698, uptime 0:05:58",
-    "rvsf-model                       RUNNING   pid 2424, uptime 0:12:43",
-    "rvsf-origin-registrar            RUNNING   pid 3613, uptime 0:06:40",
-    "rvsf-public-monitor              RUNNING   pid 3621, uptime 0:06:38",
-    "rvsf-tunnel                      RUNNING   pid 4130, uptime 0:05:03"
+    "rvsf-api                         RUNNING   pid 11640, uptime 0:04:25",
+    "rvsf-asr                         RUNNING   pid 11641, uptime 0:04:25",
+    "rvsf-model                       RUNNING   pid 11642, uptime 0:04:25",
+    "rvsf-origin-registrar            RUNNING   pid 11643, uptime 0:04:25",
+    "rvsf-public-monitor              RUNNING   pid 11644, uptime 0:04:25",
+    "rvsf-tunnel                      RUNNING   pid 11645, uptime 0:04:25"
   ],
+  "independentWatchdog": {
+    "pid": 11568,
+    "command": "bash /workspace/radeon-voice-skill-foundry-current/scripts/rvsf_supervisor_watchdog.sh watch",
+    "intervalSeconds": 30,
+    "failureThreshold": 3,
+    "supervisorFailureObservedAt": "2026-08-02T07:10:59Z",
+    "supervisorRestartStartedAt": "2026-08-02T07:11:59Z",
+    "supervisorControlHealthyAt": "2026-08-02T07:12:14Z",
+    "stablePublicHealthAt": "2026-08-02T07:13:32Z",
+    "postRecoveryConsecutiveHealthyProbes": 5
+  },
   "liveCompile": {
     "runId": "run_a5e5baca660d",
     "constraintCount": 7,
@@ -86,6 +101,8 @@
     "dependencyFailureDetection": "ASR termination produced public HTTP 503 with asr=unavailable",
     "dependencyAutoRestart": "supervisord restored ASR and public HTTP 200 in about 20 seconds",
     "quickTunnelRotation": "new Quick Tunnel registered and stable Pages health recovered in about 25 seconds",
-    "localExternalMonitor": "launchd runs every 300 seconds; last exit code 0"
+    "supervisorMainProcessRecovery": "an independent watchdog detected supervisord shutdown, restarted it after three 30-second failures, restored all six managed services, and reached stable public HTTP 200 in about 161 seconds from shutdown",
+    "localExternalMonitor": "launchd runs every 300 seconds; last exit code 0",
+    "githubExternalMonitor": "GitHub Actions workflow is active with an offset 15-minute schedule and an independently verified manual run"
   }
 }

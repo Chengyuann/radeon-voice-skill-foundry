@@ -829,11 +829,21 @@ A controlled Quick Tunnel rotation restored the stable Pages URL in about
 managed services and live ASR, compile, verify, and proof results are recorded
 in `LIVE_RADEON_RECOVERY_EVIDENCE.json`.
 
-This recovery design handles process and Quick Tunnel failures while the
-Radeon Cloud instance exists. It cannot prevent platform deletion after
-credits are exhausted. The account showed five available credits and a
-one-credit-per-GPU-hour rate during the recovery run, so continued public
-availability through judging requires sufficient organizer-issued credits.
+An independent watchdog runs outside Supervisor and checks its control socket
+every 30 seconds. In a controlled Supervisor shutdown, the watchdog waited for
+three consecutive failures, restarted Supervisor, restored all six managed
+services, and reached stable public HTTP 200 in about 161 seconds without
+operator intervention. The local 5-minute launchd monitor and the active
+GitHub Actions health workflow provide external detection independent of the
+Radeon service process tree.
+
+This recovery design handles child-process, Supervisor-main-process, and Quick
+Tunnel failures while the Radeon Cloud instance exists. It cannot recreate an
+instance deleted by the platform or recover a stopped host. The account still
+showed five available credits and zero consumed credits after more than two
+hours of runtime on August 2, despite the nominal one-credit-per-GPU-hour UI
+text. Continued availability therefore still depends on the organizer keeping
+the instance allocation active through judging.
 
 Source commit `efec128059fea3b68521aa1dd333c71d5ea6a679` was
 clean-cloned on Radeon Cloud.
