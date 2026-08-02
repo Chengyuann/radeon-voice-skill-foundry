@@ -31,7 +31,10 @@ import {
 import { id } from "./hash.js";
 import { buildSubmissionPackage } from "./package.js";
 import { governanceLedgerJsonl } from "./governance-ledger.js";
-import { getRuntimeInfo } from "./runtime.js";
+import {
+  getRuntimeDependencyHealth,
+  getRuntimeInfo
+} from "./runtime.js";
 import {
   resolveCompileRun,
   resolveVerificationRun,
@@ -93,9 +96,16 @@ app.use("/api", (request, response, next) => {
 });
 
 app.get("/api/health", async (_request, response) => {
-  response.json({
-    ok: true,
-    runtime: getRuntimeInfo(),
+  const runtime = getRuntimeInfo();
+  const dependencies = await getRuntimeDependencyHealth();
+  const healthy =
+    runtime.mode !== "radeon" ||
+    (dependencies.model === "healthy" && dependencies.asr === "healthy");
+  response.status(healthy ? 200 : 503).json({
+    ok: healthy,
+    healthy,
+    runtime,
+    dependencies,
     persisted: {
       ...(await runtimeRecordCounts()),
       voiceEvidenceRecords: await voiceEvidenceRecordCount(),

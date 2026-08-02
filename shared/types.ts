@@ -66,6 +66,11 @@ export type RuntimeInfo = {
   };
 };
 
+export type RuntimeDependencyHealth = {
+  model: "healthy" | "unconfigured" | "unavailable";
+  asr: "healthy" | "unconfigured" | "unavailable";
+};
+
 export type ModelMetrics = {
   ttftMs: number;
   generationMs: number;
