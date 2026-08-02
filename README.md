@@ -17,6 +17,13 @@ verification again before it can be promoted.
 
 - Live product:
   `https://radeon-voice-skill-foundry.pages.dev/`
+- Unedited W7900 live evidence (48.96 seconds):
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4`
+- W7900 live evidence summary:
+  [`submission/W7900_LIVE_EVIDENCE_SUMMARY.json`](submission/W7900_LIVE_EVIDENCE_SUMMARY.json)
+- Public stable-URL history:
+  [`submission/PUBLIC_HEALTH_SUMMARY.json`](submission/PUBLIC_HEALTH_SUMMARY.json) and
+  [`submission/PUBLIC_HEALTH_HISTORY.jsonl`](submission/PUBLIC_HEALTH_HISTORY.jsonl)
 - Judge quickstart:
   [`submission/JUDGE_QUICKSTART.md`](submission/JUDGE_QUICKSTART.md)
 - Reproducibility:

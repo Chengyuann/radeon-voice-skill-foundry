@@ -56,10 +56,55 @@ const requiredAssets = [
   "submission/AGENT_HARNESS_REPAIR_PROOF.zip",
   "submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4",
   "submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4",
+  "submission/PUBLIC_HEALTH_HISTORY.jsonl",
+  "submission/PUBLIC_HEALTH_SUMMARY.json",
+  "submission/W7900_LIVE_EVIDENCE_SUMMARY.json",
+  "submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4",
+  "submission/W7900_LIVE_EVIDENCE_UNEDITED.webm",
   "submission/SHA256SUMS.txt"
 ];
 for (const asset of requiredAssets) {
   if (!existsSync(asset)) throw new Error(`Missing submission asset: ${asset}`);
+}
+
+const healthSummary = JSON.parse(
+  readFileSync("submission/PUBLIC_HEALTH_SUMMARY.json", "utf8")
+);
+if (
+  healthSummary.durationMinutes < 180 ||
+  healthSummary.sampleCount < 36 ||
+  healthSummary.healthyCount !== healthSummary.sampleCount ||
+  healthSummary.failureCount !== 0
+) {
+  throw new Error("Public health history does not prove three stable hours");
+}
+
+const liveEvidence = JSON.parse(
+  readFileSync("submission/W7900_LIVE_EVIDENCE_SUMMARY.json", "utf8")
+);
+if (
+  liveEvidence.unedited !== true ||
+  liveEvidence.health?.healthy !== true ||
+  liveEvidence.health?.runtime?.mode !== "radeon" ||
+  liveEvidence.health?.dependencies?.model !== "healthy" ||
+  liveEvidence.health?.dependencies?.asr !== "healthy" ||
+  liveEvidence.verify?.status !== "verified" ||
+  liveEvidence.verify?.passedFixtures !== liveEvidence.verify?.totalFixtures ||
+  !/^[a-f0-9]{64}$/.test(liveEvidence.verify?.proofHash || "")
+) {
+  throw new Error("Unedited W7900 evidence summary failed semantic checks");
+}
+for (const [mediaKey, mediaPath] of [
+  ["rawWebm", "submission/W7900_LIVE_EVIDENCE_UNEDITED.webm"],
+  ["releaseMp4", "submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4"]
+]) {
+  const expected = liveEvidence.media?.[mediaKey]?.sha256;
+  const actual = createHash("sha256")
+    .update(readFileSync(mediaPath))
+    .digest("hex");
+  if (expected !== actual) {
+    throw new Error(`${mediaKey} SHA-256 does not match live evidence summary`);
+  }
 }
 
 const evidencePath = path.join(
@@ -88,6 +133,8 @@ console.log(
         "agent harness repair evidence",
         "68/68 tests",
         "independent supervisor watchdog",
+        "three-hour public health history",
+        "unedited W7900 live evidence",
         "typecheck and production build",
         "submission SHA256SUMS",
         "project specification PDF text",

@@ -4,14 +4,18 @@ This page is the shortest path through Radeon Voice Skill Foundry.
 
 ## 1. Watch These First
 
-1. Product Demo, 4:49:
+1. Unedited live W7900 evidence, 48.96 seconds:
+   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4`
+   Raw browser capture:
+   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.webm`
+2. Product Demo, 4:49:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
-2. Multi-turn Director Cut, 35.5 seconds:
+3. Multi-turn Director Cut, 35.5 seconds:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4`
 
-The Product Demo shows the public Cloudflare product, W7900-backed ASR and
-Agent compile, deterministic replay, promotion review, governance ledger, and
-exact reuse. The Director Cut isolates the multi-turn revision behavior.
+The unedited capture shows one continuous public request sequence:
+`health -> ASR -> compile -> verify -> proof hash`. The Product Demo shows the
+broader workflow, and the Director Cut isolates multi-turn revision behavior.
 
 ## 2. Score Map
 
@@ -25,6 +29,8 @@ exact reuse. The Director Cut isolates the multi-turn revision behavior.
 | Permission and privacy | `mail:send = deny`, redaction, five fail-closed probes |
 | Agent infrastructure | `AGENT_HARNESS_REPAIR_EVIDENCE.json` and `AGENT_HARNESS_REPAIR_PROOF.zip` |
 | Radeon optimization | vLLM concurrency, ASR batching, compact output, Quark rejection study |
+| Live W7900 execution | 48.96-second unedited capture and `W7900_LIVE_EVIDENCE_SUMMARY.json` |
+| Public stability | `PUBLIC_HEALTH_SUMMARY.json` and `PUBLIC_HEALTH_HISTORY.jsonl` |
 
 ## 3. One-command Verification
 
@@ -49,6 +55,10 @@ Specification PDF contains the current P0 evidence.
 - `GOVERNANCE_LEDGER.jsonl`: hash-chained promotion ledger sample.
 - `LIVE_RADEON_RECOVERY_EVIDENCE.json`: current W7900 public-health,
   ASR, compile, verify, dependency restart, and tunnel-rotation evidence.
+- `W7900_LIVE_EVIDENCE_SUMMARY.json`: hashes, runtime, timings, 7/7 result,
+  and proof hash for the 48.96-second unedited live capture.
+- `PUBLIC_HEALTH_SUMMARY.json` and `PUBLIC_HEALTH_HISTORY.jsonl`: more than
+  three hours of external stable-URL health samples.
 - `SHA256SUMS.txt`: SHA-256 digest for every finalized artifact except itself.
 
 ## 5. Boundaries

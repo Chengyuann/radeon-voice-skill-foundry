@@ -6,21 +6,26 @@ reproducible evidence.
 ## Start Here
 
 1. [Live product](https://radeon-voice-skill-foundry.pages.dev/)
-2. [Judge quickstart](JUDGE_QUICKSTART.md)
-3. [Reproducibility](REPRODUCIBILITY.md)
-4. [Multi-turn Director Cut, 35.5 seconds](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4)
-5. [Raw multi-turn product capture, 32 seconds](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DEMO.mp4)
-6. [Multi-turn supplement screenshot](MULTI_TURN_INTERACTION_DEMO.png)
-7. [Multi-turn interaction brief](MULTI_TURN_INTERACTION.md)
-8. [Parent-child lineage](MULTI_TURN_LINEAGE.png)
-9. [Agent harness repair evidence](AGENT_HARNESS_REPAIR_EVIDENCE.json)
-10. [Agent harness repair proof](AGENT_HARNESS_REPAIR_PROOF.zip)
-11. [Product Demo](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4)
-12. [Project Specification](PROJECT_SPECIFICATION.pdf)
-13. [Technical Evidence Index](TECHNICAL_EVIDENCE_INDEX.md)
-14. [Poster](POSTER.pdf)
-15. [Source repository](https://github.com/Chengyuann/radeon-voice-skill-foundry)
-16. [Continuous integration](https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/workflows/ci.yml)
+2. [Unedited W7900 live evidence, 48.96 seconds](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4)
+3. [Raw unedited browser capture](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.webm)
+4. [W7900 live evidence summary](W7900_LIVE_EVIDENCE_SUMMARY.json)
+5. [Public health summary](PUBLIC_HEALTH_SUMMARY.json)
+6. [Public health history](PUBLIC_HEALTH_HISTORY.jsonl)
+7. [Judge quickstart](JUDGE_QUICKSTART.md)
+8. [Reproducibility](REPRODUCIBILITY.md)
+9. [Multi-turn Director Cut, 35.5 seconds](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4)
+10. [Raw multi-turn product capture, 32 seconds](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DEMO.mp4)
+11. [Multi-turn supplement screenshot](MULTI_TURN_INTERACTION_DEMO.png)
+12. [Multi-turn interaction brief](MULTI_TURN_INTERACTION.md)
+13. [Parent-child lineage](MULTI_TURN_LINEAGE.png)
+14. [Agent harness repair evidence](AGENT_HARNESS_REPAIR_EVIDENCE.json)
+15. [Agent harness repair proof](AGENT_HARNESS_REPAIR_PROOF.zip)
+16. [Product Demo](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4)
+17. [Project Specification](PROJECT_SPECIFICATION.pdf)
+18. [Technical Evidence Index](TECHNICAL_EVIDENCE_INDEX.md)
+19. [Poster](POSTER.pdf)
+20. [Source repository](https://github.com/Chengyuann/radeon-voice-skill-foundry)
+21. [Continuous integration](https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/workflows/ci.yml)
 
 Runtime and integrity checks:
 
@@ -86,6 +91,9 @@ npm run verify:submission
 ## Verification Snapshot
 
 - Submission regression suite: `68/68`
+- Unedited W7900 run: `48.96 seconds`, health -> ASR -> compile -> verify ->
+  proof hash `4181034f...f5510`
+- External stable-URL history: `187.6 minutes`, `39/39` healthy, `0` failures
 - Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
 - TypeScript typecheck: passed
 - Production build: passed

@@ -9,27 +9,32 @@ verification artifacts, and documented evidence boundaries.
 
 1. Judge quickstart: `JUDGE_QUICKSTART.md`
 2. Reproducibility: `REPRODUCIBILITY.md`
-3. Multi-turn interaction: `MULTI_TURN_INTERACTION.md`
-4. Multi-turn Director Cut:
+3. Unedited W7900 evidence:
+   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4`
+4. W7900 evidence summary: `W7900_LIVE_EVIDENCE_SUMMARY.json`
+5. Public health summary and history:
+   `PUBLIC_HEALTH_SUMMARY.json`, `PUBLIC_HEALTH_HISTORY.jsonl`
+6. Multi-turn interaction: `MULTI_TURN_INTERACTION.md`
+7. Multi-turn Director Cut:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4`
-5. Raw multi-turn product capture:
+8. Raw multi-turn product capture:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DEMO.mp4`
-6. Multi-turn supplement screenshot: `MULTI_TURN_INTERACTION_DEMO.png`
-7. Parent-child lineage: `MULTI_TURN_LINEAGE.png`
-8. Agent harness repair evidence: `AGENT_HARNESS_REPAIR_EVIDENCE.json`
-9. Agent harness repair proof: `AGENT_HARNESS_REPAIR_PROOF.zip`
-10. Submission evidence map: `SUBMISSION_EVIDENCE_MAP.md`
-11. Live product: `https://radeon-voice-skill-foundry.pages.dev/`
-12. Product Demo:
+9. Multi-turn supplement screenshot: `MULTI_TURN_INTERACTION_DEMO.png`
+10. Parent-child lineage: `MULTI_TURN_LINEAGE.png`
+11. Agent harness repair evidence: `AGENT_HARNESS_REPAIR_EVIDENCE.json`
+12. Agent harness repair proof: `AGENT_HARNESS_REPAIR_PROOF.zip`
+13. Submission evidence map: `SUBMISSION_EVIDENCE_MAP.md`
+14. Live product: `https://radeon-voice-skill-foundry.pages.dev/`
+15. Product Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
-13. Project Specification: `PROJECT_SPECIFICATION.pdf`
-14. Architecture: `ARCHITECTURE.png`
-15. Poster: `POSTER.pdf`
-16. Multi-turn refinement: `MULTI_TURN_REFINEMENT.png` and
+16. Project Specification: `PROJECT_SPECIFICATION.pdf`
+17. Architecture: `ARCHITECTURE.png`
+18. Poster: `POSTER.pdf`
+19. Multi-turn refinement: `MULTI_TURN_REFINEMENT.png` and
    `MULTI_TURN_REFINEMENT.json`, with
    `MULTI_TURN_REFINEMENT_PROOF.zip`
-17. Radeon evidence: `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json`
-18. Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
+20. Radeon evidence: `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json`
+21. Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
 
 ## System Capability Map
 
@@ -41,6 +46,8 @@ verification artifacts, and documented evidence boundaries.
 | Multi-turn refinement | A natural-language correction creates revision 2, binds `parentRunId`, and regenerates constraints and fixtures without overwriting the prior run; another correction creates revision 3 and reopens verification | 35.5-second Director Cut with locally generated VoxCPM2 narration; raw 32-second product capture; screenshot; brief; lineage; JSON; child proof ZIP | Director Cut `00:00-00:35.5` | The Director Cut is independent of the 4:49 Product Demo; the raw capture remains the primary product evidence |
 | Verification and procedural memory | Deterministic replay, five fail-closed probes, typed harness/verifier contracts, bounded verifier repair, versioned memory, promotion, ledger export, and exact reuse | Public Proof and Memory modules; submission `68/68` suite; agent harness repair proof; verified workflow proof and ledger | Product Demo 02:48-04:15; repair evidence JSON | Reuse applies only to an identical promoted skill; non-policy failures remain manual-only |
 | Core inference on Radeon | Qwen3-ASR-0.6B and Qwen3-4B-Instruct-2507 run on W7900-class `gfx1100` with ROCm 7.2.1 | Live `/api/health`; Radeon audio proof; verified workflow proof ZIP | Product Demo 00:29-01:53 | Real model waiting time is preserved |
+| Unedited W7900 execution | One continuous public run shows health, ASR, primary-model compile, 7/7 verification, and the full proof hash | 48.96-second raw WebM/MP4; `W7900_LIVE_EVIDENCE_SUMMARY.json` | Unedited capture 00:00-00:48.96 | MP4 is a full-length codec transcode only |
+| Public stable-URL operation | External launchd monitor validates HTTP 200 and model/ASR dependency health | `PUBLIC_HEALTH_SUMMARY.json`; `PUBLIC_HEALTH_HISTORY.jsonl` | N/A | 187.6-minute captured interval, 39/39 healthy |
 | Targeted inference optimization | Same-hardware vLLM serving A/B, native ASR batching, and compact structured output | Radeon experiment summary; source benchmark JSON in the project repository | Performance Demo 03:38-04:13 | Compact-output A/B uses three runs; vLLM C8 is a concurrent serving result |
 
 ## Track 2 Capability Coverage

@@ -15,4 +15,5 @@ outputs/
 tmp/
 output/playwright/
 submission/*.mp4
+submission/*.webm
 output/imagegen/

@@ -16,9 +16,16 @@ requires explicit human promotion.
 
 1. Judge quickstart:
    [`JUDGE_QUICKSTART.md`](JUDGE_QUICKSTART.md)
-2. Reproducibility:
+2. Unedited W7900 live evidence (48.96 seconds):
+   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4`
+3. W7900 live evidence summary:
+   [`W7900_LIVE_EVIDENCE_SUMMARY.json`](W7900_LIVE_EVIDENCE_SUMMARY.json)
+4. Public health summary and full history:
+   [`PUBLIC_HEALTH_SUMMARY.json`](PUBLIC_HEALTH_SUMMARY.json) and
+   [`PUBLIC_HEALTH_HISTORY.jsonl`](PUBLIC_HEALTH_HISTORY.jsonl)
+5. Reproducibility:
    [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md)
-3. Multi-turn interaction:
+6. Multi-turn interaction:
    [`MULTI_TURN_INTERACTION.md`](MULTI_TURN_INTERACTION.md)
 4. Multi-turn Director Cut (35.5 seconds):
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4`
@@ -82,6 +89,13 @@ Current live Radeon recovery evidence:
 The August 2 evidence includes a controlled Supervisord shutdown: a detached
 watchdog restored all six services and stable public Radeon health without
 operator intervention.
+
+The new unedited live capture runs one continuous public sequence:
+`health -> ASR -> compile -> verify -> proof hash`. It lasts 48.96 seconds,
+passes 7/7 fixtures, and ends at proof hash
+`4181034f7cbc354d78df1ab6e248b720f9818e264b9d9bd1f589c2337b3f5510`.
+The public-health history covers 187.6 minutes with 39/39 healthy samples and
+zero observed failures.
 
 ## Traceable Multi-Turn Interaction
 
