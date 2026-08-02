@@ -1,0 +1,59 @@
+name: Radeon Public Health
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: radeon-public-health
+  cancel-in-progress: true
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Verify live Radeon dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="https://radeon-voice-skill-foundry.pages.dev/api/health"
+          for attempt in 1 2 3; do
+            if curl \
+              --fail \
+              --silent \
+              --show-error \
+              --max-time 20 \
+              "$url" \
+              --output health.json &&
+              node <<'NODE'
+          const fs = require("node:fs");
+          const health = JSON.parse(fs.readFileSync("health.json", "utf8"));
+          const runtime = health.runtime || {};
+          const dependencies = health.dependencies || {};
+          if (
+            health.ok !== true ||
+            health.healthy !== true ||
+            runtime.mode !== "radeon" ||
+            runtime.baseUrlConfigured !== true ||
+            !String(runtime.gpu || "").includes("Radeon") ||
+            !String(runtime.rocm || "").includes("ROCm") ||
+            dependencies.model !== "healthy" ||
+            dependencies.asr !== "healthy"
+          ) {
+            console.error(JSON.stringify(health, null, 2));
+            process.exit(1);
+          }
+          console.log(JSON.stringify(health, null, 2));
+          NODE
+            then
+              exit 0
+            fi
+            echo "Health attempt ${attempt}/3 failed" >&2
+            sleep 10
+          done
+          exit 1
