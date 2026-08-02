@@ -25,12 +25,18 @@ npm run verify:submission
 
 This command performs:
 
-1. `npm run evidence:agent-harness`
-2. `npm test` (68 tests)
-3. `npm run build`
-4. `python3 scripts/generate_submission_checksums.py`
-5. `shasum -a 256 -c submission/SHA256SUMS.txt`
-6. `pdftotext` checks for current P0 proof text in `PROJECT_SPECIFICATION.pdf`
+1. reads the committed `SHA256SUMS.txt`
+2. downloads only missing large media from the fixed `submission` Release
+3. rejects any downloaded asset whose SHA-256 differs from the manifest
+4. runs `npm run evidence:agent-harness`
+5. runs `npm test` (68 tests) and the Supervisor-watchdog fault simulation
+6. runs the typecheck and production build
+7. regenerates and checks `submission/SHA256SUMS.txt`
+8. validates the three-hour public-health evidence and unedited W7900 run
+9. runs `pdftotext` checks for current P0 proof text
+
+This makes the command work from a clean source clone even though large videos
+are distributed as GitHub Release assets instead of Git objects.
 
 ## Evidence Generation
 

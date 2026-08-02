@@ -1,6 +1,7 @@
 import { spawnSync } from "node:child_process";
 import {
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readFileSync,
   rmSync
@@ -13,6 +14,8 @@ const root = process.cwd();
 const evidenceOutputDir = mkdtempSync(
   path.join(tmpdir(), "rvsf-agent-harness-evidence-")
 );
+
+hydrateMissingReleaseAssets();
 
 const steps = [
   [
@@ -133,6 +136,7 @@ console.log(
         "agent harness repair evidence",
         "68/68 tests",
         "independent supervisor watchdog",
+        "clean-clone Release asset hydration",
         "three-hour public health history",
         "unedited W7900 live evidence",
         "typecheck and production build",
@@ -147,6 +151,49 @@ console.log(
   )
 );
 rmSync(evidenceOutputDir, { recursive: true, force: true });
+
+function hydrateMissingReleaseAssets() {
+  const manifestPath = path.join(root, "submission", "SHA256SUMS.txt");
+  const releaseBase =
+    "https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission";
+  const entries = readFileSync(manifestPath, "utf8")
+    .split("\n")
+    .filter(Boolean)
+    .map((line) => {
+      const match = line.match(/^([a-f0-9]{64})  (.+)$/);
+      if (!match) throw new Error(`Invalid checksum manifest line: ${line}`);
+      return { sha256: match[1], relativePath: match[2] };
+    });
+
+  for (const entry of entries) {
+    const destination = path.join(root, "submission", entry.relativePath);
+    if (existsSync(destination)) continue;
+    mkdirSync(path.dirname(destination), { recursive: true });
+    const assetName = path.basename(entry.relativePath);
+    console.log(`\n$ hydrate Release asset ${assetName}`);
+    run(
+      "curl",
+      [
+        "--location",
+        "--fail",
+        "--silent",
+        "--show-error",
+        "--max-time",
+        "300",
+        `${releaseBase}/${encodeURIComponent(assetName)}`,
+        "--output",
+        destination
+      ],
+      {}
+    );
+    const actual = createHash("sha256")
+      .update(readFileSync(destination))
+      .digest("hex");
+    if (actual !== entry.sha256) {
+      throw new Error(`Hydrated asset hash mismatch: ${entry.relativePath}`);
+    }
+  }
+}
 
 function run(command, args, options = {}) {
   console.log(`\n$ ${command} ${args.join(" ")}`);
