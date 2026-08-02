@@ -31,5 +31,8 @@ jobs:
       - name: Run regression suite
         run: npm test
 
+      - name: Test Supervisor watchdog
+        run: npm run test:watchdog
+
       - name: Build production bundle
         run: npm run build

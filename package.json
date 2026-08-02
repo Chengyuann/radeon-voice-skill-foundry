@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:watchdog": "bash scripts/test_rvsf_supervisor_watchdog.sh",
     "evidence:agent-harness": "tsx scripts/build_agent_harness_evidence.ts",
     "evidence:multi-turn": "node scripts/capture_multi_turn_evidence.mjs",
     "submission:checksums": "python3 scripts/generate_submission_checksums.py",

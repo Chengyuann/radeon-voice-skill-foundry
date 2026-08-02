@@ -19,6 +19,8 @@ Last updated: 2026-07-20 (UTC+8)
 - Public product: `https://radeon-voice-skill-foundry.pages.dev/`.
 - Public API port on W7900: `8792`.
 - Public API, Quick Tunnel, and origin registrar: Supervisor managed.
+- Independent supervisor watchdog: detached from Supervisor and checks the
+  Supervisor control socket every 30 seconds.
 - Dynamic origin registry: Cloudflare KV binding `RVSF_ORIGIN_REGISTRY`.
 
 If the browser says `127.0.0.1 refused to connect`, the local Express server is
@@ -152,7 +154,20 @@ Inspect the managed services:
 ```bash
 supervisorctl -c /workspace/rvsf-supervisord.conf status
 bash /workspace/radeon-voice-skill-foundry-live/scripts/radeon_origin_registrar.sh status
+bash /workspace/radeon-voice-skill-foundry-current/scripts/rvsf_supervisor_watchdog.sh check
 ```
+
+Install or verify the independent Supervisor watchdog:
+
+```bash
+bash /workspace/radeon-voice-skill-foundry-current/scripts/install_rvsf_supervisor_watchdog.sh
+```
+
+The watchdog is intentionally not a Supervisor child. After three consecutive
+control-socket failures it removes stale pid/socket files, starts Supervisord,
+and lets Supervisord restore the model, ASR, API, tunnel, registrar, and public
+monitor. It refuses to start a duplicate Supervisord process when the recorded
+pid is still alive.
 
 Production releases use immutable directories and one stable symlink:
 
@@ -173,6 +188,21 @@ watch -n 2 'cat /workspace/rvsf-public-origin.txt; curl -fsS https://radeon-voic
 Success means the tunnel origin changes, the registrar reports the same origin,
 and the stable Pages health endpoint returns the W7900 Radeon runtime without a
 new Pages deployment.
+
+Controlled Supervisor recovery test:
+
+```bash
+supervisorctl -c /workspace/rvsf-supervisord.conf shutdown
+watch -n 5 'bash /workspace/radeon-voice-skill-foundry-current/scripts/rvsf_supervisor_watchdog.sh check || true'
+```
+
+Success means the independent watchdog restarts Supervisord, all six managed
+services return to `RUNNING`, and the stable public health endpoint returns
+HTTP 200 with both model dependencies healthy.
+
+This recovery protects service processes while the Radeon Cloud instance still
+exists. It cannot recreate an instance deleted by the platform, recover a
+stopped host, or guarantee availability if organizer-issued credits expire.
 
 Verified on 2026-07-20:
 

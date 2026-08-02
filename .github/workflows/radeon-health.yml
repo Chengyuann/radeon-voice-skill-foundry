@@ -2,7 +2,9 @@ name: Radeon Public Health
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    # Offset from the top of the hour, when GitHub scheduled jobs are most
+    # likely to be delayed or dropped under load.
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
 
 permissions:

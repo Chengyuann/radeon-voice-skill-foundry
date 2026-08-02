@@ -25,6 +25,7 @@ const steps = [
     }
   ],
   ["npm", ["test"]],
+  ["npm", ["run", "test:watchdog"]],
   ["npm", ["run", "build"]],
   ["python3", ["scripts/generate_submission_checksums.py"]],
   ["shasum", ["-a", "256", "-c", "SHA256SUMS.txt"], { cwd: "submission" }],
@@ -86,6 +87,7 @@ console.log(
       verified: [
         "agent harness repair evidence",
         "68/68 tests",
+        "independent supervisor watchdog",
         "typecheck and production build",
         "submission SHA256SUMS",
         "project specification PDF text",
