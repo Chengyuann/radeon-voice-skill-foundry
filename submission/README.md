@@ -72,9 +72,12 @@ npm ci
 npm run verify:submission
 ```
 
-This regenerates the agent-harness repair evidence, runs the 66-test suite,
+This regenerates the agent-harness repair evidence, runs the 68-test suite,
 typechecks, builds the production frontend, verifies `SHA256SUMS.txt`, and
 checks that the Project Specification PDF contains the current P0 proof text.
+
+Current live Radeon recovery evidence:
+[`LIVE_RADEON_RECOVERY_EVIDENCE.json`](LIVE_RADEON_RECOVERY_EVIDENCE.json).
 
 ## Traceable Multi-Turn Interaction
 
@@ -174,7 +177,7 @@ run on a private network without the public gateway.
 - The Product Demo ends with a terminology card clarifying the exact Agent Skill
   Markdown, proof-hash, and ledger integrity boundaries.
 - The Performance Demo's spoken `35/35` count belongs to its pinned recording
-  revision; the submission regression suite is `66/66`.
+  revision; the submission regression suite is `68/68`.
 - Proof ZIPs preserve immutable internal run and policy identifiers required
   for artifact verification; the submission exposes one canonical filename
   for each proof role.
@@ -192,6 +195,6 @@ run on a private network without the public gateway.
   Agent Skill Markdown. No external GAIA conformance or certification is
   claimed.
 - Test counts belong to pinned revisions. The current submission regression
-  suite passes 66/66; Radeon benchmark snapshots retain their recorded counts.
+  suite passes 68/68; Radeon benchmark snapshots retain their recorded counts.
 - The synthetic Chinese SOP WAV is a reproducible fixture, not a claimed human
   recording.

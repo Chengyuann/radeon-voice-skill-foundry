@@ -26,7 +26,7 @@ npm run verify:submission
 This command performs:
 
 1. `npm run evidence:agent-harness`
-2. `npm test`
+2. `npm test` (68 tests)
 3. `npm run build`
 4. `python3 scripts/generate_submission_checksums.py`
 5. `shasum -a 256 -c submission/SHA256SUMS.txt`
@@ -86,6 +86,7 @@ The Radeon measurements are already included as frozen evidence in:
 - `submission/evidence/QUARK_QUANTIZATION_SUMMARY.json`
 - `submission/evidence/ADAPTIVE_PRECISION_SUMMARY.json`
 - `submission/evidence/ADAPTIVE_PRECISION_E2E.json`
+- `submission/LIVE_RADEON_RECOVERY_EVIDENCE.json`
 
 The main reported values are:
 

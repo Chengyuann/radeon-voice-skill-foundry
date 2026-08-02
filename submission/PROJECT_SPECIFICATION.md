@@ -458,7 +458,7 @@ The client verification payload was deliberately modified to claim
 returned `mail.send = deny`, demonstrating that browser-supplied proof fields
 are not trusted.
 
-The submission regression suite passes 66/66 locally, together with typecheck
+The submission regression suite passes 68/68 locally, together with typecheck
 and the production build. The Radeon experiment source commit was clean-cloned
 on Radeon and passed 33/33 plus the production build.
 
@@ -781,7 +781,7 @@ measured Radeon claims:
    burst-loss case is quarantined at 65/100. These remain deterministic
    measurements and do not claim learned acoustic diagnosis.
 
-The submission regression suite passes 66/66 tests locally, with typecheck and
+The submission regression suite passes 68/68 tests locally, with typecheck and
 production build. A single-take browser demo shows upload,
 voice-evidence analysis, compile, 7/7 verification, save, reuse, service
 restart recovery, runtime invalidation, one-click revalidation, and proof
@@ -796,7 +796,7 @@ npm run verify:submission
 ```
 
 This command regenerates the governed agent-harness repair evidence, runs the
-66-test suite, typechecks, builds the production frontend, checks the finalized
+68-test suite, typechecks, builds the production frontend, checks the finalized
 SHA-256 manifest, and verifies that the Project Specification PDF contains the
 current P0 proof text.
 
@@ -818,6 +818,22 @@ performance claim. It does not change the pinned Radeon measurements.
 
 The Governance Audit Ledger is local operational-integrity evidence and does
 not change the pinned Radeon measurements.
+
+The public Radeon service was rebuilt and recovery-tested on August 2, 2026.
+The stable Pages health endpoint now probes the Qwen3-4B and Qwen3-ASR
+dependencies instead of inferring health only from environment variables.
+Stopping the ASR process produced HTTP 503 with `asr = unavailable`;
+supervisord restarted the model and restored HTTP 200 in about 20 seconds.
+A controlled Quick Tunnel rotation restored the stable Pages URL in about
+25 seconds through signed origin registration and Cloudflare KV. The six
+managed services and live ASR, compile, verify, and proof results are recorded
+in `LIVE_RADEON_RECOVERY_EVIDENCE.json`.
+
+This recovery design handles process and Quick Tunnel failures while the
+Radeon Cloud instance exists. It cannot prevent platform deletion after
+credits are exhausted. The account showed five available credits and a
+one-credit-per-GPU-hour rate during the recovery run, so continued public
+availability through judging requires sufficient organizer-issued credits.
 
 Source commit `efec128059fea3b68521aa1dd333c71d5ea6a679` was
 clean-cloned on Radeon Cloud.
@@ -846,6 +862,7 @@ presentation tools do not provide the product's core Agent or ASR functions.
 - Technical evidence index: `TECHNICAL_EVIDENCE_INDEX.md`
 - Agent harness repair evidence: `AGENT_HARNESS_REPAIR_EVIDENCE.json`
 - Agent harness repair proof: `AGENT_HARNESS_REPAIR_PROOF.zip`
+- Live Radeon recovery evidence: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
 - Multi-turn interaction brief: `MULTI_TURN_INTERACTION.md`
 - Parent-child lineage: `MULTI_TURN_LINEAGE.png`
 - Product Demo: `RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`

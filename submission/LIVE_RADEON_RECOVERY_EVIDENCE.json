@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "0.1.0",
+  "capturedAt": "2026-08-02T05:13:44.604979+00:00",
+  "sourceCommit": "6760774c2e67b5e58dae5f9e3dfcf66aaf4ea730",
+  "instance": {
+    "id": "u-8159-8576a2be",
+    "gpuCount": 1,
+    "creditRate": "1 credit/GPU/hour",
+    "creditsObserved": 5
+  },
+  "publicHealth": {
+    "ok": true,
+    "healthy": true,
+    "runtime": {
+      "mode": "radeon",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "baseUrlConfigured": true,
+      "asrModel": "Qwen/Qwen3-ASR-0.6B",
+      "gpu": "AMD Radeon Pro W7900-class gfx1100 48GB",
+      "rocm": "ROCm 7.2.1",
+      "asrRtf": 0.0556,
+      "asrXRealtime": 17.98,
+      "asrPeakVramGiB": 1.752
+    },
+    "dependencies": {
+      "model": "healthy",
+      "asr": "healthy"
+    },
+    "persisted": {
+      "compileRuns": 1,
+      "verificationRuns": 1,
+      "voiceEvidenceRecords": 1,
+      "demonstrationSessions": 1
+    }
+  },
+  "governance": {
+    "status": "valid",
+    "entryCount": 0,
+    "headHash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "issues": []
+  },
+  "services": [
+    "rvsf-api                         RUNNING   pid 3538, uptime 0:06:44",
+    "rvsf-asr                         RUNNING   pid 3698, uptime 0:05:58",
+    "rvsf-model                       RUNNING   pid 2424, uptime 0:12:43",
+    "rvsf-origin-registrar            RUNNING   pid 3613, uptime 0:06:40",
+    "rvsf-public-monitor              RUNNING   pid 3621, uptime 0:06:38",
+    "rvsf-tunnel                      RUNNING   pid 4130, uptime 0:05:03"
+  ],
+  "liveCompile": {
+    "runId": "run_a5e5baca660d",
+    "constraintCount": 7,
+    "fixtureCount": 6,
+    "modelMetrics": {
+      "ttftMs": 1790.15,
+      "generationMs": 17531.04,
+      "tokensPerSecond": 20.36,
+      "inputTokens": 1187,
+      "outputTokens": 357,
+      "peakVramGiB": 7.825
+    },
+    "modelRoute": {
+      "selected": "primary",
+      "primaryAccepted": true,
+      "primaryReasons": []
+    }
+  },
+  "liveVerification": {
+    "status": "verified",
+    "passedFixtures": 6,
+    "proofHash": "3fb2d1c15a8fb014cf13843b916379766bfc37937979c9ba99e05e4da20c779c",
+    "harnessContractHash": "ae2dceaa4cc3f4be2ea895aebb0e04a9c0729742aba5e560d0f824c589c18523",
+    "verifierContractHash": "b39e7824235c53b91eeb39f5f81ff9b4f8656ceb6c980eee9c88dc906633676a"
+  },
+  "liveAsr": {
+    "transcript": "项目评审之后，之处理P零和P一问题。外部报告里不能包含薪资数据。邮件只能生成草稿，不要自动发送。如果负责人缺失，必须标记为需要确认。只有存在截止日期时，才创建日历站位。",
+    "language": "Chinese",
+    "audioSeconds": 20.39,
+    "inferenceMs": 13612.16,
+    "rtf": 0.6676,
+    "xRealtime": 1.5,
+    "peakVramGiB": 1.652,
+    "qualityScore": 100
+  },
+  "recoveryTests": {
+    "dependencyFailureDetection": "ASR termination produced public HTTP 503 with asr=unavailable",
+    "dependencyAutoRestart": "supervisord restored ASR and public HTTP 200 in about 20 seconds",
+    "quickTunnelRotation": "new Quick Tunnel registered and stable Pages health recovered in about 25 seconds",
+    "localExternalMonitor": "launchd runs every 300 seconds; last exit code 0"
+  }
+}

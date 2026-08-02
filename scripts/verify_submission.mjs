@@ -41,7 +41,7 @@ for (const needle of [
   "Bounded Verify-Refine-Reverify",
   "AGENT_HARNESS_REPAIR_EVIDENCE.json",
   "npm run verify:submission",
-  "66/66"
+  "68/68"
 ]) {
   if (!pdfText.includes(needle)) {
     throw new Error(`PROJECT_SPECIFICATION.pdf is missing: ${needle}`);
@@ -85,7 +85,7 @@ console.log(
       status: "ok",
       verified: [
         "agent harness repair evidence",
-        "66/66 tests",
+        "68/68 tests",
         "typecheck and production build",
         "submission SHA256SUMS",
         "project specification PDF text",

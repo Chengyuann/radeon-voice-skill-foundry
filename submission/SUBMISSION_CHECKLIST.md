@@ -51,8 +51,9 @@
 
 ## Quality and Integrity
 
-- [x] Submission regression suite passes 66/66
+- [x] Submission regression suite passes 68/68
 - [x] `npm run verify:submission` passes locally
+- [x] Live W7900 dependency and Quick Tunnel recovery evidence is included
 - [x] Typecheck and production build pass
 - [x] Synthetic SOP audio is disclosed as a reproducible fixture
 - [x] Voice Evidence is described as an internal deterministic gate

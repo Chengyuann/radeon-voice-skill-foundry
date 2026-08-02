@@ -85,7 +85,8 @@ npm run verify:submission
 
 ## Verification Snapshot
 
-- Submission regression suite: `66/66`
+- Submission regression suite: `68/68`
+- Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
 - TypeScript typecheck: passed
 - Production build: passed
 - Audio-backed workflow: `7/7`

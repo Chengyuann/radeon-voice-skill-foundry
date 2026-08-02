@@ -36,7 +36,7 @@ npm run verify:submission
 ```
 
 The verification command regenerates the agent-harness repair evidence, runs
-the 66-test suite, typechecks, builds the production frontend, checks every
+the 68-test suite, typechecks, builds the production frontend, checks every
 submission artifact in `SHA256SUMS.txt`, and verifies that the Project
 Specification PDF contains the current P0 evidence.
 
@@ -47,6 +47,8 @@ Specification PDF contains the current P0 evidence.
 - `AGENT_HARNESS_REPAIR_PROOF.zip`: harness, verifier, structured feedback,
   repair cycle, and final child proof.
 - `GOVERNANCE_LEDGER.jsonl`: hash-chained promotion ledger sample.
+- `LIVE_RADEON_RECOVERY_EVIDENCE.json`: current W7900 public-health,
+  ASR, compile, verify, dependency restart, and tunnel-rotation evidence.
 - `SHA256SUMS.txt`: SHA-256 digest for every finalized artifact except itself.
 
 ## 5. Boundaries

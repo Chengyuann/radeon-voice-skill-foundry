@@ -29,6 +29,7 @@ verification artifacts, and documented evidence boundaries.
    `MULTI_TURN_REFINEMENT.json`, with
    `MULTI_TURN_REFINEMENT_PROOF.zip`
 17. Radeon evidence: `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json`
+18. Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
 
 ## System Capability Map
 
@@ -38,7 +39,7 @@ verification artifacts, and documented evidence boundaries.
 | Local knowledge retrieval | Deterministic token-overlap retrieval over local policy and SOP documents | Project Specification sections 4-5; public Memory module; proof ZIP | Product Demo 00:29-04:15 | Retrieval is token-overlap search, not embedding or vector search |
 | Tool invocation and planning | Typed tools and six server-accepted actions compile into a multi-step procedure, constraints, permissions, and fixtures | Public Voice and Proof modules; generated policy; proof ZIP | Product Demo 00:29-02:48 | The workspace isolates external side effects |
 | Multi-turn refinement | A natural-language correction creates revision 2, binds `parentRunId`, and regenerates constraints and fixtures without overwriting the prior run; another correction creates revision 3 and reopens verification | 35.5-second Director Cut with locally generated VoxCPM2 narration; raw 32-second product capture; screenshot; brief; lineage; JSON; child proof ZIP | Director Cut `00:00-00:35.5` | The Director Cut is independent of the 4:49 Product Demo; the raw capture remains the primary product evidence |
-| Verification and procedural memory | Deterministic replay, five fail-closed probes, typed harness/verifier contracts, bounded verifier repair, versioned memory, promotion, ledger export, and exact reuse | Public Proof and Memory modules; submission `66/66` suite; agent harness repair proof; verified workflow proof and ledger | Product Demo 02:48-04:15; repair evidence JSON | Reuse applies only to an identical promoted skill; non-policy failures remain manual-only |
+| Verification and procedural memory | Deterministic replay, five fail-closed probes, typed harness/verifier contracts, bounded verifier repair, versioned memory, promotion, ledger export, and exact reuse | Public Proof and Memory modules; submission `68/68` suite; agent harness repair proof; verified workflow proof and ledger | Product Demo 02:48-04:15; repair evidence JSON | Reuse applies only to an identical promoted skill; non-policy failures remain manual-only |
 | Core inference on Radeon | Qwen3-ASR-0.6B and Qwen3-4B-Instruct-2507 run on W7900-class `gfx1100` with ROCm 7.2.1 | Live `/api/health`; Radeon audio proof; verified workflow proof ZIP | Product Demo 00:29-01:53 | Real model waiting time is preserved |
 | Targeted inference optimization | Same-hardware vLLM serving A/B, native ASR batching, and compact structured output | Radeon experiment summary; source benchmark JSON in the project repository | Performance Demo 03:38-04:13 | Compact-output A/B uses three runs; vLLM C8 is a concurrent serving result |
 
@@ -89,6 +90,7 @@ verification artifacts, and documented evidence boundaries.
 | Agent harness contract | Server-authoritative tool, context, memory, skill, sandbox, subagent, and budget declarations; harness hash bound into proof compatibility | `AGENT_HARNESS_REPAIR_PROOF.zip/harness.json`; proof bundle |
 | Independent verifier contract | Completion criteria, repairability, manual-only categories, server-side isolation, and verifier hash | `AGENT_HARNESS_REPAIR_PROOF.zip/verifier.json`; proof bundle |
 | Bounded verifier repair | Injected `mail:send = allow` is quarantined; verifier feedback creates revision 2; parent guardrails remain; child verifies with deny restored | `AGENT_HARNESS_REPAIR_EVIDENCE.json`; `repair_cycle.json` in proof ZIP |
+| Live service recovery | Dependency-aware health returns 503 during ASR failure, supervisor restarts the model, Quick Tunnel rotates through signed KV registration, and stable Pages health recovers | `LIVE_RADEON_RECOVERY_EVIDENCE.json`; public `/api/health` |
 
 The bundled `GOVERNANCE_LEDGER.jsonl` is a verified workflow sample with one
 `PROMOTE` entry. The regression suite covers the implemented supersede, revoke,
