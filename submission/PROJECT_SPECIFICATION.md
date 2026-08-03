@@ -838,7 +838,11 @@ the stable Pages health endpoint remained HTTP 200 through `rc-tunnel`. After
 the official `rc-tunnel stop` command terminated the native FRP connection,
 Pages remained HTTP 200 through Quick Tunnel. Supervisor then exposed a new
 `rc-*.radeon.firstdg.ai` domain and the primary registrar updated Cloudflare KV
-without a Pages redeploy.
+without a Pages redeploy. The Pages proxy publishes
+`x-rvsf-origin-kind: rc-tunnel|quick-tunnel` for operational verification.
+During the strict failover test, three consecutive responses were HTTP 200 and
+marked `quick-tunnel`; five seconds later the recovered response was HTTP 200
+and marked `rc-tunnel`.
 
 An independent watchdog runs outside Supervisor and checks its control socket
 every 30 seconds. In a controlled Supervisor shutdown, the watchdog waited for
