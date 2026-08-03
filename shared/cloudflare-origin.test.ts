@@ -3,6 +3,8 @@ import {
   handleOriginRecovery,
   normalizeRadeonOrigin,
   parseOriginRegistry,
+  RADEON_ORIGIN_FALLBACK_KEY,
+  RADEON_ORIGIN_PRIMARY_KEY,
   RADEON_ORIGIN_REGISTRY_KEY,
   resolveRadeonOrigin,
   resolveRadeonOrigins,
@@ -31,10 +33,13 @@ describe("Cloudflare Radeon origin recovery", () => {
     ).resolves.toBe("https://fallback-tunnel.trycloudflare.com");
 
     const dualRegistry = memoryRegistry(
-      JSON.stringify({
-        primary: "https://rc-0123456789abcdef.radeon.firstdg.ai",
-        fallback: "https://fallback-tunnel.trycloudflare.com"
-      })
+      undefined,
+      {
+        [RADEON_ORIGIN_PRIMARY_KEY]:
+          "https://rc-0123456789abcdef.radeon.firstdg.ai",
+        [RADEON_ORIGIN_FALLBACK_KEY]:
+          "https://fallback-tunnel.trycloudflare.com"
+      }
     );
     await expect(
       resolveRadeonOrigins({
@@ -142,13 +147,18 @@ describe("Cloudflare Radeon origin recovery", () => {
 
     expect(response.status).toBe(200);
     expect(await registry.get(RADEON_ORIGIN_REGISTRY_KEY)).toBe(
-      JSON.stringify({ primary: "https://new-tunnel.trycloudflare.com" })
+      null
+    );
+    expect(await registry.get(RADEON_ORIGIN_PRIMARY_KEY)).toBe(
+      "https://new-tunnel.trycloudflare.com"
     );
 
     const dualRegistry = memoryRegistry(
-      JSON.stringify({
-        primary: "https://rc-0123456789abcdef.radeon.firstdg.ai"
-      })
+      undefined,
+      {
+        [RADEON_ORIGIN_PRIMARY_KEY]:
+          "https://rc-0123456789abcdef.radeon.firstdg.ai"
+      }
     );
     const fallbackResponse = await handleOriginRecovery(
       await recoveryRequest("recovery-token", validRuntime(), undefined, {
@@ -160,11 +170,11 @@ describe("Cloudflare Radeon origin recovery", () => {
 
     expect(fallbackResponse.status).toBe(200);
     expect(
-      JSON.parse((await dualRegistry.get(RADEON_ORIGIN_REGISTRY_KEY))!)
-    ).toEqual({
-      primary: "https://rc-0123456789abcdef.radeon.firstdg.ai",
-      fallback: "https://fallback-tunnel.trycloudflare.com"
-    });
+      await dualRegistry.get(RADEON_ORIGIN_PRIMARY_KEY)
+    ).toBe("https://rc-0123456789abcdef.radeon.firstdg.ai");
+    expect(await dualRegistry.get(RADEON_ORIGIN_FALLBACK_KEY)).toBe(
+      "https://fallback-tunnel.trycloudflare.com"
+    );
 
     const verifyFetch = vi
       .fn<typeof fetch>()
@@ -314,9 +324,15 @@ function recoveryEnv(registry: KeyValueStore) {
   };
 }
 
-function memoryRegistry(initial?: string): KeyValueStore {
+function memoryRegistry(
+  initial?: string,
+  entries: Record<string, string> = {}
+): KeyValueStore {
   const values = new Map<string, string>();
   if (initial) values.set(RADEON_ORIGIN_REGISTRY_KEY, initial);
+  for (const [key, value] of Object.entries(entries)) {
+    values.set(key, value);
+  }
   return {
     async get(key) {
       return values.get(key) ?? null;

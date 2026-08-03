@@ -1,4 +1,6 @@
 export const RADEON_ORIGIN_REGISTRY_KEY = "radeon-api-origin";
+export const RADEON_ORIGIN_PRIMARY_KEY = "radeon-api-origin-primary";
+export const RADEON_ORIGIN_FALLBACK_KEY = "radeon-api-origin-fallback";
 export type RadeonOriginRole = "primary" | "fallback";
 
 export type KeyValueStore = {
@@ -30,16 +32,15 @@ export async function resolveRadeonOrigin(
 export async function resolveRadeonOrigins(
   env: RadeonOriginEnv
 ): Promise<string[]> {
-  let registered: string | null | undefined;
-  try {
-    registered = await env.RVSF_ORIGIN_REGISTRY?.get(
-      RADEON_ORIGIN_REGISTRY_KEY
-    );
-  } catch {
-    registered = undefined;
-  }
-  const parsed = parseOriginRegistry(registered);
+  const [primary, fallback, legacy] = await Promise.all([
+    readRegistryValue(env, RADEON_ORIGIN_PRIMARY_KEY),
+    readRegistryValue(env, RADEON_ORIGIN_FALLBACK_KEY),
+    readRegistryValue(env, RADEON_ORIGIN_REGISTRY_KEY)
+  ]);
+  const parsed = parseOriginRegistry(legacy);
   return uniqueOrigins([
+    normalizeRadeonOrigin(primary),
+    normalizeRadeonOrigin(fallback),
     parsed.primary,
     parsed.fallback,
     normalizeRadeonOrigin(env.RADEON_API_ORIGIN)
@@ -188,20 +189,19 @@ export async function handleOriginRecovery(
     );
   }
 
-  let existing: string | null = null;
-  try {
-    existing = await env.RVSF_ORIGIN_REGISTRY.get(
-      RADEON_ORIGIN_REGISTRY_KEY
-    );
-  } catch {
-    existing = null;
-  }
-  const registry = parseOriginRegistry(existing);
-  registry[role] = origin;
-  await env.RVSF_ORIGIN_REGISTRY.put(
-    RADEON_ORIGIN_REGISTRY_KEY,
-    JSON.stringify(registry)
-  );
+  const key =
+    role === "primary"
+      ? RADEON_ORIGIN_PRIMARY_KEY
+      : RADEON_ORIGIN_FALLBACK_KEY;
+  await env.RVSF_ORIGIN_REGISTRY.put(key, origin);
+  const [primary, fallback] = await Promise.all([
+    readRegistryValue(env, RADEON_ORIGIN_PRIMARY_KEY),
+    readRegistryValue(env, RADEON_ORIGIN_FALLBACK_KEY)
+  ]);
+  const registry = {
+    primary: normalizeRadeonOrigin(primary),
+    fallback: normalizeRadeonOrigin(fallback)
+  };
   return Response.json({
     ok: true,
     origin,
@@ -237,6 +237,17 @@ function uniqueOrigins(values: Array<string | undefined>): string[] {
   return Array.from(
     new Set(values.filter((value): value is string => Boolean(value)))
   );
+}
+
+async function readRegistryValue(
+  env: RadeonOriginEnv,
+  key: string
+): Promise<string | null> {
+  try {
+    return (await env.RVSF_ORIGIN_REGISTRY?.get(key)) ?? null;
+  } catch {
+    return null;
+  }
 }
 
 function parseRuntimeProof(body: unknown): RecoveryRuntimeProof | undefined {
