@@ -833,6 +833,13 @@ keeps Quick Tunnel as fallback. The current eight managed services and live
 ASR, compile, verify, and proof results are recorded in
 `LIVE_RADEON_RECOVERY_EVIDENCE.json`.
 
+The dual-tunnel path was tested in both directions. With Quick Tunnel stopped,
+the stable Pages health endpoint remained HTTP 200 through `rc-tunnel`. After
+the official `rc-tunnel stop` command terminated the native FRP connection,
+Pages remained HTTP 200 through Quick Tunnel. Supervisor then exposed a new
+`rc-*.radeon.firstdg.ai` domain and the primary registrar updated Cloudflare KV
+without a Pages redeploy.
+
 An independent watchdog runs outside Supervisor and checks its control socket
 every 30 seconds. In a controlled Supervisor shutdown, the watchdog waited for
 three consecutive failures, restarted Supervisor, restored all six managed

@@ -98,7 +98,10 @@
     "qualityScore": 100
   },
   "recoveryTests": {
-    "dualTunnelGateway": "Radeon Cloud rc-tunnel is supported as the primary origin and Cloudflare Quick Tunnel remains the fallback origin; Pages failover preserves safe retryable requests.",
+    "dualTunnelGateway": "Radeon Cloud rc-tunnel is the primary origin and Cloudflare Quick Tunnel is the fallback origin. Stopping Quick Tunnel left stable Pages health at HTTP 200 through rc-tunnel. Stopping rc-tunnel with the official command left stable Pages health at HTTP 200 through Quick Tunnel; Supervisor then exposed a new rc domain and the primary registrar updated KV automatically.",
+    "dualTunnelActivePrimary": "https://rc-42fa244acdd0fb96.radeon.firstdg.ai",
+    "dualTunnelActiveFallback": "https://turbo-sagem-sheer-gaps.trycloudflare.com",
+    "dualTunnelManagedServices": 8,
     "dependencyFailureDetection": "ASR termination produced public HTTP 503 with asr=unavailable",
     "dependencyAutoRestart": "supervisord restored ASR and public HTTP 200 in about 20 seconds",
     "quickTunnelRotation": "new Quick Tunnel registered and stable Pages health recovered in about 25 seconds",

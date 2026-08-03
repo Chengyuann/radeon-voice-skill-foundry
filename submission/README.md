@@ -90,6 +90,11 @@ The August 2 evidence includes a controlled Supervisord shutdown: a detached
 watchdog restored all six services and stable public Radeon health without
 operator intervention.
 
+The August 3 gateway upgrade adds Radeon Cloud `rc-tunnel` as primary and keeps
+Cloudflare Quick Tunnel as fallback. Both one-tunnel-down cases were tested;
+the stable Pages health URL stayed HTTP 200, and a stopped rc-tunnel was
+re-exposed under a new domain and re-registered automatically.
+
 The new unedited live capture runs one continuous public sequence:
 `health -> ASR -> compile -> verify -> proof hash`. It lasts 48.96 seconds,
 passes 7/7 fixtures, and ends at proof hash

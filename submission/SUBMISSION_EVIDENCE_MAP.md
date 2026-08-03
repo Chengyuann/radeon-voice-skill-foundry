@@ -99,6 +99,9 @@ npm run verify:submission
   observed runs are reported without claiming exact 15-minute execution.
 - Radeon Cloud allocation: `23.69 hours`, `5` credits available, `0` consumed
   at the August 3 profile check.
+- Dual public origins: Radeon Cloud `rc-tunnel` primary plus Cloudflare Quick
+  Tunnel fallback; each tunnel was stopped independently while Pages health
+  remained HTTP 200.
 - Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
 - TypeScript typecheck: passed
 - Production build: passed

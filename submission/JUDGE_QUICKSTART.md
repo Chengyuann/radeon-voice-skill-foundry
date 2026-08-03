@@ -54,7 +54,8 @@ Specification PDF contains the current P0 evidence.
   repair cycle, and final child proof.
 - `GOVERNANCE_LEDGER.jsonl`: hash-chained promotion ledger sample.
 - `LIVE_RADEON_RECOVERY_EVIDENCE.json`: current W7900 public-health,
-  ASR, compile, verify, dependency restart, and tunnel-rotation evidence.
+  ASR, compile, verify, dependency restart, dual-tunnel failover, and
+  tunnel-rotation evidence.
 - `W7900_LIVE_EVIDENCE_SUMMARY.json`: hashes, runtime, timings, 7/7 result,
   and proof hash for the 48.96-second unedited live capture.
 - `PUBLIC_HEALTH_SUMMARY.json` and `PUBLIC_HEALTH_HISTORY.jsonl`: more than
