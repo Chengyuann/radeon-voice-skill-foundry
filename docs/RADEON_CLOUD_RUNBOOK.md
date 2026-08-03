@@ -124,6 +124,13 @@ curl http://127.0.0.1:8791/api/health
 The public browser never receives the W7900 API token. Pages Functions proxy
 same-origin `/api/*` requests and inject `RVSF_API_TOKEN`.
 
+The public gateway uses two independently managed tunnels:
+
+- Primary: Radeon Cloud native `rc-tunnel`, exposed as
+  `https://rc-*.radeon.firstdg.ai`.
+- Fallback: Cloudflare Quick Tunnel, exposed as
+  `https://*.trycloudflare.com`.
+
 The Quick Tunnel hostname is intentionally treated as replaceable:
 
 1. `scripts/radeon_tunnel_supervisor.sh` starts `cloudflared`.
@@ -139,8 +146,21 @@ The Quick Tunnel hostname is intentionally treated as replaceable:
    requires a three-minute timestamp window, and checks the Radeon runtime
    fields.
 8. Only a valid fresh proof is written to KV as `radeon-api-origin`.
-9. The normal `/api/*` proxy reads KV first and uses `RADEON_API_ORIGIN` only
-   as a fallback.
+9. The normal `/api/*` proxy reads KV first. With the current schema, KV stores
+   `primary` and `fallback` origins. Pages tries primary first and falls back
+   to the next origin for safe retryable requests if the primary is unavailable.
+10. `RADEON_API_ORIGIN` remains a final static fallback.
+
+The Radeon Cloud native tunnel is managed by:
+
+```bash
+bash /workspace/radeon-voice-skill-foundry-current/scripts/radeon_rc_tunnel_supervisor.sh
+bash /workspace/radeon-voice-skill-foundry-current/scripts/radeon_rc_origin_registrar.sh status
+```
+
+It installs the platform `rc-tunnel` helper if needed, exposes port `8792`, and
+registers the resulting `rc-*.radeon.firstdg.ai` URL as the primary origin. The
+Cloudflare Quick Tunnel registrar registers its current origin as fallback.
 
 Secret files on W7900:
 
@@ -154,6 +174,7 @@ Inspect the managed services:
 ```bash
 supervisorctl -c /workspace/rvsf-supervisord.conf status
 bash /workspace/radeon-voice-skill-foundry-live/scripts/radeon_origin_registrar.sh status
+bash /workspace/radeon-voice-skill-foundry-current/scripts/radeon_rc_origin_registrar.sh status
 bash /workspace/radeon-voice-skill-foundry-current/scripts/rvsf_supervisor_watchdog.sh check
 ```
 
@@ -187,9 +208,9 @@ supervisorctl -c /workspace/rvsf-supervisord.conf restart rvsf-tunnel
 watch -n 2 'cat /workspace/rvsf-public-origin.txt; curl -fsS https://radeon-voice-skill-foundry.pages.dev/api/health'
 ```
 
-Success means the tunnel origin changes, the registrar reports the same origin,
-and the stable Pages health endpoint returns the W7900 Radeon runtime without a
-new Pages deployment.
+Success means the fallback tunnel origin changes, the registrar reports the
+same fallback origin, and the stable Pages health endpoint returns the W7900
+Radeon runtime without a new Pages deployment.
 
 Controlled Supervisor recovery test:
 
@@ -198,7 +219,7 @@ supervisorctl -c /workspace/rvsf-supervisord.conf shutdown
 watch -n 5 'bash /workspace/radeon-voice-skill-foundry-current/scripts/rvsf_supervisor_watchdog.sh check || true'
 ```
 
-Success means the independent watchdog restarts Supervisord, all six managed
+Success means the independent watchdog restarts Supervisord, all eight managed
 services return to `RUNNING`, and the stable public health endpoint returns
 HTTP 200 with both model dependencies healthy.
 

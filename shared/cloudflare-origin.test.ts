@@ -1,11 +1,14 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   handleOriginRecovery,
   normalizeRadeonOrigin,
+  parseOriginRegistry,
   RADEON_ORIGIN_REGISTRY_KEY,
   resolveRadeonOrigin,
+  resolveRadeonOrigins,
   type KeyValueStore
 } from "./cloudflare-origin.js";
+import { proxyRadeonRequest } from "../functions/api/[[path]].js";
 
 describe("Cloudflare Radeon origin recovery", () => {
   it("prefers a valid registered origin and falls back to the configured origin", async () => {
@@ -26,6 +29,41 @@ describe("Cloudflare Radeon origin recovery", () => {
         RADEON_API_ORIGIN: "https://fallback-tunnel.trycloudflare.com"
       })
     ).resolves.toBe("https://fallback-tunnel.trycloudflare.com");
+
+    const dualRegistry = memoryRegistry(
+      JSON.stringify({
+        primary: "https://rc-0123456789abcdef.radeon.firstdg.ai",
+        fallback: "https://fallback-tunnel.trycloudflare.com"
+      })
+    );
+    await expect(
+      resolveRadeonOrigins({
+        RVSF_ORIGIN_REGISTRY: dualRegistry,
+        RADEON_API_ORIGIN: "https://configured-tunnel.trycloudflare.com"
+      })
+    ).resolves.toEqual([
+      "https://rc-0123456789abcdef.radeon.firstdg.ai",
+      "https://fallback-tunnel.trycloudflare.com",
+      "https://configured-tunnel.trycloudflare.com"
+    ]);
+
+    const healthFetch = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(new Response("origin down", { status: 530 }))
+      .mockResolvedValueOnce(Response.json({ ok: true, healthy: true }));
+    const healthResponse = await proxyRadeonRequest(
+      new Request("https://public.example/api/health"),
+      proxyEnv(dualRegistry),
+      healthFetch
+    );
+    expect(healthResponse.status).toBe(200);
+    expect(healthFetch).toHaveBeenCalledTimes(2);
+    expect(requestUrl(healthFetch.mock.calls[0][0])).toBe(
+      "https://rc-0123456789abcdef.radeon.firstdg.ai/api/health"
+    );
+    expect(requestUrl(healthFetch.mock.calls[1][0])).toBe(
+      "https://fallback-tunnel.trycloudflare.com/api/health"
+    );
   });
 
   it("accepts only canonical HTTPS Quick Tunnel origins", () => {
@@ -43,6 +81,29 @@ describe("Cloudflare Radeon origin recovery", () => {
     expect(
       normalizeRadeonOrigin("https://trycloudflare.com.attacker.example")
     ).toBeUndefined();
+    expect(
+      normalizeRadeonOrigin("https://rc-0123456789abcdef.radeon.firstdg.ai/")
+    ).toBe("https://rc-0123456789abcdef.radeon.firstdg.ai");
+    expect(
+      normalizeRadeonOrigin("https://evil-radeon.firstdg.ai")
+    ).toBeUndefined();
+
+    expect(
+      parseOriginRegistry("https://legacy.trycloudflare.com")
+    ).toEqual({
+      primary: "https://legacy.trycloudflare.com"
+    });
+    expect(
+      parseOriginRegistry(
+        JSON.stringify({
+          primary: "https://rc-0123456789abcdef.radeon.firstdg.ai",
+          fallback: "https://fallback.trycloudflare.com"
+        })
+      )
+    ).toEqual({
+      primary: "https://rc-0123456789abcdef.radeon.firstdg.ai",
+      fallback: "https://fallback.trycloudflare.com"
+    });
   });
 
   it("uses the fallback origin when the registry is temporarily unavailable", async () => {
@@ -63,12 +124,12 @@ describe("Cloudflare Radeon origin recovery", () => {
 
   it("rejects unauthorized registration without probing the candidate", async () => {
     const registry = memoryRegistry();
-    const response = await handleOriginRecovery(
+    const unauthorizedResponse = await handleOriginRecovery(
       await recoveryRequest("wrong-token"),
       recoveryEnv(registry)
     );
 
-    expect(response.status).toBe(401);
+    expect(unauthorizedResponse.status).toBe(401);
     expect(await registry.get(RADEON_ORIGIN_REGISTRY_KEY)).toBeNull();
   });
 
@@ -81,7 +142,64 @@ describe("Cloudflare Radeon origin recovery", () => {
 
     expect(response.status).toBe(200);
     expect(await registry.get(RADEON_ORIGIN_REGISTRY_KEY)).toBe(
-      "https://new-tunnel.trycloudflare.com"
+      JSON.stringify({ primary: "https://new-tunnel.trycloudflare.com" })
+    );
+
+    const dualRegistry = memoryRegistry(
+      JSON.stringify({
+        primary: "https://rc-0123456789abcdef.radeon.firstdg.ai"
+      })
+    );
+    const fallbackResponse = await handleOriginRecovery(
+      await recoveryRequest("recovery-token", validRuntime(), undefined, {
+        origin: "https://fallback-tunnel.trycloudflare.com",
+        role: "fallback"
+      }),
+      recoveryEnv(dualRegistry)
+    );
+
+    expect(fallbackResponse.status).toBe(200);
+    expect(
+      JSON.parse((await dualRegistry.get(RADEON_ORIGIN_REGISTRY_KEY))!)
+    ).toEqual({
+      primary: "https://rc-0123456789abcdef.radeon.firstdg.ai",
+      fallback: "https://fallback-tunnel.trycloudflare.com"
+    });
+
+    const verifyFetch = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(new Response("unavailable", { status: 503 }))
+      .mockResolvedValueOnce(Response.json({ status: "verified" }));
+    const verifyResponse = await proxyRadeonRequest(
+      new Request("https://public.example/api/verify", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ compilation: { runId: "run_1" }, actions: [] })
+      }),
+      proxyEnv(dualRegistry),
+      verifyFetch
+    );
+    expect(verifyResponse.status).toBe(200);
+    expect(verifyFetch).toHaveBeenCalledTimes(2);
+
+    const compileFetch = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(new Response("unavailable", { status: 530 }))
+      .mockResolvedValueOnce(Response.json({ ok: true, healthy: true }))
+      .mockResolvedValueOnce(Response.json({ runId: "run_1" }));
+    const compileResponse = await proxyRadeonRequest(
+      new Request("https://public.example/api/compile", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ projectName: "demo" })
+      }),
+      proxyEnv(dualRegistry),
+      compileFetch
+    );
+    expect(compileResponse.status).toBe(200);
+    expect(compileFetch).toHaveBeenCalledTimes(3);
+    expect(requestUrl(compileFetch.mock.calls[2][0])).toBe(
+      "https://fallback-tunnel.trycloudflare.com/api/compile"
     );
   });
 
@@ -130,10 +248,12 @@ describe("Cloudflare Radeon origin recovery", () => {
 async function recoveryRequest(
   token: string,
   runtime: Record<string, unknown> = validRuntime(),
-  timestamp = Math.floor(Date.now() / 1000)
+  timestamp = Math.floor(Date.now() / 1000),
+  overrides: { origin?: string; role?: "primary" | "fallback" } = {}
 ): Promise<Request> {
   const proof = {
-    origin: "https://new-tunnel.trycloudflare.com",
+    origin: overrides.origin || "https://new-tunnel.trycloudflare.com",
+    role: overrides.role || "primary",
     timestamp,
     runtime
   };
@@ -205,4 +325,15 @@ function memoryRegistry(initial?: string): KeyValueStore {
       values.set(key, value);
     }
   };
+}
+
+function proxyEnv(registry: KeyValueStore) {
+  return {
+    RVSF_API_TOKEN: "api-token",
+    RVSF_ORIGIN_REGISTRY: registry
+  };
+}
+
+function requestUrl(input: string | URL | Request): string {
+  return input instanceof Request ? input.url : String(input);
 }

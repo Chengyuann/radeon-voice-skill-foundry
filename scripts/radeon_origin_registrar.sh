@@ -2,12 +2,13 @@
 set -euo pipefail
 
 command_name="${1:-watch}"
+origin_role="${RVSF_ORIGIN_ROLE:-fallback}"
 runtime_dir="${RVSF_RUNTIME_DIR:-/workspace}"
 origin_file="${RVSF_PUBLIC_ORIGIN_FILE:-$runtime_dir/rvsf-public-origin.txt}"
 token_file="${RVSF_ORIGIN_RECOVERY_TOKEN_FILE:-$runtime_dir/.rvsf-origin-recovery-token}"
 api_token_file="${RVSF_API_TOKEN_FILE:-$runtime_dir/.rvsf-api-token}"
-registered_file="$runtime_dir/rvsf-registered-origin.txt"
-response_file="$runtime_dir/rvsf-origin-registration-response.json"
+registered_file="${RVSF_REGISTERED_ORIGIN_FILE:-$runtime_dir/rvsf-${origin_role}-registered-origin.txt}"
+response_file="${RVSF_ORIGIN_RESPONSE_FILE:-$runtime_dir/rvsf-${origin_role}-origin-registration-response.json}"
 pages_origin="${RVSF_PAGES_ORIGIN:-https://radeon-voice-skill-foundry.pages.dev}"
 recovery_url="${pages_origin%/}/internal/origin-recovery"
 health_url="${pages_origin%/}/api/health"
@@ -65,7 +66,8 @@ register_origin() {
     "$recovery_url" \
     "$api_token_file" \
     "$token_file" \
-    "$temporary_response" <<'PY'
+    "$temporary_response" \
+    "$origin_role" <<'PY'
 import hashlib
 import hmac
 import json
@@ -73,7 +75,14 @@ import sys
 import time
 import urllib.request
 
-origin, recovery_url, api_token_file, recovery_token_file, output_file = sys.argv[1:]
+(
+    origin,
+    recovery_url,
+    api_token_file,
+    recovery_token_file,
+    output_file,
+    origin_role,
+) = sys.argv[1:]
 api_token = open(api_token_file, encoding="utf-8").read().strip()
 recovery_token = open(recovery_token_file, encoding="utf-8").read().strip()
 
@@ -101,6 +110,7 @@ if (
 
 proof = {
     "origin": origin,
+    "role": origin_role,
     "timestamp": int(time.time()),
     "runtime": {
         "mode": "radeon",

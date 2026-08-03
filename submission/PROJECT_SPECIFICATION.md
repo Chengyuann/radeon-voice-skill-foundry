@@ -751,13 +751,14 @@ The Product Demo and supplementary videos have separate evidence roles:
   and fails the required semantic acceptance gate, so it is not promoted.
 - FP8 remains untested because loader registration alone does not prove a
   native accelerated FP8 path on RDNA3 `gfx1100`.
-- The stable Cloudflare Pages URL currently depends on a W7900 Quick Tunnel.
-  Its rotating origin is registered in Cloudflare KV by a Supervisor-managed
-  W7900 process. The registrar validates the HTTPS `trycloudflare.com`
-  candidate through the public tunnel and signs a fresh Radeon health proof
-  with the API token. Pages verifies that proof plus an independent recovery
-  token before writing KV. This allows a tunnel restart without a frontend
-  redeploy. A named Tunnel remains the preferred infrastructure upgrade.
+- The stable Cloudflare Pages URL now has two W7900 public-origin paths. The
+  primary path uses Radeon Cloud's native `rc-tunnel` and the fallback path uses
+  Cloudflare Quick Tunnel. Supervisor-managed registrars validate each candidate
+  through its public HTTPS origin, sign a fresh Radeon health proof with the API
+  token, and write `primary` / `fallback` origins into Cloudflare KV. Pages tries
+  the primary origin first and falls back for safe retryable requests if the
+  primary is unavailable. This keeps the existing Quick Tunnel recovery while
+  adding the official Radeon Cloud tunnel path.
 - The governance ledger detects inconsistent local records through hashes and
   cross-checks. It is not externally signed or immutably anchored.
 - The Product Demo's recorded `GAIA-compatible` phrase refers only to portable
@@ -826,9 +827,11 @@ dependencies instead of inferring health only from environment variables.
 Stopping the ASR process produced HTTP 503 with `asr = unavailable`;
 supervisord restarted the model and restored HTTP 200 in about 20 seconds.
 A controlled Quick Tunnel rotation restored the stable Pages URL in about
-25 seconds through signed origin registration and Cloudflare KV. The six
-managed services and live ASR, compile, verify, and proof results are recorded
-in `LIVE_RADEON_RECOVERY_EVIDENCE.json`.
+25 seconds through signed origin registration and Cloudflare KV. The gateway
+now also supports Radeon Cloud's native `rc-tunnel` as the primary origin and
+keeps Quick Tunnel as fallback. The current eight managed services and live
+ASR, compile, verify, and proof results are recorded in
+`LIVE_RADEON_RECOVERY_EVIDENCE.json`.
 
 An independent watchdog runs outside Supervisor and checks its control socket
 every 30 seconds. In a controlled Supervisor shutdown, the watchdog waited for

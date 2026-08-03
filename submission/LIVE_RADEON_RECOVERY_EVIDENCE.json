@@ -98,6 +98,7 @@
     "qualityScore": 100
   },
   "recoveryTests": {
+    "dualTunnelGateway": "Radeon Cloud rc-tunnel is supported as the primary origin and Cloudflare Quick Tunnel remains the fallback origin; Pages failover preserves safe retryable requests.",
     "dependencyFailureDetection": "ASR termination produced public HTTP 503 with asr=unavailable",
     "dependencyAutoRestart": "supervisord restored ASR and public HTTP 200 in about 20 seconds",
     "quickTunnelRotation": "new Quick Tunnel registered and stable Pages health recovered in about 25 seconds",

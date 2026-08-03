@@ -1,4 +1,5 @@
 export const RADEON_ORIGIN_REGISTRY_KEY = "radeon-api-origin";
+export type RadeonOriginRole = "primary" | "fallback";
 
 export type KeyValueStore = {
   get(key: string): Promise<string | null>;
@@ -23,6 +24,12 @@ type RecoveryRuntimeProof = {
 export async function resolveRadeonOrigin(
   env: RadeonOriginEnv
 ): Promise<string | undefined> {
+  return (await resolveRadeonOrigins(env))[0];
+}
+
+export async function resolveRadeonOrigins(
+  env: RadeonOriginEnv
+): Promise<string[]> {
   let registered: string | null | undefined;
   try {
     registered = await env.RVSF_ORIGIN_REGISTRY?.get(
@@ -31,8 +38,12 @@ export async function resolveRadeonOrigin(
   } catch {
     registered = undefined;
   }
-  return normalizeRadeonOrigin(registered) ??
-    normalizeRadeonOrigin(env.RADEON_API_ORIGIN);
+  const parsed = parseOriginRegistry(registered);
+  return uniqueOrigins([
+    parsed.primary,
+    parsed.fallback,
+    normalizeRadeonOrigin(env.RADEON_API_ORIGIN)
+  ]);
 }
 
 export function normalizeRadeonOrigin(
@@ -49,15 +60,39 @@ export function normalizeRadeonOrigin(
       url.pathname !== "/" ||
       url.search ||
       url.hash ||
-      !/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.trycloudflare\.com$/i.test(
-        url.hostname
-      )
+      !isAllowedRadeonOriginHost(url.hostname)
     ) {
       return undefined;
     }
     return url.origin;
   } catch {
     return undefined;
+  }
+}
+
+export function parseOriginRegistry(
+  candidate: string | null | undefined
+): { primary?: string; fallback?: string } {
+  const legacy = normalizeRadeonOrigin(candidate);
+  if (legacy) return { primary: legacy };
+  if (!candidate) return {};
+  try {
+    const parsed = JSON.parse(candidate) as {
+      primary?: unknown;
+      fallback?: unknown;
+    };
+    return {
+      primary:
+        typeof parsed.primary === "string"
+          ? normalizeRadeonOrigin(parsed.primary)
+          : undefined,
+      fallback:
+        typeof parsed.fallback === "string"
+          ? normalizeRadeonOrigin(parsed.fallback)
+          : undefined
+    };
+  } catch {
+    return {};
   }
 }
 
@@ -103,10 +138,14 @@ export async function handleOriginRecovery(
   const origin = normalizeRadeonOrigin(candidate);
   if (!origin) {
     return Response.json(
-      { error: "Origin must be an HTTPS trycloudflare.com origin" },
+      {
+        error:
+          "Origin must be an HTTPS rc-*.radeon.firstdg.ai or trycloudflare.com origin"
+      },
       { status: 400 }
     );
   }
+  const role = parseOriginRole(body);
 
   const timestamp =
     body &&
@@ -137,24 +176,67 @@ export async function handleOriginRecovery(
     );
   }
 
-  const proof = { origin, timestamp, runtime };
-  if (!(await verifyHealthProof(proof, signature, apiToken))) {
+  const proof = { origin, role, timestamp, runtime };
+  const legacyProof = { origin, timestamp, runtime };
+  if (
+    !(await verifyHealthProof(proof, signature, apiToken)) &&
+    !(await verifyHealthProof(legacyProof, signature, apiToken))
+  ) {
     return Response.json(
       { error: "Radeon health proof signature is invalid" },
       { status: 401 }
     );
   }
 
+  let existing: string | null = null;
+  try {
+    existing = await env.RVSF_ORIGIN_REGISTRY.get(
+      RADEON_ORIGIN_REGISTRY_KEY
+    );
+  } catch {
+    existing = null;
+  }
+  const registry = parseOriginRegistry(existing);
+  registry[role] = origin;
   await env.RVSF_ORIGIN_REGISTRY.put(
     RADEON_ORIGIN_REGISTRY_KEY,
-    origin
+    JSON.stringify(registry)
   );
   return Response.json({
     ok: true,
     origin,
+    role,
+    origins: registry,
     registeredAt: new Date().toISOString(),
     runtime
   });
+}
+
+function parseOriginRole(body: unknown): RadeonOriginRole {
+  if (
+    body &&
+    typeof body === "object" &&
+    "role" in body &&
+    body.role === "fallback"
+  ) {
+    return "fallback";
+  }
+  return "primary";
+}
+
+function isAllowedRadeonOriginHost(hostname: string): boolean {
+  return (
+    /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.trycloudflare\.com$/i.test(
+      hostname
+    ) ||
+    /^rc-[a-z0-9-]+\.radeon\.firstdg\.ai$/i.test(hostname)
+  );
+}
+
+function uniqueOrigins(values: Array<string | undefined>): string[] {
+  return Array.from(
+    new Set(values.filter((value): value is string => Boolean(value)))
+  );
 }
 
 function parseRuntimeProof(body: unknown): RecoveryRuntimeProof | undefined {
@@ -197,6 +279,7 @@ function parseRuntimeProof(body: unknown): RecoveryRuntimeProof | undefined {
 async function verifyHealthProof(
   proof: {
     origin: string;
+    role?: RadeonOriginRole;
     timestamp: number;
     runtime: RecoveryRuntimeProof;
   },

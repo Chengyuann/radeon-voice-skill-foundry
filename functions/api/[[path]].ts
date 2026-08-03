@@ -1,5 +1,5 @@
 import {
-  resolveRadeonOrigin,
+  resolveRadeonOrigins,
   type RadeonOriginEnv
 } from "../../shared/cloudflare-origin.js";
 
@@ -9,9 +9,17 @@ type PagesContext = {
 };
 
 export async function onRequest(context: PagesContext): Promise<Response> {
-  const origin = await resolveRadeonOrigin(context.env);
-  const token = context.env.RVSF_API_TOKEN;
-  if (!origin || !token) {
+  return proxyRadeonRequest(context.request, context.env);
+}
+
+export async function proxyRadeonRequest(
+  request: Request,
+  env: RadeonOriginEnv,
+  fetcher: typeof fetch = fetch
+): Promise<Response> {
+  const origins = await resolveRadeonOrigins(env);
+  const token = env.RVSF_API_TOKEN;
+  if (!origins.length || !token) {
     return Response.json(
       {
         error:
@@ -21,9 +29,8 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     );
   }
 
-  const incoming = new URL(context.request.url);
-  const upstream = new URL(`${incoming.pathname}${incoming.search}`, origin);
-  const headers = new Headers(context.request.headers);
+  const incoming = new URL(request.url);
+  const headers = new Headers(request.headers);
   headers.delete("host");
   headers.delete("cf-connecting-ip");
   headers.delete("cf-ipcountry");
@@ -33,38 +40,59 @@ export async function onRequest(context: PagesContext): Promise<Response> {
   headers.delete("x-forwarded-proto");
   headers.set("x-rvsf-api-token", token);
 
-  const method = context.request.method;
+  const method = request.method;
   const hasBody = method !== "GET" && method !== "HEAD";
   const retryable =
     method === "GET" ||
     method === "HEAD" ||
     (method === "POST" && incoming.pathname === "/api/verify");
-  const bufferedBody =
-    retryable && hasBody ? await context.request.arrayBuffer() : undefined;
-  const createUpstreamRequest = () =>
-    new Request(upstream, {
-      method: context.request.method,
+  const requestOrigins =
+    !retryable && origins.length > 1
+      ? await selectHealthyOrigin(origins, headers, fetcher)
+      : origins;
+  if (!requestOrigins.length) {
+    return Response.json(
+      { error: "No healthy Radeon origin is available" },
+      { status: 503 }
+    );
+  }
+  const bufferedBody = hasBody ? await request.arrayBuffer() : undefined;
+  const createUpstreamRequest = (origin: string) => {
+    const upstream = new URL(
+      `${incoming.pathname}${incoming.search}`,
+      origin
+    );
+    return new Request(upstream, {
+      method: request.method,
       headers,
-      body: hasBody
-        ? retryable
-          ? bufferedBody?.slice(0)
-          : context.request.body
-        : undefined,
+      body: hasBody ? bufferedBody?.slice(0) : undefined,
       redirect: "manual"
     });
+  };
 
-  let response: Response;
-  try {
-    response = await fetch(createUpstreamRequest());
-  } catch (error) {
-    if (!retryable) throw error;
-    await retryDelay();
-    response = await fetch(createUpstreamRequest());
+  let response: Response | undefined;
+  let lastError: unknown;
+  for (const [index, origin] of requestOrigins.entries()) {
+    try {
+      response = await fetcher(createUpstreamRequest(origin));
+      if (
+        retryable &&
+        index < requestOrigins.length - 1 &&
+        [502, 503, 504, 530].includes(response.status)
+      ) {
+        await response.body?.cancel();
+        response = undefined;
+        continue;
+      }
+      break;
+    } catch (error) {
+      lastError = error;
+      response = undefined;
+      if (!retryable || index === requestOrigins.length - 1) break;
+    }
   }
-  if (retryable && [502, 503, 504].includes(response.status)) {
-    await response.body?.cancel();
-    await retryDelay();
-    response = await fetch(createUpstreamRequest());
+  if (!response) {
+    throw lastError || new Error("Radeon origins unavailable");
   }
 
   const responseHeaders = new Headers(response.headers);
@@ -77,6 +105,25 @@ export async function onRequest(context: PagesContext): Promise<Response> {
   });
 }
 
-function retryDelay(): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, 250));
+async function selectHealthyOrigin(
+  origins: string[],
+  headers: Headers,
+  fetcher: typeof fetch
+): Promise<string[]> {
+  for (const origin of origins) {
+    try {
+      const response = await fetcher(
+        new Request(new URL("/api/health", origin), {
+          method: "GET",
+          headers,
+          redirect: "manual"
+        })
+      );
+      await response.body?.cancel();
+      if (response.ok) return [origin];
+    } catch {
+      // Continue to the next independently managed tunnel.
+    }
+  }
+  return [];
 }
