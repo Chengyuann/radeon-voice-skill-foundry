@@ -24,6 +24,8 @@ verification again before it can be promoted.
 - Public stable-URL history:
   [`submission/PUBLIC_HEALTH_SUMMARY.json`](submission/PUBLIC_HEALTH_SUMMARY.json) and
   [`submission/PUBLIC_HEALTH_HISTORY.jsonl`](submission/PUBLIC_HEALTH_HISTORY.jsonl)
+- GitHub scheduled health evidence:
+  [`submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json`](submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json)
 - Judge quickstart:
   [`submission/JUDGE_QUICKSTART.md`](submission/JUDGE_QUICKSTART.md)
 - Reproducibility:

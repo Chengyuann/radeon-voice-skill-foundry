@@ -103,6 +103,6 @@
     "quickTunnelRotation": "new Quick Tunnel registered and stable Pages health recovered in about 25 seconds",
     "supervisorMainProcessRecovery": "an independent watchdog detected supervisord shutdown, restarted it after three 30-second failures, restored all six managed services, and reached stable public HTTP 200 in about 161 seconds from shutdown",
     "localExternalMonitor": "launchd runs every 300 seconds; last exit code 0",
-    "githubExternalMonitor": "GitHub Actions workflow is active with an offset 15-minute schedule and an independently verified manual run"
+    "githubExternalMonitor": "GitHub Actions requests four offset checks per hour; actual schedule execution is best-effort. Observed scheduled runs are recorded in GITHUB_SCHEDULED_HEALTH_SUMMARY.json."
   }
 }

@@ -12,7 +12,8 @@ Demo captions:
 ## Speak the SOP. Prove the Skill.
 
 **AMD AI DevMaster Hackathon - Track 2**
-**Team:** N/A (solo)
+**Participant:** Chengyuan Ma
+**Team:** None (solo)
 **GitHub:** Chengyuann
 **Repository:** https://github.com/Chengyuann/radeon-voice-skill-foundry
 
@@ -835,7 +836,10 @@ three consecutive failures, restarted Supervisor, restored all six managed
 services, and reached stable public HTTP 200 in about 161 seconds without
 operator intervention. The local 5-minute launchd monitor and the active
 GitHub Actions health workflow provide external detection independent of the
-Radeon service process tree.
+Radeon service process tree. GitHub Actions requests four offset checks per
+hour, but scheduled execution is best-effort; the submission reports observed
+run timestamps and conclusions in `GITHUB_SCHEDULED_HEALTH_SUMMARY.json`
+instead of claiming an exact 15-minute execution interval.
 
 This recovery design handles child-process, Supervisor-main-process, and Quick
 Tunnel failures while the Radeon Cloud instance exists. It cannot recreate an

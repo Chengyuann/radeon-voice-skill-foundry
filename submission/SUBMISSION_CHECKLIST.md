@@ -4,8 +4,8 @@
 
 - [x] Project name: Radeon Voice Skill Foundry
 - [x] Track: Development and Local Deployment of Private AI Agents
-- [x] Participant: Chengyuann
-- [x] Team: N/A (solo)
+- [x] Participant: Chengyuan Ma (`@Chengyuann`)
+- [x] Team: None (solo)
 - [x] License: MIT
 - [x] Public product URL is documented
 - [x] Source repository and official submission URL are documented

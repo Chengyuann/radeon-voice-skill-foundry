@@ -378,7 +378,7 @@ def build_poster() -> tuple[Path, Path]:
         fill=MUTED,
     )
 
-    draw.text((110, 2405), "Track 2 | Team N/A | github.com/Chengyuann/radeon-voice-skill-foundry", font=font(24, bold=True), fill=INK)
+    draw.text((110, 2405), "Track 2 | Chengyuan Ma | github.com/Chengyuann/radeon-voice-skill-foundry", font=font(24, bold=True), fill=INK)
     draw.text((110, 2450), "Actions capture what happened. Voice captures why, when, and what must never happen.", font=font(23), fill=MUTED)
 
     png = SUBMISSION / "POSTER.png"
@@ -387,7 +387,7 @@ def build_poster() -> tuple[Path, Path]:
     pdf = SUBMISSION / "POSTER.pdf"
     canvas_doc = pdf_canvas.Canvas(str(pdf), pagesize=A4)
     canvas_doc.setTitle("Radeon Voice Skill Foundry - Poster")
-    canvas_doc.setAuthor("Chengyuann")
+    canvas_doc.setAuthor("Chengyuan Ma")
     canvas_doc.setSubject("AMD AI DevMaster Hackathon Track 2")
     canvas_doc.setCreator("Radeon Voice Skill Foundry submission asset builder")
     canvas_doc.drawImage(str(png), 0, 0, width=A4[0], height=A4[1])
@@ -440,7 +440,7 @@ def build_spec_pdf(architecture_path: Path) -> Path:
         topMargin=17 * mm,
         bottomMargin=17 * mm,
         title="Radeon Voice Skill Foundry - Project Specification",
-        author="Chengyuann",
+        author="Chengyuan Ma",
         subject="AMD AI DevMaster Hackathon Track 2",
     )
 
@@ -562,7 +562,7 @@ def build_spec_pdf(architecture_path: Path) -> Path:
     story.append(
         Paragraph(
             "AMD AI DevMaster Hackathon - Track 2<br/>"
-            "Team N/A (solo) | GitHub: Chengyuann",
+            "Chengyuan Ma | Solo participant | GitHub: Chengyuann",
             ParagraphStyle(
                 "CoverMeta",
                 parent=styles["Bodyx"],
@@ -593,7 +593,7 @@ def build_spec_pdf(architecture_path: Path) -> Path:
                 Paragraph("<b>257.65 tok/s</b><br/><font size=8>vLLM graph C8</font>", styles["Bodyx"]),
                 Paragraph("<b>12.47x</b><br/><font size=8>serving uplift</font>", styles["Bodyx"]),
                 Paragraph("<b>85.35x</b><br/><font size=8>ASR batch real-time</font>", styles["Bodyx"]),
-                Paragraph("<b>PASS / 7 / 63</b><br/><font size=8>voice gate / proof / tests</font>", styles["Bodyx"]),
+                Paragraph("<b>PASS / 7 / 68</b><br/><font size=8>voice gate / proof / tests</font>", styles["Bodyx"]),
             ]
         ],
         colWidths=[41 * mm] * 4,

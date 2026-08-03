@@ -2,8 +2,8 @@
 
 **Track 2: Development and Local Deployment of Private AI Agents**
 
-**Participant:** Chengyuann
-**Team:** N/A (solo)
+**Participant:** Chengyuan Ma (`@Chengyuann`)
+**Team:** None (solo)
 **License:** MIT
 
 Radeon Voice Skill Foundry converts a spoken operating procedure and six
@@ -27,37 +27,37 @@ requires explicit human promotion.
    [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md)
 6. Multi-turn interaction:
    [`MULTI_TURN_INTERACTION.md`](MULTI_TURN_INTERACTION.md)
-4. Multi-turn Director Cut (35.5 seconds):
+7. Multi-turn Director Cut (35.5 seconds):
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4`
-5. Raw multi-turn product capture (32 seconds):
+8. Raw multi-turn product capture (32 seconds):
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DEMO.mp4`
-6. Multi-turn supplement screenshot:
+9. Multi-turn supplement screenshot:
    [`MULTI_TURN_INTERACTION_DEMO.png`](MULTI_TURN_INTERACTION_DEMO.png)
-7. Parent-child lineage:
+10. Parent-child lineage:
    [`MULTI_TURN_LINEAGE.png`](MULTI_TURN_LINEAGE.png)
-8. Agent harness and bounded repair evidence:
+11. Agent harness and bounded repair evidence:
    [`AGENT_HARNESS_REPAIR_EVIDENCE.json`](AGENT_HARNESS_REPAIR_EVIDENCE.json)
    with [`AGENT_HARNESS_REPAIR_PROOF.zip`](AGENT_HARNESS_REPAIR_PROOF.zip)
-9. Live product:
+12. Live product:
    `https://radeon-voice-skill-foundry.pages.dev/`
-10. Submission evidence map:
+13. Submission evidence map:
    [`SUBMISSION_EVIDENCE_MAP.md`](SUBMISSION_EVIDENCE_MAP.md)
-11. Product Demo:
+14. Product Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
-12. Project Specification: [`PROJECT_SPECIFICATION.pdf`](PROJECT_SPECIFICATION.pdf)
-13. Technical evidence: [`TECHNICAL_EVIDENCE_INDEX.md`](TECHNICAL_EVIDENCE_INDEX.md)
-14. Architecture: [`ARCHITECTURE.png`](ARCHITECTURE.png)
-15. Poster: [`POSTER.pdf`](POSTER.pdf)
-16. Multi-turn evidence:
+15. Project Specification: [`PROJECT_SPECIFICATION.pdf`](PROJECT_SPECIFICATION.pdf)
+16. Technical evidence: [`TECHNICAL_EVIDENCE_INDEX.md`](TECHNICAL_EVIDENCE_INDEX.md)
+17. Architecture: [`ARCHITECTURE.png`](ARCHITECTURE.png)
+18. Poster: [`POSTER.pdf`](POSTER.pdf)
+19. Multi-turn evidence:
    [`MULTI_TURN_REFINEMENT.png`](MULTI_TURN_REFINEMENT.png) and
    [`MULTI_TURN_REFINEMENT.json`](MULTI_TURN_REFINEMENT.json), with
    [`MULTI_TURN_REFINEMENT_PROOF.zip`](MULTI_TURN_REFINEMENT_PROOF.zip)
-17. Performance Demo:
+20. Performance Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_PERFORMANCE_DEMO.mp4`
-18. Continuous Operation Demo:
+21. Continuous Operation Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/CONTINUOUS_OPERATION_DEMO.mp4`
-19. Package integrity: [`SHA256SUMS.txt`](SHA256SUMS.txt)
-20. Source:
+22. Package integrity: [`SHA256SUMS.txt`](SHA256SUMS.txt)
+23. Source:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry`
 
 Demo captions:
@@ -96,6 +96,10 @@ passes 7/7 fixtures, and ends at proof hash
 `4181034f7cbc354d78df1ab6e248b720f9818e264b9d9bd1f589c2337b3f5510`.
 The public-health history covers 187.6 minutes with 39/39 healthy samples and
 zero observed failures.
+Independent GitHub scheduling subsequently produced 14/14 successful W7900
+health runs across 15.88 observed hours. GitHub scheduling is best-effort; the
+exact run timestamps are preserved in
+[`GITHUB_SCHEDULED_HEALTH_SUMMARY.json`](GITHUB_SCHEDULED_HEALTH_SUMMARY.json).
 
 ## Traceable Multi-Turn Interaction
 

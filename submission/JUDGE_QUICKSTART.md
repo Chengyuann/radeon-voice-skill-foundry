@@ -59,6 +59,8 @@ Specification PDF contains the current P0 evidence.
   and proof hash for the 48.96-second unedited live capture.
 - `PUBLIC_HEALTH_SUMMARY.json` and `PUBLIC_HEALTH_HISTORY.jsonl`: more than
   three hours of external stable-URL health samples.
+- `GITHUB_SCHEDULED_HEALTH_SUMMARY.json`: independently scheduled cloud checks
+  with observed run times and explicit GitHub scheduling boundaries.
 - `SHA256SUMS.txt`: SHA-256 digest for every finalized artifact except itself.
 
 ## 5. Boundaries

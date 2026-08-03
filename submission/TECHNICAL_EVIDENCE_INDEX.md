@@ -14,27 +14,29 @@ verification artifacts, and documented evidence boundaries.
 4. W7900 evidence summary: `W7900_LIVE_EVIDENCE_SUMMARY.json`
 5. Public health summary and history:
    `PUBLIC_HEALTH_SUMMARY.json`, `PUBLIC_HEALTH_HISTORY.jsonl`
-6. Multi-turn interaction: `MULTI_TURN_INTERACTION.md`
-7. Multi-turn Director Cut:
+6. GitHub scheduled health summary:
+   `GITHUB_SCHEDULED_HEALTH_SUMMARY.json`
+7. Multi-turn interaction: `MULTI_TURN_INTERACTION.md`
+8. Multi-turn Director Cut:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4`
-8. Raw multi-turn product capture:
+9. Raw multi-turn product capture:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DEMO.mp4`
-9. Multi-turn supplement screenshot: `MULTI_TURN_INTERACTION_DEMO.png`
-10. Parent-child lineage: `MULTI_TURN_LINEAGE.png`
-11. Agent harness repair evidence: `AGENT_HARNESS_REPAIR_EVIDENCE.json`
-12. Agent harness repair proof: `AGENT_HARNESS_REPAIR_PROOF.zip`
-13. Submission evidence map: `SUBMISSION_EVIDENCE_MAP.md`
-14. Live product: `https://radeon-voice-skill-foundry.pages.dev/`
-15. Product Demo:
+10. Multi-turn supplement screenshot: `MULTI_TURN_INTERACTION_DEMO.png`
+11. Parent-child lineage: `MULTI_TURN_LINEAGE.png`
+12. Agent harness repair evidence: `AGENT_HARNESS_REPAIR_EVIDENCE.json`
+13. Agent harness repair proof: `AGENT_HARNESS_REPAIR_PROOF.zip`
+14. Submission evidence map: `SUBMISSION_EVIDENCE_MAP.md`
+15. Live product: `https://radeon-voice-skill-foundry.pages.dev/`
+16. Product Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
-16. Project Specification: `PROJECT_SPECIFICATION.pdf`
-17. Architecture: `ARCHITECTURE.png`
-18. Poster: `POSTER.pdf`
-19. Multi-turn refinement: `MULTI_TURN_REFINEMENT.png` and
+17. Project Specification: `PROJECT_SPECIFICATION.pdf`
+18. Architecture: `ARCHITECTURE.png`
+19. Poster: `POSTER.pdf`
+20. Multi-turn refinement: `MULTI_TURN_REFINEMENT.png` and
    `MULTI_TURN_REFINEMENT.json`, with
    `MULTI_TURN_REFINEMENT_PROOF.zip`
-20. Radeon evidence: `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json`
-21. Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
+21. Radeon evidence: `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json`
+22. Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
 
 ## System Capability Map
 
@@ -48,6 +50,7 @@ verification artifacts, and documented evidence boundaries.
 | Core inference on Radeon | Qwen3-ASR-0.6B and Qwen3-4B-Instruct-2507 run on W7900-class `gfx1100` with ROCm 7.2.1 | Live `/api/health`; Radeon audio proof; verified workflow proof ZIP | Product Demo 00:29-01:53 | Real model waiting time is preserved |
 | Unedited W7900 execution | One continuous public run shows health, ASR, primary-model compile, 7/7 verification, and the full proof hash | 48.96-second raw WebM/MP4; `W7900_LIVE_EVIDENCE_SUMMARY.json` | Unedited capture 00:00-00:48.96 | MP4 is a full-length codec transcode only |
 | Public stable-URL operation | External launchd monitor validates HTTP 200 and model/ASR dependency health | `PUBLIC_HEALTH_SUMMARY.json`; `PUBLIC_HEALTH_HISTORY.jsonl` | N/A | 187.6-minute captured interval, 39/39 healthy |
+| Independent cloud health checks | GitHub Actions validates Radeon mode plus model and ASR dependencies outside the W7900 and local Mac process trees | `GITHUB_SCHEDULED_HEALTH_SUMMARY.json`; workflow run links | N/A | Schedule is best-effort; observed executions are reported exactly |
 | Targeted inference optimization | Same-hardware vLLM serving A/B, native ASR batching, and compact structured output | Radeon experiment summary; source benchmark JSON in the project repository | Performance Demo 03:38-04:13 | Compact-output A/B uses three runs; vLLM C8 is a concurrent serving result |
 
 ## Track 2 Capability Coverage

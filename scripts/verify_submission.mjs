@@ -41,6 +41,8 @@ for (const [command, args, options] of steps) {
 
 const pdfText = readFileSync("/tmp/rvsf-project-spec.txt", "utf8");
 for (const needle of [
+  "Participant: Chengyuan Ma",
+  "Team: None (solo)",
   "Agent Harness and Independent Verifier Contracts",
   "Bounded Verify-Refine-Reverify",
   "AGENT_HARNESS_REPAIR_EVIDENCE.json",
@@ -61,6 +63,7 @@ const requiredAssets = [
   "submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4",
   "submission/PUBLIC_HEALTH_HISTORY.jsonl",
   "submission/PUBLIC_HEALTH_SUMMARY.json",
+  "submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json",
   "submission/W7900_LIVE_EVIDENCE_SUMMARY.json",
   "submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4",
   "submission/W7900_LIVE_EVIDENCE_UNEDITED.webm",
@@ -68,6 +71,14 @@ const requiredAssets = [
 ];
 for (const asset of requiredAssets) {
   if (!existsSync(asset)) throw new Error(`Missing submission asset: ${asset}`);
+}
+
+const submissionReadme = readFileSync("submission/README.md", "utf8");
+if (
+  !submissionReadme.includes("Participant:** Chengyuan Ma") ||
+  !submissionReadme.includes("Team:** None (solo)")
+) {
+  throw new Error("Submission identity does not match the registered solo participant");
 }
 
 const healthSummary = JSON.parse(
@@ -80,6 +91,19 @@ if (
   healthSummary.failureCount !== 0
 ) {
   throw new Error("Public health history does not prove three stable hours");
+}
+
+const githubHealthSummary = JSON.parse(
+  readFileSync("submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json", "utf8")
+);
+if (
+  githubHealthSummary.observedDurationHours < 12 ||
+  githubHealthSummary.runCount < 10 ||
+  githubHealthSummary.successCount !== githubHealthSummary.runCount ||
+  githubHealthSummary.failureCount !== 0 ||
+  !String(githubHealthSummary.schedulerBoundary || "").includes("best-effort")
+) {
+  throw new Error("GitHub scheduled health evidence is incomplete");
 }
 
 const liveEvidence = JSON.parse(
@@ -138,6 +162,7 @@ console.log(
         "independent supervisor watchdog",
         "clean-clone Release asset hydration",
         "three-hour public health history",
+        "GitHub scheduled health history",
         "unedited W7900 live evidence",
         "typecheck and production build",
         "submission SHA256SUMS",

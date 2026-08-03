@@ -16,4 +16,5 @@ tmp/
 output/playwright/
 submission/*.mp4
 submission/*.webm
+*.codex-preview.jpg
 output/imagegen/

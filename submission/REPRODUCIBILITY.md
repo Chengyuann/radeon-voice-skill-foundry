@@ -33,7 +33,8 @@ This command performs:
 6. runs the typecheck and production build
 7. regenerates and checks `submission/SHA256SUMS.txt`
 8. validates the three-hour public-health evidence and unedited W7900 run
-9. runs `pdftotext` checks for current P0 proof text
+9. validates independently scheduled GitHub health-run history
+10. runs `pdftotext` checks for current P0 proof text
 
 This makes the command work from a clean source clone even though large videos
 are distributed as GitHub Release assets instead of Git objects.
