@@ -97,6 +97,8 @@ npm run verify:submission
 - External stable-URL history: `187.6 minutes`, `39/39` healthy, `0` failures
 - GitHub scheduled cloud checks: see `GITHUB_SCHEDULED_HEALTH_SUMMARY.json`;
   observed runs are reported without claiming exact 15-minute execution.
+- Radeon Cloud allocation: `23.69 hours`, `5` credits available, `0` consumed
+  at the August 3 profile check.
 - Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
 - TypeScript typecheck: passed
 - Production build: passed

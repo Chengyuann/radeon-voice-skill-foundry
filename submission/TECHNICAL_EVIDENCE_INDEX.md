@@ -51,6 +51,7 @@ verification artifacts, and documented evidence boundaries.
 | Unedited W7900 execution | One continuous public run shows health, ASR, primary-model compile, 7/7 verification, and the full proof hash | 48.96-second raw WebM/MP4; `W7900_LIVE_EVIDENCE_SUMMARY.json` | Unedited capture 00:00-00:48.96 | MP4 is a full-length codec transcode only |
 | Public stable-URL operation | External launchd monitor validates HTTP 200 and model/ASR dependency health | `PUBLIC_HEALTH_SUMMARY.json`; `PUBLIC_HEALTH_HISTORY.jsonl` | N/A | 187.6-minute captured interval, 39/39 healthy |
 | Independent cloud health checks | GitHub Actions validates Radeon mode plus model and ASR dependencies outside the W7900 and local Mac process trees | `GITHUB_SCHEDULED_HEALTH_SUMMARY.json`; workflow run links | N/A | Schedule is best-effort; observed executions are reported exactly |
+| Allocation continuity | Radeon Cloud Profile still showed 5 credits available and 0 consumed after 23.69 hours | `LIVE_RADEON_RECOVERY_EVIDENCE.json` | N/A | Platform allocation policy remains organizer-controlled |
 | Targeted inference optimization | Same-hardware vLLM serving A/B, native ASR batching, and compact structured output | Radeon experiment summary; source benchmark JSON in the project repository | Performance Demo 03:38-04:13 | Compact-output A/B uses three runs; vLLM C8 is a concurrent serving result |
 
 ## Track 2 Capability Coverage

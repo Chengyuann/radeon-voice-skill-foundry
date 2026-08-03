@@ -844,10 +844,13 @@ instead of claiming an exact 15-minute execution interval.
 This recovery design handles child-process, Supervisor-main-process, and Quick
 Tunnel failures while the Radeon Cloud instance exists. It cannot recreate an
 instance deleted by the platform or recover a stopped host. The account still
-showed five available credits and zero consumed credits after more than two
-hours of runtime on August 2, despite the nominal one-credit-per-GPU-hour UI
-text. Continued availability therefore still depends on the organizer keeping
-the instance allocation active through judging.
+showed five available credits and zero consumed credits after 23.69 hours
+(1,421 minutes) of runtime on August 3, despite the nominal
+one-credit-per-GPU-hour UI text. Several `HTTP 000` samples from the macOS
+launchd probe during that period were local network or sleep-state failures:
+the W7900 internal public monitor returned healthy once per minute throughout
+the same interval. Continued availability still depends on the organizer
+keeping the instance allocation active through judging.
 
 Source commit `efec128059fea3b68521aa1dd333c71d5ea6a679` was
 clean-cloned on Radeon Cloud.

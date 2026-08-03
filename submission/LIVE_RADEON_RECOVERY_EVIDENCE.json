@@ -8,9 +8,9 @@
     "creditRate": "1 credit/GPU/hour",
     "creditsObserved": 5,
     "creditsConsumedObserved": 0,
-    "runtimeHoursObserved": 2.06,
-    "runtimeMinutesObserved": 123,
-    "creditObservationAt": "2026-08-02T06:41:31Z"
+    "runtimeHoursObserved": 23.69,
+    "runtimeMinutesObserved": 1421,
+    "creditObservationAt": "2026-08-03T04:03:01Z"
   },
   "publicHealth": {
     "ok": true,
@@ -102,7 +102,7 @@
     "dependencyAutoRestart": "supervisord restored ASR and public HTTP 200 in about 20 seconds",
     "quickTunnelRotation": "new Quick Tunnel registered and stable Pages health recovered in about 25 seconds",
     "supervisorMainProcessRecovery": "an independent watchdog detected supervisord shutdown, restarted it after three 30-second failures, restored all six managed services, and reached stable public HTTP 200 in about 161 seconds from shutdown",
-    "localExternalMonitor": "launchd runs every 300 seconds; last exit code 0",
+    "localExternalMonitor": "launchd runs every 300 seconds. Several HTTP 000 probes on 2026-08-03 were isolated to the Mac network or sleep state: the W7900 internal monitor returned healthy every minute during the same interval.",
     "githubExternalMonitor": "GitHub Actions requests four offset checks per hour; actual schedule execution is best-effort. Observed scheduled runs are recorded in GITHUB_SCHEDULED_HEALTH_SUMMARY.json."
   }
 }
