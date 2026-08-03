@@ -157,7 +157,7 @@ run_once() {
   require_secret_file "$api_token_file"
   local origin
   if ! origin="$(current_origin)"; then
-    log "no valid Quick Tunnel origin is available" >&2
+    log "no valid public tunnel origin is available" >&2
     return 1
   fi
 
@@ -167,7 +167,7 @@ run_once() {
     return
   fi
 
-  log "registering current Quick Tunnel origin"
+  log "registering current public tunnel origin as $origin_role"
   if ! register_origin "$origin"; then
     log "origin registration failed" >&2
     return 1

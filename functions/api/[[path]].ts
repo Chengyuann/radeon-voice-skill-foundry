@@ -71,6 +71,7 @@ export async function proxyRadeonRequest(
   };
 
   let response: Response | undefined;
+  let selectedOrigin: string | undefined;
   let lastError: unknown;
   for (const [index, origin] of requestOrigins.entries()) {
     try {
@@ -84,6 +85,7 @@ export async function proxyRadeonRequest(
         response = undefined;
         continue;
       }
+      selectedOrigin = origin;
       break;
     } catch (error) {
       lastError = error;
@@ -97,6 +99,14 @@ export async function proxyRadeonRequest(
 
   const responseHeaders = new Headers(response.headers);
   responseHeaders.set("cache-control", "no-store");
+  if (selectedOrigin) {
+    responseHeaders.set(
+      "x-rvsf-origin-kind",
+      selectedOrigin.includes(".radeon.firstdg.ai")
+        ? "rc-tunnel"
+        : "quick-tunnel"
+    );
+  }
   responseHeaders.delete("set-cookie");
   return new Response(response.body, {
     status: response.status,

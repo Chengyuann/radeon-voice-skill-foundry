@@ -62,6 +62,9 @@ describe("Cloudflare Radeon origin recovery", () => {
       healthFetch
     );
     expect(healthResponse.status).toBe(200);
+    expect(healthResponse.headers.get("x-rvsf-origin-kind")).toBe(
+      "quick-tunnel"
+    );
     expect(healthFetch).toHaveBeenCalledTimes(2);
     expect(requestUrl(healthFetch.mock.calls[0][0])).toBe(
       "https://rc-0123456789abcdef.radeon.firstdg.ai/api/health"
@@ -190,6 +193,9 @@ describe("Cloudflare Radeon origin recovery", () => {
       verifyFetch
     );
     expect(verifyResponse.status).toBe(200);
+    expect(verifyResponse.headers.get("x-rvsf-origin-kind")).toBe(
+      "quick-tunnel"
+    );
     expect(verifyFetch).toHaveBeenCalledTimes(2);
 
     const compileFetch = vi
