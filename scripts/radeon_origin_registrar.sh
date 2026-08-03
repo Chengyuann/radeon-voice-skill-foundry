@@ -40,7 +40,8 @@ current_origin() {
   [[ -s "$origin_file" ]] || return 1
   local origin
   origin="$(tr -d '\r\n' <"$origin_file")"
-  if [[ "$origin" =~ ^https://[a-z0-9]([a-z0-9-]*[a-z0-9])?\.trycloudflare\.com$ ]]; then
+  if [[ "$origin" =~ ^https://[a-z0-9]([a-z0-9-]*[a-z0-9])?\.trycloudflare\.com$ ]] ||
+    [[ "$origin" =~ ^https://rc-[a-z0-9-]+\.radeon\.firstdg\.ai$ ]]; then
     printf '%s\n' "$origin"
     return
   fi
