@@ -54,7 +54,7 @@ describe("Cloudflare Radeon origin recovery", () => {
 
     const healthFetch = vi
       .fn<typeof fetch>()
-      .mockResolvedValueOnce(new Response("origin down", { status: 530 }))
+      .mockResolvedValueOnce(new Response("origin retired", { status: 404 }))
       .mockResolvedValueOnce(Response.json({ ok: true, healthy: true }));
     const healthResponse = await proxyRadeonRequest(
       new Request("https://public.example/api/health"),

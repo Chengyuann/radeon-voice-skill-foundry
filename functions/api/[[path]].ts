@@ -79,7 +79,7 @@ export async function proxyRadeonRequest(
       if (
         retryable &&
         index < requestOrigins.length - 1 &&
-        [502, 503, 504, 530].includes(response.status)
+        [404, 502, 503, 504, 530].includes(response.status)
       ) {
         await response.body?.cancel();
         response = undefined;
