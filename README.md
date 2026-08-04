@@ -41,10 +41,6 @@ verification again before it can be promoted.
 - Cross-modal policy induction diagram:
   [`submission/CROSS_MODAL_POLICY_INDUCTION.png`](submission/CROSS_MODAL_POLICY_INDUCTION.png)
 
-Optional project artwork can be generated through ByteDance AIDP with
-`scripts/aidp_imagegen.py`. The script reads the access key only from
-`AIDP_IMAGE_AK`; do not put access keys in commands, files, or submission
-assets.
 - Judge quickstart:
   [`submission/JUDGE_QUICKSTART.md`](submission/JUDGE_QUICKSTART.md)
 - Reproducibility:
