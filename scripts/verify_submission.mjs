@@ -61,16 +61,67 @@ const requiredAssets = [
   "submission/AGENT_HARNESS_REPAIR_PROOF.zip",
   "submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4",
   "submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4",
+  "submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt",
+  "submission/RADEON_VOICE_SKILL_FOUNDRY_PERFORMANCE_DEMO.srt",
+  "submission/CONTINUOUS_OPERATION_DEMO.srt",
+  "submission/MULTI_TURN_INTERACTION_DEMO.srt",
+  "submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.srt",
   "submission/PUBLIC_HEALTH_HISTORY.jsonl",
   "submission/PUBLIC_HEALTH_SUMMARY.json",
   "submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json",
   "submission/W7900_LIVE_EVIDENCE_SUMMARY.json",
   "submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4",
+  "submission/W7900_LIVE_EVIDENCE_UNEDITED.srt",
   "submission/W7900_LIVE_EVIDENCE_UNEDITED.webm",
   "submission/SHA256SUMS.txt"
 ];
 for (const asset of requiredAssets) {
   if (!existsSync(asset)) throw new Error(`Missing submission asset: ${asset}`);
+}
+
+const productProbe = JSON.parse(
+  runCapture("ffprobe", [
+    "-v",
+    "error",
+    "-show_entries",
+    "format=duration:stream=codec_type,codec_name:stream_tags=language",
+    "-of",
+    "json",
+    "submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4"
+  ])
+);
+const productDuration = Number(productProbe.format?.duration || 0);
+const productStreams = productProbe.streams || [];
+if (
+  productDuration < 180 ||
+  productDuration > 300 ||
+  !productStreams.some(
+    (stream) =>
+      stream.codec_type === "video" && stream.codec_name === "h264"
+  ) ||
+  !productStreams.some(
+    (stream) =>
+      stream.codec_type === "audio" && stream.codec_name === "aac"
+  ) ||
+  !productStreams.some(
+    (stream) =>
+      stream.codec_type === "subtitle" &&
+      stream.codec_name === "mov_text" &&
+      stream.tags?.language === "eng"
+  )
+) {
+  throw new Error("Primary Product Demo media contract failed");
+}
+
+const uneditedCaptions = readFileSync(
+  "submission/W7900_LIVE_EVIDENCE_UNEDITED.srt",
+  "utf8"
+);
+if (
+  !uneditedCaptions.includes("00:00:48,960") ||
+  !uneditedCaptions.includes("health -> ASR -> compile -> verify -> proof hash")
+) {
+  throw new Error("Unedited W7900 stage captions are incomplete");
 }
 
 const submissionReadme = readFileSync("submission/README.md", "utf8");
@@ -233,4 +284,17 @@ function run(command, args, options = {}) {
   if (result.status !== 0) {
     throw new Error(`${command} ${args.join(" ")} failed with ${result.status}`);
   }
+}
+
+function runCapture(command, args) {
+  const result = spawnSync(command, args, {
+    cwd: root,
+    encoding: "utf8"
+  });
+  if (result.status !== 0) {
+    throw new Error(
+      `${command} ${args.join(" ")} failed: ${result.stderr || result.stdout}`
+    );
+  }
+  return result.stdout;
 }

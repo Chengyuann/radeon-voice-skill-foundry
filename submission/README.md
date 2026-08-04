@@ -16,48 +16,50 @@ requires explicit human promotion.
 
 1. Judge quickstart:
    [`JUDGE_QUICKSTART.md`](JUDGE_QUICKSTART.md)
-2. Unedited W7900 live evidence (48.96 seconds):
+2. Primary contest Product Demo (4:49):
+   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
+3. Supplementary unedited W7900 live evidence (48.96 seconds):
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4`
-3. W7900 live evidence summary:
+4. Unedited W7900 stage captions:
+   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.srt`
+5. W7900 live evidence summary:
    [`W7900_LIVE_EVIDENCE_SUMMARY.json`](W7900_LIVE_EVIDENCE_SUMMARY.json)
-4. Public health summary and full history:
+6. Public health summary and full history:
    [`PUBLIC_HEALTH_SUMMARY.json`](PUBLIC_HEALTH_SUMMARY.json) and
    [`PUBLIC_HEALTH_HISTORY.jsonl`](PUBLIC_HEALTH_HISTORY.jsonl)
-5. Reproducibility:
+7. Reproducibility:
    [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md)
-6. Multi-turn interaction:
+8. Multi-turn interaction:
    [`MULTI_TURN_INTERACTION.md`](MULTI_TURN_INTERACTION.md)
-7. Multi-turn Director Cut (35.5 seconds):
+9. Multi-turn Director Cut (35.5 seconds):
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4`
-8. Raw multi-turn product capture (32 seconds):
+10. Raw multi-turn product capture (32 seconds):
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DEMO.mp4`
-9. Multi-turn supplement screenshot:
+11. Multi-turn supplement screenshot:
    [`MULTI_TURN_INTERACTION_DEMO.png`](MULTI_TURN_INTERACTION_DEMO.png)
-10. Parent-child lineage:
+12. Parent-child lineage:
    [`MULTI_TURN_LINEAGE.png`](MULTI_TURN_LINEAGE.png)
-11. Agent harness and bounded repair evidence:
+13. Agent harness and bounded repair evidence:
    [`AGENT_HARNESS_REPAIR_EVIDENCE.json`](AGENT_HARNESS_REPAIR_EVIDENCE.json)
    with [`AGENT_HARNESS_REPAIR_PROOF.zip`](AGENT_HARNESS_REPAIR_PROOF.zip)
-12. Live product:
+14. Live product:
    `https://radeon-voice-skill-foundry.pages.dev/`
-13. Submission evidence map:
+15. Submission evidence map:
    [`SUBMISSION_EVIDENCE_MAP.md`](SUBMISSION_EVIDENCE_MAP.md)
-14. Product Demo:
-   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
-15. Project Specification: [`PROJECT_SPECIFICATION.pdf`](PROJECT_SPECIFICATION.pdf)
-16. Technical evidence: [`TECHNICAL_EVIDENCE_INDEX.md`](TECHNICAL_EVIDENCE_INDEX.md)
-17. Architecture: [`ARCHITECTURE.png`](ARCHITECTURE.png)
-18. Poster: [`POSTER.pdf`](POSTER.pdf)
-19. Multi-turn evidence:
+16. Project Specification: [`PROJECT_SPECIFICATION.pdf`](PROJECT_SPECIFICATION.pdf)
+17. Technical evidence: [`TECHNICAL_EVIDENCE_INDEX.md`](TECHNICAL_EVIDENCE_INDEX.md)
+18. Architecture: [`ARCHITECTURE.png`](ARCHITECTURE.png)
+19. Poster: [`POSTER.pdf`](POSTER.pdf)
+20. Multi-turn evidence:
    [`MULTI_TURN_REFINEMENT.png`](MULTI_TURN_REFINEMENT.png) and
    [`MULTI_TURN_REFINEMENT.json`](MULTI_TURN_REFINEMENT.json), with
    [`MULTI_TURN_REFINEMENT_PROOF.zip`](MULTI_TURN_REFINEMENT_PROOF.zip)
-20. Performance Demo:
+21. Performance Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_PERFORMANCE_DEMO.mp4`
-21. Continuous Operation Demo:
+22. Continuous Operation Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/CONTINUOUS_OPERATION_DEMO.mp4`
-22. Package integrity: [`SHA256SUMS.txt`](SHA256SUMS.txt)
-23. Source:
+23. Package integrity: [`SHA256SUMS.txt`](SHA256SUMS.txt)
+24. Source:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry`
 
 Demo captions:
@@ -200,7 +202,7 @@ run on a private network without the public gateway.
 
 ## Evidence Boundaries
 
-- The Product Demo is the authoritative product recording.
+- The 4:49 Product Demo is the authoritative primary contest video.
 - The Product Demo ends with a terminology card clarifying the exact Agent Skill
   Markdown, proof-hash, and ledger integrity boundaries.
 - The Performance Demo's spoken `35/35` count belongs to its pinned recording

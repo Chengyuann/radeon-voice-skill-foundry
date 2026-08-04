@@ -4,18 +4,25 @@ This page is the shortest path through Radeon Voice Skill Foundry.
 
 ## 1. Watch These First
 
-1. Unedited live W7900 evidence, 48.96 seconds:
-   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4`
-   Raw browser capture:
-   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.webm`
-2. Product Demo, 4:49:
+1. Primary contest Product Demo, 4:49:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
+2. Supplementary unedited live W7900 proof, 48.96 seconds:
+   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4`
+   Raw browser capture and English stage captions:
+   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.webm`
+   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.srt`
 3. Multi-turn Director Cut, 35.5 seconds:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4`
 
-The unedited capture shows one continuous public request sequence:
-`health -> ASR -> compile -> verify -> proof hash`. The Product Demo shows the
-broader workflow, and the Director Cut isolates multi-turn revision behavior.
+The Product Demo is the authoritative 3-5 minute contest video. The unedited
+capture independently proves one continuous public request sequence:
+`health -> ASR -> compile -> verify -> proof hash`. The Director Cut isolates
+multi-turn revision behavior.
+
+Video delivery audit: every Release media asset matched `SHA256SUMS.txt` and
+decoded fully. The 4:49 Product Demo is H.264 1080p with AAC narration,
+burned-in captions, an embedded English subtitle track, and the matching
+external SRT. Its measured duration is 288.58 seconds.
 
 ## 2. Score Map
 

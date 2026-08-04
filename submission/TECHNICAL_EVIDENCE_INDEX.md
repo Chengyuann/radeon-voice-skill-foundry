@@ -109,10 +109,10 @@ and rollback actions.
 
 ## Demo Artifact Boundaries
 
-- `RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4` records the public product
-  path, including real W7900 inference, promotion, ledger export, and exact
-  reuse. It ends with a terminology card that states the package and integrity
-  boundaries.
+- `RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4` is the primary 4:49 contest video. It
+  records the public product path, including real W7900 inference, promotion,
+  ledger export, and exact reuse. It ends with a terminology card that states
+  the package and integrity boundaries.
 - `RADEON_VOICE_SKILL_FOUNDRY_PERFORMANCE_DEMO.mp4` is supplementary performance
   narration for the same public Radeon path. Its spoken `35/35` count belongs
   to the pinned recording revision.
@@ -120,6 +120,8 @@ and rollback actions.
   while performing real process restarts and durable recovery. It documents
   compatibility, invalidation, and parent-child proof lineage rather than GPU
   performance.
+- `W7900_LIVE_EVIDENCE_UNEDITED.mp4` and its WebM source are supplementary,
+  silent runtime evidence; the external SRT labels each recorded stage.
 
 ## Evidence Boundaries
 

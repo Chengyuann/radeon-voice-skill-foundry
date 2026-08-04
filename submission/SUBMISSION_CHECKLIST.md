@@ -19,7 +19,8 @@
 - [x] Product Demo records the public Cloudflare-to-W7900 workflow
 - [x] Performance Demo preserves the real W7900 model wait
 - [x] Continuous Operation Demo is labeled as deterministic lifecycle evidence
-- [x] English SRT captions are included for every video
+- [x] Every submitted recording has English external captions; the three
+      formal long videos also carry embedded English subtitle tracks
 - [x] Verified workflow proof ZIP and governance ledger are included
 - [x] Performance and continuous-operation proof ZIPs are included
 - [x] Multi-turn interaction has a dedicated brief and lineage diagram

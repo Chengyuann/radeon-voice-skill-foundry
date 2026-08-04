@@ -17,8 +17,12 @@ verification again before it can be promoted.
 
 - Live product:
   `https://radeon-voice-skill-foundry.pages.dev/`
-- Unedited W7900 live evidence (48.96 seconds):
+- Primary contest Product Demo (4:49):
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
+- Supplementary unedited W7900 live evidence (48.96 seconds):
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4`
+- Unedited W7900 stage captions:
+  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.srt`
 - W7900 live evidence summary:
   [`submission/W7900_LIVE_EVIDENCE_SUMMARY.json`](submission/W7900_LIVE_EVIDENCE_SUMMARY.json)
 - Public stable-URL history:
@@ -42,8 +46,6 @@ verification again before it can be promoted.
   [`submission/MULTI_TURN_LINEAGE.png`](submission/MULTI_TURN_LINEAGE.png)
 - Submission evidence map:
   [`submission/SUBMISSION_EVIDENCE_MAP.md`](submission/SUBMISSION_EVIDENCE_MAP.md)
-- Product Demo (4:49):
-  `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
 - Demo captions:
   `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt`
 - Verified workflow proof:

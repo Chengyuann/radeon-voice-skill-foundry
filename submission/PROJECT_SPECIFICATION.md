@@ -715,19 +715,22 @@ unauthenticated origin requests are rejected.
 
 The Product Demo and supplementary videos have separate evidence roles:
 
-- `RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4` records the complete frozen public
-  product continuously: voice, six server-authoritative actions, real W7900
-  ASR and skill compilation, Sandbox Replay, Promotion Impact Review,
-  proof-hash-checked promotion, Governance Audit Ledger export, and exact
-  reuse.
+- `RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4` is the primary 4:49 contest video. It
+  records the complete frozen public product continuously: voice, six
+  server-authoritative actions, real W7900 ASR and skill compilation, Sandbox
+  Replay, Promotion Impact Review, proof-hash-checked promotion, Governance
+  Audit Ledger export, and exact reuse.
 
-- `RADEON_VOICE_SKILL_FOUNDRY_PERFORMANCE_DEMO.mp4` records the live Cloudflare product
-  executing real W7900 Qwen3-ASR and Qwen3-4B inference. The actual model wait
-  is preserved and no cached policy replaces generation.
+- `RADEON_VOICE_SKILL_FOUNDRY_PERFORMANCE_DEMO.mp4` is supplementary
+  optimization evidence. It records the live Cloudflare product executing real
+  W7900 Qwen3-ASR and Qwen3-4B inference. The actual model wait is preserved
+  and no cached policy replaces generation.
 - `CONTINUOUS_OPERATION_DEMO.mp4` uses deterministic ASR/compiler fixtures
   while executing two real Node API restarts, durable recovery, runtime drift,
   proof invalidation, and child-run revalidation in one take. It is lifecycle
   evidence, not GPU performance evidence.
+- `W7900_LIVE_EVIDENCE_UNEDITED.mp4` is supplementary silent runtime proof,
+  with external English stage captions and a raw WebM counterpart.
 
 ## 14. Limitations and Next Steps
 
