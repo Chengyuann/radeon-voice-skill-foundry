@@ -33,7 +33,9 @@ read_origin() {
 ensure_active() {
   local status=""
   status="$("$rc_tunnel_bin" status 2>&1 || true)"
-  if ! grep -q '^FRPC running:[[:space:]]*true$' <<<"$status"; then
+  if ! grep -q '^Status:[[:space:]]*active$' <<<"$status" ||
+    ! grep -q '^FRPC running:[[:space:]]*true$' <<<"$status"; then
+    "$rc_tunnel_bin" stop >/dev/null 2>&1 || true
     "$rc_tunnel_bin" expose --port "$api_port"
   fi
   local origin=""
