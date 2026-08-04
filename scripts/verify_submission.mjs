@@ -70,6 +70,7 @@ const requiredAssets = [
   "submission/PUBLIC_HEALTH_SUMMARY.json",
   "submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json",
   "submission/AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json",
+  "submission/CROSS_MODAL_POLICY_INDUCTION.png",
   "submission/evidence/BOARD_ENERGY_SUMMARY.json",
   "submission/W7900_LIVE_EVIDENCE_SUMMARY.json",
   "submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4",
@@ -181,6 +182,17 @@ if (
   throw new Error("Audio-native policy critic evidence is incomplete");
 }
 
+const crossModalPng = readFileSync(
+  "submission/CROSS_MODAL_POLICY_INDUCTION.png"
+);
+if (
+  crossModalPng.length < 100_000 ||
+  !submissionReadme.includes("Cross-modal policy induction") ||
+  !pdfText.includes("Cross-Modal Policy Induction")
+) {
+  throw new Error("Cross-modal policy induction evidence is incomplete");
+}
+
 const boardEnergySummary = JSON.parse(
   readFileSync("submission/evidence/BOARD_ENERGY_SUMMARY.json", "utf8")
 );
@@ -256,6 +268,7 @@ console.log(
         "three-hour public health history",
         "GitHub scheduled health history",
         "audio-native policy critic admission",
+        "cross-modal policy induction visual",
         "fixed-workload board-energy integration",
         "unedited W7900 live evidence",
         "typecheck and production build",

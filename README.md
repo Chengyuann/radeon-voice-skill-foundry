@@ -6,6 +6,12 @@ Radeon Voice Skill Foundry is a Track 2 submission for the AMD AI DevMaster
 Hackathon. It converts a spoken operating procedure and a six-step workflow
 demonstration into a verified, reusable Agent Skill package.
 
+It is not speech-to-text-to-chat. It performs **Cross-Modal Policy Induction
+with Audio-Native Verification**: private speech explains why, when, and what
+must never happen; demonstrated actions prove tools, parameters, and state;
+local policy retrieval supplies authority; critical disagreement is
+quarantined rather than promoted.
+
 Core speech recognition and Agent inference run on a dedicated Radeon Cloud
 W7900-class GPU with ROCm. The application retrieves local policy evidence,
 compiles typed constraints and permissions, runs deterministic positive and
@@ -32,6 +38,13 @@ verification again before it can be promoted.
   [`submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json`](submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json)
 - Audio-native policy critic evidence:
   [`submission/AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`](submission/AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json)
+- Cross-modal policy induction diagram:
+  [`submission/CROSS_MODAL_POLICY_INDUCTION.png`](submission/CROSS_MODAL_POLICY_INDUCTION.png)
+
+Optional project artwork can be generated through ByteDance AIDP with
+`scripts/aidp_imagegen.py`. The script reads the access key only from
+`AIDP_IMAGE_AK`; do not put access keys in commands, files, or submission
+assets.
 - Judge quickstart:
   [`submission/JUDGE_QUICKSTART.md`](submission/JUDGE_QUICKSTART.md)
 - Reproducibility:
@@ -316,7 +329,7 @@ npm test
 npm run build
 ```
 
-The current suite contains 63 tests. Historical evidence files retain the test
+The current suite contains 68 tests. Historical evidence files retain the test
 counts from their pinned commits and are not combined into one remote run.
 
 Run the optimization benchmark:

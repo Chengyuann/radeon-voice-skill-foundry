@@ -39,12 +39,15 @@ verification artifacts, and documented evidence boundaries.
 22. Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
 23. Audio-native policy critic:
    `AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`
+24. Cross-modal policy induction:
+   `CROSS_MODAL_POLICY_INDUCTION.png`
 
 ## System Capability Map
 
 | Capability | Implementation | Evidence | Demo timestamp | Boundary |
 |---|---|---|---|---|
 | Voice-seeded workflow capture | Voice records conditions, exceptions, and prohibited side effects that are absent from a UI trace | Project Specification sections 1-3; generated `SKILL.md`, policy, fixtures, and proof ZIP | Product Demo 00:00-00:29 | Synthetic SOP audio is disclosed as a reproducible fixture |
+| Cross-modal policy induction | Private speech supplies hidden intent, demonstrated actions supply real tool/state evidence, and local retrieval supplies authority; the resulting policy is typed and verified | `CROSS_MODAL_POLICY_INDUCTION.png`; Project Specification section 3; proof `action_contract.json` and `rag_evidence.json` | Product Demo 00:00-02:48 | The illustrated ASR-negation conflict is explanatory; measured Omni taxonomy rejection is separately recorded |
 | Local knowledge retrieval | Deterministic token-overlap retrieval over local policy and SOP documents | Project Specification sections 4-5; public Memory module; proof ZIP | Product Demo 00:29-04:15 | Retrieval is token-overlap search, not embedding or vector search |
 | Tool invocation and planning | Typed tools and six server-accepted actions compile into a multi-step procedure, constraints, permissions, and fixtures | Public Voice and Proof modules; generated policy; proof ZIP | Product Demo 00:29-02:48 | The workspace isolates external side effects |
 | Multi-turn refinement | A natural-language correction creates revision 2, binds `parentRunId`, and regenerates constraints and fixtures without overwriting the prior run; another correction creates revision 3 and reopens verification | 35.5-second Director Cut with locally generated VoxCPM2 narration; raw 32-second product capture; screenshot; brief; lineage; JSON; child proof ZIP | Director Cut `00:00-00:35.5` | The Director Cut is independent of the 4:49 Product Demo; the raw capture remains the primary product evidence |

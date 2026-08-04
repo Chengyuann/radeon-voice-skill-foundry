@@ -61,6 +61,8 @@ requires explicit human promotion.
 23. Package integrity: [`SHA256SUMS.txt`](SHA256SUMS.txt)
 24. Source:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry`
+25. Cross-modal policy induction:
+   [`CROSS_MODAL_POLICY_INDUCTION.png`](CROSS_MODAL_POLICY_INDUCTION.png)
 
 Demo captions:
 `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.srt`
@@ -115,6 +117,11 @@ place. The child records `parentRunId`, receives regenerated constraints,
 permissions and fixtures, and must pass verification again.
 
 The submitted public workflow demonstrates:
+
+- **Cross-Modal Policy Induction with Audio-Native Verification:** speech
+  supplies hidden rationale and prohibitions, demonstrated actions supply real
+  tools and state transitions, and local policy retrieval supplies authority.
+  Critical disagreement fails closed instead of granting permissions.
 
 - user correction: require confirmation before creating calendar holds
 - parent run: `run_dbc1a6e2c6b5`

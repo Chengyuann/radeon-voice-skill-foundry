@@ -64,5 +64,7 @@
 - [x] Voice Evidence is described as an internal deterministic gate
 - [x] Ledger hashes are not described as external signatures or anchoring
 - [x] AI-assisted narration and image assets are disclosed
+- [x] AIDP image-generation access keys are not stored in source, evidence, or
+      release assets; `scripts/aidp_imagegen.py` reads only `AIDP_IMAGE_AK`
 - [x] Canonical filenames contain no release-generation suffixes
 - [x] `SHA256SUMS.txt` covers every finalized artifact except itself

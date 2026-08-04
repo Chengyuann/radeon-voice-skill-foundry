@@ -270,6 +270,143 @@ def build_architecture() -> Path:
     return path
 
 
+def icon_circle(
+    draw: ImageDraw.ImageDraw,
+    center: tuple[int, int],
+    radius: int,
+    fill: str,
+    label: str,
+) -> None:
+    x, y = center
+    draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=fill)
+    typeface = font(34, bold=True, mono=True)
+    bbox = draw.textbbox((0, 0), label, font=typeface)
+    draw.text(
+        (x - (bbox[2] - bbox[0]) / 2, y - (bbox[3] - bbox[1]) / 2 - 3),
+        label,
+        font=typeface,
+        fill=WHITE,
+    )
+
+
+def build_cross_modal_policy() -> Path:
+    width, height = 2400, 1500
+    image = Image.new("RGB", (width, height), "#F1F3F3")
+    draw = ImageDraw.Draw(image)
+
+    draw.text(
+        (105, 70),
+        "Cross-Modal Policy Induction",
+        font=font(64, bold=True),
+        fill=INK,
+    )
+    draw.text(
+        (108, 150),
+        "Speech + Demonstration + Local Policy -> Verified Agent Skill",
+        font=font(30, bold=True),
+        fill=ACCENT_DARK,
+    )
+    draw.text(
+        (108, 205),
+        "Ordinary voice agents stop at speech-to-text-to-chat. This system uses each modality for evidence the others cannot provide.",
+        font=font(23),
+        fill=MUTED,
+    )
+
+    cols = [
+        (
+            "HEARD",
+            "Private speech",
+            ["do not send automatically", "owner missing needs confirmation"],
+            "why / when / must never happen",
+            ACCENT,
+            "#FBEAE8",
+        ),
+        (
+            "OBSERVED",
+            "Demonstrated actions",
+            ["create email draft", "select owner field"],
+            "actual tools / parameters / state",
+            BLUE,
+            BLUE_BG,
+        ),
+        (
+            "RETRIEVED",
+            "Local policy evidence",
+            ["external send needs approval", "missing owner blocks release"],
+            "authority / boundary / citation",
+            GREEN,
+            GREEN_BG,
+        ),
+    ]
+    top = 320
+    card_w = 690
+    card_h = 300
+    gap = 55
+    centers: list[tuple[int, int]] = []
+    for idx, (eyebrow, title, bullets, footer, accent, fill) in enumerate(cols):
+        x = 105 + idx * (card_w + gap)
+        rect = (x, top, x + card_w, top + card_h)
+        rounded_box(draw, rect, fill, outline=accent, radius=24, width=4)
+        icon_circle(draw, (x + 62, top + 63), 36, accent, str(idx + 1))
+        draw.text((x + 118, top + 35), eyebrow, font=font(22, bold=True, mono=True), fill=accent)
+        draw.text((x + 118, top + 78), title, font=font(33, bold=True), fill=INK)
+        by = top + 143
+        for bullet in bullets:
+            draw.rounded_rectangle((x + 42, by + 7, x + 64, by + 29), radius=6, fill=accent)
+            draw.text((x + 84, by), bullet, font=font(23, bold=True), fill=INK)
+            by += 49
+        draw.text((x + 42, top + 252), footer, font=font(20, bold=True), fill=MUTED)
+        centers.append((x + card_w // 2, top + card_h))
+
+    compiler = (535, 740, 1865, 1015)
+    rounded_box(draw, compiler, INK, outline=INK, radius=28, width=2)
+    draw.text((595, 778), "POLICY COMPILER", font=font(23, bold=True, mono=True), fill="#B9E1CC")
+    draw.text((595, 827), "typed, least-privilege policy", font=font(38, bold=True), fill=WHITE)
+    policy_lines = [
+        ("mail.draft", "allow", GREEN),
+        ("mail.send", "deny", ACCENT),
+        ("owner.missing", "requires confirmation", AMBER),
+    ]
+    px = 595
+    py = 900
+    for name, value, color in policy_lines:
+        draw.rounded_rectangle((px, py, px + 382, py + 70), radius=12, fill="#2B2F31")
+        draw.text((px + 18, py + 11), name, font=font(19, bold=True, mono=True), fill="#D7DCDD")
+        draw.text((px + 18, py + 40), value, font=font(21, bold=True), fill=color)
+        px += 420
+
+    for cx, cy in centers:
+        arrow(draw, (cx, cy + 8), (1200, compiler[1] - 8), color="#899197", width=5)
+
+    verified = (150, 1135, 1010, 1360)
+    rounded_box(draw, verified, WHITE, outline=GREEN, radius=24, width=4)
+    draw.text((195, 1172), "VERIFIED AGENT SKILL", font=font(23, bold=True, mono=True), fill=GREEN)
+    draw.text((195, 1222), "proof-bound, reusable, and versioned", font=font(31, bold=True), fill=INK)
+    draw.text((195, 1280), "fixtures + receipts + hashes + child-run lineage", font=font(22), fill=MUTED)
+
+    conflict = (1110, 1135, 2250, 1360)
+    rounded_box(draw, conflict, "#FBEAE8", outline=ACCENT, radius=24, width=4)
+    draw.text((1155, 1172), "CROSS-MODAL CONFLICT CHECK", font=font(23, bold=True, mono=True), fill=ACCENT_DARK)
+    draw.text((1155, 1220), "ASR path: mail.send = allow", font=font(25, bold=True, mono=True), fill=ACCENT_DARK)
+    draw.text((1155, 1262), "Raw audio critic: mail.send = deny", font=font(25, bold=True, mono=True), fill=INK)
+    draw.text((1155, 1310), "Decision: QUARANTINE", font=font(34, bold=True, mono=True), fill=ACCENT)
+
+    arrow(draw, (1200, compiler[3] + 10), (575, verified[1] - 10), color=GREEN, width=5)
+    arrow(draw, (1510, compiler[3] + 10), (1680, conflict[1] - 10), color=ACCENT, width=5)
+
+    draw.text(
+        (105, 1430),
+        "Actions capture what happened. Speech captures why, when, and what must never happen. Local policy supplies authority.",
+        font=font(26, bold=True),
+        fill=INK,
+    )
+
+    path = SUBMISSION / "CROSS_MODAL_POLICY_INDUCTION.png"
+    image.save(path, quality=95)
+    return path
+
+
 def build_poster() -> tuple[Path, Path]:
     width, height = 1800, 2550
     image = Image.new("RGB", (width, height), BG)
@@ -280,14 +417,14 @@ def build_poster() -> tuple[Path, Path]:
     draw.text((137, 110), "V", font=font(58, bold=True), fill=WHITE)
     draw.text((250, 78), "Radeon Voice", font=font(76, bold=True), fill=WHITE)
     draw.text((250, 160), "Skill Foundry", font=font(76, bold=True), fill=WHITE)
-    draw.text((110, 254), "SPEAK THE SOP. PROVE THE SKILL.", font=font(25, bold=True, mono=True), fill="#D8DCDE")
+    draw.text((110, 254), "CROSS-MODAL POLICY INDUCTION", font=font(25, bold=True, mono=True), fill="#D8DCDE")
 
     draw.text((110, 395), "A local Agent can observe clicks.", font=font(44, bold=True), fill=INK)
     draw.text((110, 455), "It cannot infer the hidden rules.", font=font(44, bold=True), fill=ACCENT_DARK)
     draw_wrapped(
         draw,
         (110, 535),
-        "Voice captures exceptions and prohibited actions. The W7900 compiles those rules into a least-privilege skill, then adversarial replay proves it before promotion.",
+        "Speech explains why, when, and what must never happen. Demonstrated actions show tools and parameters. Local policy provides authority. The W7900 compiles the three into a least-privilege skill and proves it before promotion.",
         font(27),
         MUTED,
         1580,
@@ -301,7 +438,7 @@ def build_poster() -> tuple[Path, Path]:
         ("85.35x", "ASR aggregate RT", "native Qwen3-ASR batch 8"),
         ("PASS", "voice evidence", "internal deterministic gate"),
         ("7/7", "adversarial proof", "mail.send remains DENY"),
-        ("63/63", "regression tests", "typecheck + production build"),
+        ("68/68", "regression tests", "typecheck + production build"),
     ]
     card_w = 500
     gap = 40
@@ -316,11 +453,11 @@ def build_poster() -> tuple[Path, Path]:
         draw.text((x + 28, card_y + 94), title, font=font(25, bold=True), fill=INK)
         draw_wrapped(draw, (x + 28, card_y + 137), note, font(20), MUTED, card_w - 56, 7)
 
-    draw.text((110, 1245), "VOICE-TO-VERIFIED-SKILL", font=font(25, bold=True, mono=True), fill=BLUE)
+    draw.text((110, 1245), "SPEECH + DEMONSTRATION + LOCAL POLICY", font=font(25, bold=True, mono=True), fill=BLUE)
     steps = [
-        ("1", "Speak + demonstrate", "Private SOP and aligned action trace"),
-        ("2", "Measure + transcribe", "Voice quality evidence + local ASR"),
-        ("3", "Compile on W7900", "local retrieval + constraints + least privilege"),
+        ("1", "Hear hidden rules", "exceptions, conditions and prohibitions"),
+        ("2", "Observe real tools", "action trace, parameters and state"),
+        ("3", "Retrieve authority", "local policy evidence and boundaries"),
         ("4", "Prove + remember", "7/7 + hashed receipts + versioned memory"),
     ]
     sy = 1320
@@ -379,7 +516,7 @@ def build_poster() -> tuple[Path, Path]:
     )
 
     draw.text((110, 2405), "Track 2 | Chengyuan Ma | github.com/Chengyuann/radeon-voice-skill-foundry", font=font(24, bold=True), fill=INK)
-    draw.text((110, 2450), "Actions capture what happened. Voice captures why, when, and what must never happen.", font=font(23), fill=MUTED)
+    draw.text((110, 2450), "Not speech-to-text-to-chat: cross-modal evidence becomes a verified Agent Skill.", font=font(23), fill=MUTED)
 
     png = SUBMISSION / "POSTER.png"
     image.save(png, quality=95)
@@ -418,7 +555,7 @@ def parse_table(lines: list[str]) -> list[list[str]]:
     return rows
 
 
-def build_spec_pdf(architecture_path: Path) -> Path:
+def build_spec_pdf(architecture_path: Path, cross_modal_path: Path) -> Path:
     pdfmetrics.registerFont(TTFont("RVSF", FONT_REGULAR))
     pdfmetrics.registerFont(TTFont("RVSFBold", FONT_BOLD))
     pdfmetrics.registerFont(TTFont("RVSFItalic", FONT_ITALIC))
@@ -628,6 +765,7 @@ def build_spec_pdf(architecture_path: Path) -> Path:
     md_lines = (SUBMISSION / "PROJECT_SPECIFICATION.md").read_text().splitlines()
     index = 0
     architecture_inserted = False
+    cross_modal_inserted = False
     in_code = False
     code_lines: list[str] = []
     while index < len(md_lines):
@@ -701,6 +839,20 @@ def build_spec_pdf(architecture_path: Path) -> Path:
         if stripped.startswith("## "):
             heading = stripped[3:]
             story.append(Paragraph(markdown_runs(heading), styles["H1x"]))
+            if heading.startswith("3. Why Voice Is Structurally Necessary") and not cross_modal_inserted:
+                story.append(
+                    KeepTogether(
+                        [
+                            Spacer(1, 4),
+                            RLImage(str(cross_modal_path), width=doc.width, height=doc.width * 1500 / 2400),
+                            Paragraph(
+                                "Figure 1. Cross-modal policy induction. Speech supplies hidden rules, demonstrations supply tool/action evidence, local policy supplies authority, and conflicts fail closed through the audio-native critic.",
+                                styles["Smallx"],
+                            ),
+                        ]
+                    )
+                )
+                cross_modal_inserted = True
             if heading.startswith("4. Agent Architecture") and not architecture_inserted:
                 story.append(
                     KeepTogether(
@@ -708,7 +860,7 @@ def build_spec_pdf(architecture_path: Path) -> Path:
                             Spacer(1, 4),
                             RLImage(str(architecture_path), width=doc.width, height=doc.width * 1420 / 2400),
                             Paragraph(
-                                "Figure 1. Public-to-W7900 voice-to-verified-skill architecture. Core ASR and Agent inference run on Radeon; source evidence, safety, replay, persistence, and hashing remain deterministic.",
+                                "Figure 2. Public-to-W7900 voice-to-verified-skill architecture. Core ASR and Agent inference run on Radeon; source evidence, safety, replay, persistence, and hashing remain deterministic.",
                                 styles["Smallx"],
                             ),
                         ]
@@ -776,12 +928,14 @@ def main() -> None:
     SUBMISSION.mkdir(parents=True, exist_ok=True)
     TMP.mkdir(parents=True, exist_ok=True)
     architecture = build_architecture()
+    cross_modal = build_cross_modal_policy()
     poster_png, poster_pdf = build_poster()
-    spec_pdf = build_spec_pdf(architecture)
+    spec_pdf = build_spec_pdf(architecture, cross_modal)
     print(
         json.dumps(
             {
                 "architecture": str(architecture),
+                "crossModalPolicy": str(cross_modal),
                 "posterPng": str(poster_png),
                 "posterPdf": str(poster_pdf),
                 "specPdf": str(spec_pdf),

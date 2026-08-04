@@ -24,6 +24,16 @@ models run on a dedicated Radeon Cloud instance. It turns a spoken standard
 operating procedure and an aligned action trace into a verified, reusable Agent
 Skill package.
 
+It is not a speech-to-text-to-chat wrapper. Its core technique is **Cross-Modal
+Policy Induction with Audio-Native Verification**:
+
+`private speech + demonstrated actions + local policy evidence -> verified Agent Skill`
+
+The three modalities are deliberately non-interchangeable. Speech carries
+reasons, exceptions, conditions, and prohibitions. Demonstrated actions carry
+the actual tools, order, parameters, and state transitions. Local retrieval
+supplies organizational authority, permission boundaries, and citations.
+
 Most workflow-learning systems infer procedures from repeated successful runs.
 That approach has a cold-start problem: the Agent must act before it has enough
 evidence to learn, and action traces alone do not explain exceptions, privacy
@@ -95,6 +105,41 @@ speech as a policy and intent channel, not as a cosmetic alternative to typing.
 
 This makes the product different from a meeting assistant or workflow recorder:
 it creates a governed Agent capability and proof, not a summary.
+
+The same distinction separates it from a conventional voice Agent:
+
+| Modality | Unique evidence |
+|---|---|
+| Private speech | Why, when, exceptions, and what must never happen |
+| Demonstrated actions | Real tools, step order, parameters, and state changes |
+| Local policy retrieval | Organizational authority, permission boundaries, and citations |
+
+For example, clicking **Create email draft** only proves that a draft action
+occurred. The spoken instruction **do not send automatically** and the retrieved
+external-send approval policy are what justify:
+
+```text
+mail.draft = allow
+mail.send = deny
+requires_confirmation = true
+```
+
+See `CROSS_MODAL_POLICY_INDUCTION.png` for the evidence fusion and illustrative
+conflict path.
+
+### Cross-Modal Conflict Detection
+
+The strongest multimodal behavior is conflict detection, not merely accepting
+multiple input types. The production ASR-plus-Agent path and the isolated
+Audio-Native Policy Critic derive policy evidence independently. If a critical
+negation or enforcement kind disagrees, the result cannot be promoted.
+
+`CROSS_MODAL_POLICY_INDUCTION.png` includes an illustrative failure state in
+which an ASR-derived path loses the negation in **do not send** while the
+raw-audio critic preserves it. The resulting decision is `QUARANTINE`, not an
+automatic permission grant. The measured Omni experiment separately showed the
+same fail-closed principle: an unconstrained raw-audio candidate recovered the
+semantics but mislabeled two enforcement kinds, so admission rejected it.
 
 ### Voice Evidence Gate
 
@@ -929,6 +974,10 @@ with burned-in English captions and an embedded subtitle track. Demo
 backgrounds use GPT Image 2. Project labels, diagrams, and reported
 measurements were derived or typeset from repository evidence. These
 presentation tools do not provide the product's core Agent or ASR functions.
+The cross-modal policy induction diagram is deterministic local drawing, not a
+model-generated product claim. Its ASR-negation conflict is an illustrative
+fail-closed scenario; measured audio-native rejection evidence is recorded
+separately in `AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`.
 
 ## 15. Evidence Index
 
