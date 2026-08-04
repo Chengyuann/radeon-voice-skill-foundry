@@ -69,6 +69,7 @@ const requiredAssets = [
   "submission/PUBLIC_HEALTH_HISTORY.jsonl",
   "submission/PUBLIC_HEALTH_SUMMARY.json",
   "submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json",
+  "submission/AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json",
   "submission/W7900_LIVE_EVIDENCE_SUMMARY.json",
   "submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4",
   "submission/W7900_LIVE_EVIDENCE_UNEDITED.srt",
@@ -157,6 +158,28 @@ if (
   throw new Error("GitHub scheduled health evidence is incomplete");
 }
 
+const audioNativeSummary = JSON.parse(
+  readFileSync(
+    "submission/AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json",
+    "utf8"
+  )
+);
+if (
+  audioNativeSummary.model !== "Qwen/Qwen2.5-Omni-3B" ||
+  audioNativeSummary.summary.baselineAdmitted !== false ||
+  audioNativeSummary.summary.strictVariantCount !== 3 ||
+  audioNativeSummary.summary.strictAdmittedCount !== 3 ||
+  audioNativeSummary.summary.noiseSafetyKindsPreserved !== true ||
+  audioNativeSummary.summary.alertSafetyKindsPreserved !== true ||
+  audioNativeSummary.summary.alertPolicyKindsUnchanged !== true ||
+  audioNativeSummary.decision.status !== "research-candidate-only" ||
+  !String(audioNativeSummary.licenseBoundary).includes(
+    "non-commercial research/evaluation only"
+  )
+) {
+  throw new Error("Audio-native policy critic evidence is incomplete");
+}
+
 const liveEvidence = JSON.parse(
   readFileSync("submission/W7900_LIVE_EVIDENCE_SUMMARY.json", "utf8")
 );
@@ -214,6 +237,7 @@ console.log(
         "clean-clone Release asset hydration",
         "three-hour public health history",
         "GitHub scheduled health history",
+        "audio-native policy critic admission",
         "unedited W7900 live evidence",
         "typecheck and production build",
         "submission SHA256SUMS",

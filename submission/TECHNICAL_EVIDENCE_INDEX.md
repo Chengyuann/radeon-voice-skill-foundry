@@ -37,6 +37,8 @@ verification artifacts, and documented evidence boundaries.
    `MULTI_TURN_REFINEMENT_PROOF.zip`
 21. Radeon evidence: `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json`
 22. Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
+23. Audio-native policy critic:
+   `AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`
 
 ## System Capability Map
 
@@ -53,6 +55,7 @@ verification artifacts, and documented evidence boundaries.
 | Independent cloud health checks | GitHub Actions validates Radeon mode plus model and ASR dependencies outside the W7900 and local Mac process trees | `GITHUB_SCHEDULED_HEALTH_SUMMARY.json`; workflow run links | N/A | Schedule is best-effort; observed executions are reported exactly |
 | Allocation continuity | Radeon Cloud Profile still showed 5 credits available and 0 consumed after 23.69 hours | `LIVE_RADEON_RECOVERY_EVIDENCE.json` | N/A | Platform allocation policy remains organizer-controlled |
 | Targeted inference optimization | Same-hardware vLLM serving A/B, native ASR batching, and compact structured output | Radeon experiment summary; source benchmark JSON in the project repository | Performance Demo 03:38-04:13 | Compact-output A/B uses three runs; vLLM C8 is a concurrent serving result |
+| Audio-native policy cross-check | Qwen2.5-Omni-3B listens to the original SOP audio and independently proposes typed policy rules without using the ASR transcript | `AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`; reproducible experiment scripts | N/A | Research-only critic under the Qwen Research License; it never grants permissions or replaces the production pipeline |
 
 ## Track 2 Capability Coverage
 
@@ -122,6 +125,26 @@ and rollback actions.
   performance.
 - `W7900_LIVE_EVIDENCE_UNEDITED.mp4` and its WebM source are supplementary,
   silent runtime evidence; the external SRT labels each recorded stage.
+
+## Audio-Native Policy Critic Experiment
+
+An isolated W7900 experiment evaluated `Qwen/Qwen2.5-Omni-3B` as an
+audio-native policy critic. The model consumed the original 20.39-second
+Chinese SOP WAV directly, with no ASR transcript supplied.
+
+- BF16, SDPA, Talker disabled
+- model revision `f75b40e3da2003cdd6e1829b1f420ca70797c34e`
+- median strict-prompt inference: `9.171 seconds`
+- maximum strict-prompt allocated VRAM: `9.108 GiB`
+- strict taxonomy admission: `3/3`
+- clean, pink-noise, and alert-tone variants preserved all four required
+  safety kinds
+
+The unconstrained prompt recovered all four safety semantics but mislabeled
+`redact` and `requires_confirmation` as ordinary requirements. The admission
+gate rejected that result. Explicit taxonomy guidance repaired the candidate,
+but the production decision remains fail-closed: Qwen3-ASR plus Qwen3-4B stays
+authoritative, and the Omni model is only an independent research critic.
 
 ## Evidence Boundaries
 

@@ -69,6 +69,9 @@ Specification PDF contains the current P0 evidence.
   three hours of external stable-URL health samples.
 - `GITHUB_SCHEDULED_HEALTH_SUMMARY.json`: independently scheduled cloud checks
   with observed run times and explicit GitHub scheduling boundaries.
+- `AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`: raw-audio Qwen2.5-Omni-3B
+  cross-check, including one rejected candidate and 3/3 admitted strict
+  clean/noise/alert variants.
 - `SHA256SUMS.txt`: SHA-256 digest for every finalized artifact except itself.
 
 ## 5. Boundaries

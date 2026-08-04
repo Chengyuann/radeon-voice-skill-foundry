@@ -28,6 +28,7 @@ reproducible evidence.
 21. [Poster](POSTER.pdf)
 22. [Source repository](https://github.com/Chengyuann/radeon-voice-skill-foundry)
 23. [Continuous integration](https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/workflows/ci.yml)
+24. [Audio-native policy critic summary](AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json)
 
 Runtime and integrity checks:
 
@@ -103,6 +104,9 @@ npm run verify:submission
 - Dual public origins: Radeon Cloud `rc-tunnel` primary plus Cloudflare Quick
   Tunnel fallback; each tunnel was stopped independently while Pages health
   remained HTTP 200.
+- Audio-native research critic: Qwen2.5-Omni-3B consumed the original SOP WAV
+  directly; 3/3 strict taxonomy variants passed while the unconstrained
+  candidate was rejected fail-closed.
 - Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
 - TypeScript typecheck: passed
 - Production build: passed

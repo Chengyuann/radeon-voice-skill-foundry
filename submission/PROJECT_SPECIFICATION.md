@@ -569,6 +569,35 @@ The engineering decision is to retain FP16 and quarantine this INT8 artifact.
 For a policy compiler, preserving no-send, redaction, confirmation, and
 conditional-scope rules has priority over memory savings.
 
+### 8.5 Audio-Native Policy Critic
+
+An isolated same-W7900 experiment tested whether a multimodal model could
+independently inspect the original SOP audio instead of trusting only an ASR
+transcript. `Qwen/Qwen2.5-Omni-3B` consumed the 20.39-second Chinese WAV
+directly with BF16, SDPA attention, and its Talker disabled.
+
+| Variant | Taxonomy gate | Safety semantics | Inference | Peak VRAM |
+|---|---:|---:|---:|---:|
+| unconstrained audio-native candidate | fail | 4/4 | 9.155 s | 9.075 GiB |
+| strict clean audio | pass | 4/4 | 9.184 s | 9.108 GiB |
+| strict pink-noise audio | pass | 4/4 | 9.154 s | 9.108 GiB |
+| strict alert-tone audio | pass | 4/4 | 9.171 s | 9.108 GiB |
+
+The unconstrained candidate understood all four safety requirements but
+classified redaction and missing-owner confirmation as ordinary `must` rules.
+The fail-closed admission gate rejected it. With explicit taxonomy guidance,
+all three clean/perturbed variants emitted `must_not`, `redact`,
+`requires_confirmation`, and `only_if` correctly. The alert tone did not alter
+the policy-kind set.
+
+This model is licensed under the Qwen Research License for non-commercial
+research/evaluation. It is therefore not promoted into the product path. The
+production Qwen3-ASR plus Qwen3-4B pipeline remains authoritative. The useful
+architecture is an independent Audio-Native Policy Critic that cross-checks
+the compiled policy and can only raise findings, never grant permissions.
+Machine-readable evidence:
+`AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`.
+
 ### 8.5 Adaptive Precision Controller
 
 The adaptive precision experiment tested whether strict JSON Schema could recover

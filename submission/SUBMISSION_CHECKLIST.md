@@ -36,6 +36,8 @@
 - [x] Same-hardware serving and ASR batching measurements are documented
 - [x] Compact-output and exact-reuse measurements are bounded correctly
 - [x] Quark INT8 rejection and FP16 production decision are documented
+- [x] Audio-native Omni critic experiment is bounded as research-only and
+      fail-closed
 
 ## Verification and Governance
 
