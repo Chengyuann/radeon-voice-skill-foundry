@@ -52,9 +52,9 @@ verification artifacts, and documented evidence boundaries.
 | Core inference on Radeon | Qwen3-ASR-0.6B and Qwen3-4B-Instruct-2507 run on W7900-class `gfx1100` with ROCm 7.2.1 | Live `/api/health`; Radeon audio proof; verified workflow proof ZIP | Product Demo 00:29-01:53 | Real model waiting time is preserved |
 | Unedited W7900 execution | One continuous public run shows health, ASR, primary-model compile, 7/7 verification, and the full proof hash | 48.96-second raw WebM/MP4; `W7900_LIVE_EVIDENCE_SUMMARY.json` | Unedited capture 00:00-00:48.96 | MP4 is a full-length codec transcode only |
 | Public stable-URL operation | External launchd monitor validates HTTP 200 and model/ASR dependency health | `PUBLIC_HEALTH_SUMMARY.json`; `PUBLIC_HEALTH_HISTORY.jsonl` | N/A | 187.6-minute captured interval, 39/39 healthy |
-| Independent cloud health checks | GitHub Actions validates Radeon mode plus model and ASR dependencies outside the W7900 and local Mac process trees | `GITHUB_SCHEDULED_HEALTH_SUMMARY.json`; workflow run links | N/A | Schedule is best-effort; observed executions are reported exactly |
-| Allocation continuity | Radeon Cloud Profile still showed 5 credits available and 0 consumed after 23.69 hours | `LIVE_RADEON_RECOVERY_EVIDENCE.json` | N/A | Platform allocation policy remains organizer-controlled |
-| Targeted inference optimization | Same-hardware vLLM serving A/B, native ASR batching, and compact structured output | Radeon experiment summary; source benchmark JSON in the project repository | Performance Demo 03:38-04:13 | Compact-output A/B uses three runs; vLLM C8 is a concurrent serving result |
+| Independent cloud health checks | GitHub Actions validates Radeon mode plus model and ASR dependencies outside the W7900 and local Mac process trees | `GITHUB_SCHEDULED_HEALTH_SUMMARY.json`; workflow run links | N/A | 29/29 scheduled checks over 50.75 observed hours; schedule is best-effort and observed executions are reported exactly |
+| Allocation continuity | Radeon Cloud Profile still showed 5 credits available and 0 consumed after 54.76 hours | `LIVE_RADEON_RECOVERY_EVIDENCE.json` | N/A | Platform allocation policy remains organizer-controlled |
+| Targeted inference optimization | Same-hardware vLLM serving A/B, GPU package-energy integration, native ASR batching, and compact structured output | Radeon experiment summary; `evidence/BOARD_ENERGY_SUMMARY.json`; source benchmark JSON in the project repository | Performance Demo 03:38-04:13 | Board energy excludes CPU, RAM, cooling, and PUE; vLLM C8 is a concurrent serving result |
 | Audio-native policy cross-check | Qwen2.5-Omni-3B listens to the original SOP audio and independently proposes typed policy rules without using the ASR transcript | `AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`; reproducible experiment scripts | N/A | Research-only critic under the Qwen Research License; it never grants permissions or replaces the production pipeline |
 
 ## Track 2 Capability Coverage
@@ -75,6 +75,8 @@ verification artifacts, and documented evidence boundaries.
 | vLLM graph, concurrency 8 | `257.65 output tokens/s` | `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json` |
 | Serialized Transformers, concurrency 8 | `20.66 output tokens/s` | `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json` |
 | Same-hardware serving ratio | `12.47x` | `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json` |
+| vLLM graph board-energy reduction | `78.76%` over the fixed 51-request workload | `evidence/BOARD_ENERGY_SUMMARY.json` |
+| vLLM graph output-token board efficiency | `0.6195 tok/J`, `4.79x` Transformers | `evidence/BOARD_ENERGY_SUMMARY.json` |
 | Native ASR batch 8 | `85.35x aggregate real-time` | `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json` |
 | Native ASR batching speedup | `6.659x` | `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json` |
 | Compact output token reduction | `29.42%` | source optimization benchmark JSON |

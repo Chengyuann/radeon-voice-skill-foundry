@@ -1,17 +1,17 @@
 {
-  "capturedAt": "2026-08-03T04:09:50Z",
+  "capturedAt": "2026-08-04T12:57:32Z",
   "failureCount": 0,
   "firstRunAt": "2026-08-02T09:24:54Z",
-  "lastRunAt": "2026-08-03T01:17:33Z",
+  "lastRunAt": "2026-08-04T12:09:41Z",
   "latestRun": {
     "conclusion": "success",
-    "createdAt": "2026-08-03T01:17:33Z",
-    "headSha": "9aa60fc83a5eca71f989da4f06ee1824fd96389a",
-    "runId": 30776529231,
-    "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30776529231"
+    "createdAt": "2026-08-04T12:09:41Z",
+    "headSha": "bdcd432e9547da2aa0ab915a9988c072565f0f63",
+    "runId": 30907868421,
+    "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30907868421"
   },
-  "observedDurationHours": 15.88,
-  "runCount": 14,
+  "observedDurationHours": 50.75,
+  "runCount": 29,
   "runs": [
     {
       "conclusion": "success",
@@ -110,11 +110,116 @@
       "headSha": "9aa60fc83a5eca71f989da4f06ee1824fd96389a",
       "runId": 30776529231,
       "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30776529231"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-03T04:51:37Z",
+      "headSha": "8a9380fd7cfe39baff919158bb7c40b01bada144",
+      "runId": 30785552464,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30785552464"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-03T08:16:24Z",
+      "headSha": "9f71e37175da3409365c8e958f92a01f44eed7ae",
+      "runId": 30796763094,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30796763094"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-03T11:48:45Z",
+      "headSha": "9f71e37175da3409365c8e958f92a01f44eed7ae",
+      "runId": 30811001227,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30811001227"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-03T14:05:07Z",
+      "headSha": "9f71e37175da3409365c8e958f92a01f44eed7ae",
+      "runId": 30820992016,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30820992016"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-03T16:36:24Z",
+      "headSha": "9f71e37175da3409365c8e958f92a01f44eed7ae",
+      "runId": 30832927338,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30832927338"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-03T18:22:46Z",
+      "headSha": "9f71e37175da3409365c8e958f92a01f44eed7ae",
+      "runId": 30840997896,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30840997896"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-03T20:15:34Z",
+      "headSha": "9f71e37175da3409365c8e958f92a01f44eed7ae",
+      "runId": 30849399987,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30849399987"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-03T21:32:59Z",
+      "headSha": "9f71e37175da3409365c8e958f92a01f44eed7ae",
+      "runId": 30855094236,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30855094236"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-03T22:35:32Z",
+      "headSha": "9f71e37175da3409365c8e958f92a01f44eed7ae",
+      "runId": 30859233673,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30859233673"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-03T23:42:49Z",
+      "headSha": "9f71e37175da3409365c8e958f92a01f44eed7ae",
+      "runId": 30863187023,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30863187023"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-04T01:09:41Z",
+      "headSha": "9f71e37175da3409365c8e958f92a01f44eed7ae",
+      "runId": 30867885161,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30867885161"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-04T04:33:17Z",
+      "headSha": "9f71e37175da3409365c8e958f92a01f44eed7ae",
+      "runId": 30878017044,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30878017044"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-04T07:18:55Z",
+      "headSha": "9f71e37175da3409365c8e958f92a01f44eed7ae",
+      "runId": 30887309311,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30887309311"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-04T10:03:01Z",
+      "headSha": "bdcd432e9547da2aa0ab915a9988c072565f0f63",
+      "runId": 30898986293,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30898986293"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-08-04T12:09:41Z",
+      "headSha": "bdcd432e9547da2aa0ab915a9988c072565f0f63",
+      "runId": 30907868421,
+      "url": "https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/runs/30907868421"
     }
   ],
   "scheduleRequest": "7,22,37,52 * * * *",
   "schedulerBoundary": "GitHub Actions schedule execution is best-effort and may be delayed or coalesced; observed runs are reported, not an exact 15-minute execution claim.",
   "schemaVersion": "0.1.0",
-  "successCount": 14,
+  "successCount": 29,
   "workflow": "Radeon Public Health"
 }

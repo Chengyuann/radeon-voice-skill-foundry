@@ -88,7 +88,7 @@ npm run verify:submission
 | Task decomposition, tools, RAG, and memory | Six typed actions compile into an ordered procedure, deterministic local retrieval, least-privilege permissions, fixtures, proof artifacts, and versioned procedural memory. New proofs also bind a typed agent harness and independent verifier contract. See Product Demo `00:29-04:15` and `AGENT_HARNESS_REPAIR_PROOF.zip`. |
 | Smooth multi-turn interaction | **Watch the [Director Cut](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4):** revision 1 baseline -> correction creates revision 2 -> revision 2 is verified -> another correction creates revision 3 -> verification is required again. It uses real product footage, hard captions, locally generated VoxCPM2 narration, and a project-owned original soundtrack. The raw product capture remains available as primary evidence. |
 | Core inference on Radeon and ROCm | Qwen3-ASR-0.6B and Qwen3-4B-Instruct-2507 run on a W7900-class `gfx1100` instance with ROCm 7.2.1. See live health, Product Demo, and `evidence/HARDWARE_BENCHMARK.json`. |
-| Targeted inference-speed optimization | Compact output reduces model output tokens by 29.42% and generation latency by 30.03%; vLLM graph serving reaches 257.65 aggregate output tokens/s at concurrency 8; native ASR batch 8 reaches 85.35x aggregate real-time. |
+| Targeted inference-speed optimization | Compact output reduces model output tokens by 29.42% and generation latency by 30.03%; vLLM graph serving reaches 257.65 aggregate output tokens/s at concurrency 8, improves bounded GPU package output-token efficiency by 4.79x, and reduces fixed-workload board energy by 78.76%; native ASR batch 8 reaches 85.35x aggregate real-time. |
 | Quantization or other optimization bonus | Quark INT8 reduces model-load VRAM by 44.07% and increases KV-cache capacity by 88.43%, but fails the policy-semantic gate. The adaptive controller rejects all unsafe INT8 outputs and falls back to FP16. This is submitted as a measured, fail-closed optimization study rather than a production quantization claim. |
 
 ## Verification Snapshot
@@ -98,9 +98,10 @@ npm run verify:submission
   proof hash `4181034f...f5510`
 - External stable-URL history: `187.6 minutes`, `39/39` healthy, `0` failures
 - GitHub scheduled cloud checks: see `GITHUB_SCHEDULED_HEALTH_SUMMARY.json`;
-  observed runs are reported without claiming exact 15-minute execution.
-- Radeon Cloud allocation: `23.69 hours`, `5` credits available, `0` consumed
-  at the August 3 profile check.
+  `29/29` scheduled checks succeeded over `50.75` observed hours without
+  claiming exact 15-minute execution.
+- Radeon Cloud allocation: `54.76 hours`, `5` credits available, `0` consumed
+  at the August 4 profile check.
 - Dual public origins: Radeon Cloud `rc-tunnel` primary plus Cloudflare Quick
   Tunnel fallback; each tunnel was stopped independently while Pages health
   remained HTTP 200.

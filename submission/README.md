@@ -103,8 +103,8 @@ passes 7/7 fixtures, and ends at proof hash
 `4181034f7cbc354d78df1ab6e248b720f9818e264b9d9bd1f589c2337b3f5510`.
 The public-health history covers 187.6 minutes with 39/39 healthy samples and
 zero observed failures.
-Independent GitHub scheduling subsequently produced 14/14 successful W7900
-health runs across 15.88 observed hours. GitHub scheduling is best-effort; the
+Independent GitHub scheduling subsequently produced 29/29 successful W7900
+health runs across 50.75 observed hours. GitHub scheduling is best-effort; the
 exact run timestamps are preserved in
 [`GITHUB_SCHEDULED_HEALTH_SUMMARY.json`](GITHUB_SCHEDULED_HEALTH_SUMMARY.json).
 
@@ -176,6 +176,9 @@ commit invitations, or perform external network writes.
 - vLLM graph concurrency-eight throughput: 257.65 output tokens/s
 - Serialized Transformers concurrency-eight throughput: 20.66 output tokens/s
 - Same-hardware serving throughput ratio: 12.47x
+- Fixed-workload vLLM graph GPU package energy: 4,939.16 J versus
+  23,255.72 J for Transformers, a 78.76% reduction
+- GPU package output-token efficiency: 0.6195 tok/J, 4.79x Transformers
 - Native ASR batch-eight: 85.35x aggregate real-time
 - Compact output: 29.42% fewer output tokens and 30.03% lower generation
   latency

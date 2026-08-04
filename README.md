@@ -284,6 +284,9 @@ Targeted optimization:
 - vLLM graph at concurrency eight: 257.65 aggregate output tokens/s
 - serialized Transformers at concurrency eight: 20.66 output tokens/s
 - same-hardware serving throughput ratio: 12.47x
+- fixed-workload vLLM graph GPU package energy: 4,939.16 J versus
+  23,255.72 J for Transformers, a 78.76% reduction
+- GPU package output-token efficiency: 0.6195 tok/J, 4.79x Transformers
 - native Qwen3-ASR batch eight: 85.35x aggregate real-time
 
 Exact reuse of an identical promoted skill measured 2.18 ms versus 24.09 s for

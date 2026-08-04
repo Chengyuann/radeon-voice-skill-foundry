@@ -35,7 +35,8 @@ external SRT. Its measured duration is 288.58 seconds.
 | Local memory | Promotion review, governance ledger, and exact reuse in Product Demo |
 | Permission and privacy | `mail:send = deny`, redaction, five fail-closed probes |
 | Agent infrastructure | `AGENT_HARNESS_REPAIR_EVIDENCE.json` and `AGENT_HARNESS_REPAIR_PROOF.zip` |
-| Radeon optimization | vLLM concurrency, ASR batching, compact output, Quark rejection study |
+| Radeon optimization | vLLM concurrency, board-energy integration, ASR batching, compact output, Quark rejection study |
+| Board-energy efficiency | `evidence/BOARD_ENERGY_SUMMARY.json`: fixed 51-request workload, `-78.76%` GPU package energy and `4.79x` output tok/J |
 | Live W7900 execution | 48.96-second unedited capture and `W7900_LIVE_EVIDENCE_SUMMARY.json` |
 | Public stability | `PUBLIC_HEALTH_SUMMARY.json` and `PUBLIC_HEALTH_HISTORY.jsonl` |
 

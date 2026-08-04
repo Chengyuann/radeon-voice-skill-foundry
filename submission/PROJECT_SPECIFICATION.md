@@ -525,6 +525,19 @@ bursts, semantic safety gates, and per-second GPU telemetry.
 Native Qwen3-ASR batch-eight reached 85.35x aggregate real-time and was 6.659x
 faster than sequential inference for the same eight inputs.
 
+The same fixed 51-request extended workload also recorded per-second
+`rocm-smi` package-power samples. Trapezoidal integration produced:
+
+| Board-energy result | Transformers FP16 | vLLM graph FP16 | Change |
+|---|---:|---:|---:|
+| Integrated GPU package energy | 23,255.72 J | 4,939.16 J | -78.76% |
+| Output tokens per GPU package joule | 0.1294 | 0.6195 | 4.79x |
+
+This is a board-level bounded comparison, not whole-system energy
+certification. CPU, RAM, storage, cooling, and datacenter PUE are excluded.
+All requests retained the four required safety semantics. Machine-readable
+derivation: `evidence/BOARD_ENERGY_SUMMARY.json`.
+
 These serving and batching measurements complement the compact-output and exact
 reuse optimizations: vLLM improves concurrent fresh compilation, batching
 improves multiple audio inputs, compact output shortens each generation, and
@@ -885,13 +898,14 @@ GitHub Actions health workflow provide external detection independent of the
 Radeon service process tree. GitHub Actions requests four offset checks per
 hour, but scheduled execution is best-effort; the submission reports observed
 run timestamps and conclusions in `GITHUB_SCHEDULED_HEALTH_SUMMARY.json`
-instead of claiming an exact 15-minute execution interval.
+instead of claiming an exact 15-minute execution interval. The current captured
+history contains 29/29 successful scheduled checks across 50.75 observed hours.
 
 This recovery design handles child-process, Supervisor-main-process, and Quick
 Tunnel failures while the Radeon Cloud instance exists. It cannot recreate an
 instance deleted by the platform or recover a stopped host. The account still
-showed five available credits and zero consumed credits after 23.69 hours
-(1,421 minutes) of runtime on August 3, despite the nominal
+showed five available credits and zero consumed credits after 54.76 hours
+(3,285 minutes) of runtime on August 4, despite the nominal
 one-credit-per-GPU-hour UI text. Several `HTTP 000` samples from the macOS
 launchd probe during that period were local network or sleep-state failures:
 the W7900 internal public monitor returned healthy once per minute throughout

@@ -8,9 +8,9 @@
     "creditRate": "1 credit/GPU/hour",
     "creditsObserved": 5,
     "creditsConsumedObserved": 0,
-    "runtimeHoursObserved": 23.69,
-    "runtimeMinutesObserved": 1421,
-    "creditObservationAt": "2026-08-03T04:03:01Z"
+    "runtimeHoursObserved": 54.76,
+    "runtimeMinutesObserved": 3285,
+    "creditObservationAt": "2026-08-04T12:50:00Z"
   },
   "publicHealth": {
     "ok": true,

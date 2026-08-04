@@ -70,6 +70,7 @@ const requiredAssets = [
   "submission/PUBLIC_HEALTH_SUMMARY.json",
   "submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json",
   "submission/AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json",
+  "submission/evidence/BOARD_ENERGY_SUMMARY.json",
   "submission/W7900_LIVE_EVIDENCE_SUMMARY.json",
   "submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4",
   "submission/W7900_LIVE_EVIDENCE_UNEDITED.srt",
@@ -149,8 +150,8 @@ const githubHealthSummary = JSON.parse(
   readFileSync("submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json", "utf8")
 );
 if (
-  githubHealthSummary.observedDurationHours < 12 ||
-  githubHealthSummary.runCount < 10 ||
+  githubHealthSummary.observedDurationHours < 48 ||
+  githubHealthSummary.runCount < 25 ||
   githubHealthSummary.successCount !== githubHealthSummary.runCount ||
   githubHealthSummary.failureCount !== 0 ||
   !String(githubHealthSummary.schedulerBoundary || "").includes("best-effort")
@@ -178,6 +179,23 @@ if (
   )
 ) {
   throw new Error("Audio-native policy critic evidence is incomplete");
+}
+
+const boardEnergySummary = JSON.parse(
+  readFileSync("submission/evidence/BOARD_ENERGY_SUMMARY.json", "utf8")
+);
+if (
+  boardEnergySummary.variants?.transformersFp16?.requestCount !== 51 ||
+  boardEnergySummary.variants?.vllmGraphFp16?.requestCount !== 51 ||
+  boardEnergySummary.comparison
+    ?.vllmGraphVsTransformersOutputTokensPerBoardJouleX !== 4.79 ||
+  boardEnergySummary.comparison
+    ?.vllmGraphVsTransformersBoardEnergyReductionPercent !== 78.76 ||
+  !String(boardEnergySummary.measurementBoundary).includes(
+    "Board-level GPU package energy only"
+  )
+) {
+  throw new Error("Board-energy evidence is incomplete");
 }
 
 const liveEvidence = JSON.parse(
@@ -238,6 +256,7 @@ console.log(
         "three-hour public health history",
         "GitHub scheduled health history",
         "audio-native policy critic admission",
+        "fixed-workload board-energy integration",
         "unedited W7900 live evidence",
         "typecheck and production build",
         "submission SHA256SUMS",
