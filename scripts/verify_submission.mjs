@@ -71,6 +71,7 @@ const requiredAssets = [
   "submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json",
   "submission/AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json",
   "submission/CROSS_MODAL_POLICY_INDUCTION.png",
+  "submission/JUDGE_RESULT_CARD.png",
   "submission/evidence/BOARD_ENERGY_SUMMARY.json",
   "submission/W7900_LIVE_EVIDENCE_SUMMARY.json",
   "submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4",
@@ -185,12 +186,15 @@ if (
 const crossModalPng = readFileSync(
   "submission/CROSS_MODAL_POLICY_INDUCTION.png"
 );
+const judgeResultCardPng = readFileSync("submission/JUDGE_RESULT_CARD.png");
 if (
   crossModalPng.length < 100_000 ||
+  judgeResultCardPng.length < 100_000 ||
   !submissionReadme.includes("Cross-modal policy induction") ||
+  !submissionReadme.includes("Judge result card") ||
   !pdfText.includes("Cross-Modal Policy Induction")
 ) {
-  throw new Error("Cross-modal policy induction evidence is incomplete");
+  throw new Error("Cross-modal judge-facing evidence is incomplete");
 }
 
 const boardEnergySummary = JSON.parse(
@@ -269,6 +273,7 @@ console.log(
         "GitHub scheduled health history",
         "audio-native policy critic admission",
         "cross-modal policy induction visual",
+        "judge result card visual",
         "fixed-workload board-energy integration",
         "unedited W7900 live evidence",
         "typecheck and production build",

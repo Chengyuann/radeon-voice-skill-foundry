@@ -28,6 +28,7 @@ external SRT. Its measured duration is 288.58 seconds.
 
 | Track 2 area | Fast evidence |
 |---|---|
+| Judge-facing result summary | `JUDGE_RESULT_CARD.png`: three evidence channels -> verified Agent Skill; critical disagreement -> quarantine; four headline metrics |
 | Local RAG | Product Demo `00:29-04:15`; proof `rag_evidence.json` |
 | Cross-modal policy induction | `CROSS_MODAL_POLICY_INDUCTION.png`: Heard + Observed + Retrieved -> typed policy; critical disagreement -> quarantine |
 | Tool invocation | Six server-authoritative actions in `action_contract.json` |
@@ -74,6 +75,8 @@ Specification PDF contains the current P0 evidence.
 - `AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`: raw-audio Qwen2.5-Omni-3B
   cross-check, including one rejected candidate and 3/3 admitted strict
   clean/noise/alert variants.
+- `JUDGE_RESULT_CARD.png`: the first-screen visual summary of why this is not
+  speech-to-text-to-chat and which four measurements judges should remember.
 - `CROSS_MODAL_POLICY_INDUCTION.png`: why speech, demonstrated actions, and
   local policy evidence provide non-interchangeable information.
 - `SHA256SUMS.txt`: SHA-256 digest for every finalized artifact except itself.

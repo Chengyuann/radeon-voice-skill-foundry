@@ -31,15 +31,16 @@ verification artifacts, and documented evidence boundaries.
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4`
 17. Project Specification: `PROJECT_SPECIFICATION.pdf`
 18. Architecture: `ARCHITECTURE.png`
-19. Poster: `POSTER.pdf`
-20. Multi-turn refinement: `MULTI_TURN_REFINEMENT.png` and
+19. Judge result card: `JUDGE_RESULT_CARD.png`
+20. Poster: `POSTER.pdf`
+21. Multi-turn refinement: `MULTI_TURN_REFINEMENT.png` and
    `MULTI_TURN_REFINEMENT.json`, with
    `MULTI_TURN_REFINEMENT_PROOF.zip`
-21. Radeon evidence: `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json`
-22. Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
-23. Audio-native policy critic:
+22. Radeon evidence: `evidence/RADEON_SERVING_AND_ASR_SUMMARY.json`
+23. Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
+24. Audio-native policy critic:
    `AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`
-24. Cross-modal policy induction:
+25. Cross-modal policy induction:
    `CROSS_MODAL_POLICY_INDUCTION.png`
 
 ## System Capability Map

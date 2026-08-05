@@ -25,11 +25,12 @@ reproducible evidence.
 18. [Agent harness repair proof](AGENT_HARNESS_REPAIR_PROOF.zip)
 19. [Project Specification](PROJECT_SPECIFICATION.pdf)
 20. [Technical Evidence Index](TECHNICAL_EVIDENCE_INDEX.md)
-21. [Poster](POSTER.pdf)
-22. [Source repository](https://github.com/Chengyuann/radeon-voice-skill-foundry)
-23. [Continuous integration](https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/workflows/ci.yml)
-24. [Audio-native policy critic summary](AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json)
-25. [Cross-modal policy induction diagram](CROSS_MODAL_POLICY_INDUCTION.png)
+21. [Judge result card](JUDGE_RESULT_CARD.png)
+22. [Poster](POSTER.pdf)
+23. [Source repository](https://github.com/Chengyuann/radeon-voice-skill-foundry)
+24. [Continuous integration](https://github.com/Chengyuann/radeon-voice-skill-foundry/actions/workflows/ci.yml)
+25. [Audio-native policy critic summary](AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json)
+26. [Cross-modal policy induction diagram](CROSS_MODAL_POLICY_INDUCTION.png)
 
 Runtime and integrity checks:
 

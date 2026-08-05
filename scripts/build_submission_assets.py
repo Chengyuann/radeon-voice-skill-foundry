@@ -407,6 +407,143 @@ def build_cross_modal_policy() -> Path:
     return path
 
 
+def draw_metric_tile(
+    draw: ImageDraw.ImageDraw,
+    rect: tuple[int, int, int, int],
+    value: str,
+    label: str,
+    note: str,
+    accent: str,
+) -> None:
+    x1, y1, x2, y2 = rect
+    rounded_box(draw, rect, WHITE, outline="#CCD2D5", radius=18, width=2)
+    draw.text((x1 + 24, y1 + 16), value, font=font(42, bold=True), fill=accent)
+    draw.text((x1 + 24, y1 + 68), label, font=font(18, bold=True, mono=True), fill=INK)
+    draw_wrapped(draw, (x1 + 24, y1 + 94), note, font(16), MUTED, x2 - x1 - 48, 4)
+
+
+def build_judge_result_card() -> Path:
+    width, height = 2400, 1350
+    image = Image.new("RGB", (width, height), "#F4F6F7")
+    draw = ImageDraw.Draw(image)
+
+    draw.rectangle((0, 0, width, 18), fill=ACCENT)
+    draw.text((96, 62), "Radeon Voice Skill Foundry", font=font(42, bold=True), fill=INK)
+    draw.text((98, 116), "AMD AI DevMaster Track 2 | Chengyuan Ma", font=font(21, bold=True, mono=True), fill=MUTED)
+    draw.text((96, 188), "Cross-Modal Policy Induction", font=font(72, bold=True), fill=INK)
+    draw.text(
+        (100, 280),
+        "Speech explains why. Demonstration proves how. Local policy defines authority.",
+        font=font(31, bold=True),
+        fill=ACCENT_DARK,
+    )
+    draw.text(
+        (100, 334),
+        "Not speech-to-text-to-chat: three non-interchangeable evidence channels become one proof-bound Agent Skill.",
+        font=font(23),
+        fill=MUTED,
+    )
+
+    # Evidence cards.
+    evidence = [
+        (
+            "HEARD",
+            "Private speech",
+            "why / when / must never happen",
+            ["do not send automatically", "owner missing requires confirmation"],
+            ACCENT,
+            "#FBEAE8",
+        ),
+        (
+            "OBSERVED",
+            "Demonstrated actions",
+            "tools / order / parameters / state",
+            ["create the draft", "select owner and due-date fields"],
+            BLUE,
+            BLUE_BG,
+        ),
+        (
+            "RETRIEVED",
+            "Local policy",
+            "authority / boundary / citation",
+            ["external send needs approval", "missing owner blocks release"],
+            GREEN,
+            GREEN_BG,
+        ),
+    ]
+    card_y = 440
+    card_w = 540
+    card_h = 300
+    card_gap = 44
+    card_centers: list[tuple[int, int]] = []
+    for idx, (eyebrow, title, footer, bullets, accent, fill) in enumerate(evidence):
+        x = 96 + idx * (card_w + card_gap)
+        rect = (x, card_y, x + card_w, card_y + card_h)
+        rounded_box(draw, rect, fill, outline=accent, radius=24, width=4)
+        draw.text((x + 30, card_y + 28), eyebrow, font=font(21, bold=True, mono=True), fill=accent)
+        draw.text((x + 30, card_y + 70), title, font=font(34, bold=True), fill=INK)
+        by = card_y + 136
+        for bullet in bullets:
+            draw.rounded_rectangle((x + 32, by + 7, x + 54, by + 29), radius=6, fill=accent)
+            draw_wrapped(draw, (x + 74, by), bullet, font(20, bold=True), INK, card_w - 110, 4)
+            by += 54
+        draw.text((x + 30, card_y + 252), footer, font=font(18, bold=True), fill=MUTED)
+        card_centers.append((x + card_w // 2, card_y + card_h))
+
+    skill = (635, 845, 1765, 1075)
+    rounded_box(draw, skill, INK, outline=INK, radius=26, width=2)
+    draw.text((685, 880), "VERIFIED AGENT SKILL", font=font(24, bold=True, mono=True), fill="#B9E1CC")
+    draw.text((685, 930), "least-privilege policy + tests + receipts", font=font(38, bold=True), fill=WHITE)
+    draw.text(
+        (685, 990),
+        "portable SKILL.md | 7/7 adversarial replay | versioned memory | explicit promotion",
+        font=font(23),
+        fill="#D7DCDD",
+    )
+    for cx, cy in card_centers:
+        arrow(draw, (cx, cy + 12), (1200, skill[1] - 12), color="#8A9297", width=5)
+
+    conflict = (1825, 440, 2304, 1075)
+    rounded_box(draw, conflict, WHITE, outline=ACCENT, radius=24, width=4)
+    draw.text((1860, 478), "FAIL-CLOSED CHECK", font=font(22, bold=True, mono=True), fill=ACCENT_DARK)
+    draw.text((1860, 540), "critical", font=font(42, bold=True), fill=INK)
+    draw.text((1860, 590), "disagreement", font=font(42, bold=True), fill=INK)
+    draw.line((1860, 665, 2265, 665), fill=LINE, width=3)
+    draw.text((1860, 706), "ASR + Agent path", font=font(22, bold=True), fill=MUTED)
+    draw.text((1860, 744), "mail.send = allow", font=font(24, bold=True, mono=True), fill=ACCENT_DARK)
+    draw.text((1860, 808), "Raw-audio critic", font=font(22, bold=True), fill=MUTED)
+    draw.text((1860, 846), "mail.send = deny", font=font(24, bold=True, mono=True), fill=GREEN)
+    draw.rounded_rectangle((1860, 928, 2265, 1016), radius=16, fill="#FBEAE8", outline=ACCENT, width=3)
+    draw.text((1900, 950), "QUARANTINE", font=font(38, bold=True, mono=True), fill=ACCENT)
+    draw.text((1860, 1040), "conflicts never grant permission", font=font(19, bold=True), fill=MUTED)
+    arrow(draw, (1765, 960), (1825, 960), color=ACCENT, width=5)
+
+    # Bottom result rail.
+    rail = (96, 1144, 2304, 1296)
+    rounded_box(draw, rail, "#E7EBED", outline="#CCD2D5", radius=22, width=2)
+    metrics = [
+        ("257.65", "TOK/S", "vLLM graph C8", ACCENT_DARK),
+        ("12.47x", "SERVING", "throughput uplift", BLUE),
+        ("4.79x", "TOK/J", "GPU package output efficiency", GREEN),
+        ("68/68", "TESTS", "typecheck + build + verifier", GREEN),
+    ]
+    x = 126
+    for value, label, note, accent in metrics:
+        draw_metric_tile(draw, (x, 1168, x + 500, 1282), value, label, note, accent)
+        x += 540
+
+    draw.text(
+        (96, 1310),
+        "Detailed evidence: CROSS_MODAL_POLICY_INDUCTION.png, AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json, BOARD_ENERGY_SUMMARY.json, SHA256SUMS.txt",
+        font=font(18, bold=True),
+        fill=MUTED,
+    )
+
+    path = SUBMISSION / "JUDGE_RESULT_CARD.png"
+    image.save(path, quality=95)
+    return path
+
+
 def build_poster() -> tuple[Path, Path]:
     width, height = 1800, 2550
     image = Image.new("RGB", (width, height), BG)
@@ -929,6 +1066,7 @@ def main() -> None:
     TMP.mkdir(parents=True, exist_ok=True)
     architecture = build_architecture()
     cross_modal = build_cross_modal_policy()
+    judge_result_card = build_judge_result_card()
     poster_png, poster_pdf = build_poster()
     spec_pdf = build_spec_pdf(architecture, cross_modal)
     print(
@@ -936,6 +1074,7 @@ def main() -> None:
             {
                 "architecture": str(architecture),
                 "crossModalPolicy": str(cross_modal),
+                "judgeResultCard": str(judge_result_card),
                 "posterPng": str(poster_png),
                 "posterPdf": str(poster_pdf),
                 "specPdf": str(spec_pdf),

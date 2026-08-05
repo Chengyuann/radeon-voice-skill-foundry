@@ -38,6 +38,8 @@ verification again before it can be promoted.
   [`submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json`](submission/GITHUB_SCHEDULED_HEALTH_SUMMARY.json)
 - Audio-native policy critic evidence:
   [`submission/AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`](submission/AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json)
+- Judge result card:
+  [`submission/JUDGE_RESULT_CARD.png`](submission/JUDGE_RESULT_CARD.png)
 - Cross-modal policy induction diagram:
   [`submission/CROSS_MODAL_POLICY_INDUCTION.png`](submission/CROSS_MODAL_POLICY_INDUCTION.png)
 

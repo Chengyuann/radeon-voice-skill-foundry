@@ -49,19 +49,20 @@ requires explicit human promotion.
 16. Project Specification: [`PROJECT_SPECIFICATION.pdf`](PROJECT_SPECIFICATION.pdf)
 17. Technical evidence: [`TECHNICAL_EVIDENCE_INDEX.md`](TECHNICAL_EVIDENCE_INDEX.md)
 18. Architecture: [`ARCHITECTURE.png`](ARCHITECTURE.png)
-19. Poster: [`POSTER.pdf`](POSTER.pdf)
-20. Multi-turn evidence:
+19. Judge result card: [`JUDGE_RESULT_CARD.png`](JUDGE_RESULT_CARD.png)
+20. Poster: [`POSTER.pdf`](POSTER.pdf)
+21. Multi-turn evidence:
    [`MULTI_TURN_REFINEMENT.png`](MULTI_TURN_REFINEMENT.png) and
    [`MULTI_TURN_REFINEMENT.json`](MULTI_TURN_REFINEMENT.json), with
    [`MULTI_TURN_REFINEMENT_PROOF.zip`](MULTI_TURN_REFINEMENT_PROOF.zip)
-21. Performance Demo:
+22. Performance Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_PERFORMANCE_DEMO.mp4`
-22. Continuous Operation Demo:
+23. Continuous Operation Demo:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/CONTINUOUS_OPERATION_DEMO.mp4`
-23. Package integrity: [`SHA256SUMS.txt`](SHA256SUMS.txt)
-24. Source:
+24. Package integrity: [`SHA256SUMS.txt`](SHA256SUMS.txt)
+25. Source:
    `https://github.com/Chengyuann/radeon-voice-skill-foundry`
-25. Cross-modal policy induction:
+26. Cross-modal policy induction:
    [`CROSS_MODAL_POLICY_INDUCTION.png`](CROSS_MODAL_POLICY_INDUCTION.png)
 
 Demo captions:
