@@ -439,7 +439,7 @@ def build_judge_result_card() -> Path:
     )
     draw.text(
         (100, 334),
-        "Not speech-to-text-to-chat: three non-interchangeable evidence channels become one proof-bound Agent Skill.",
+        "Not speech-to-text-to-chat: only a verified, least-privilege skill can be promoted for reuse.",
         font=font(23),
         fill=MUTED,
     )
@@ -503,20 +503,26 @@ def build_judge_result_card() -> Path:
     for cx, cy in card_centers:
         arrow(draw, (cx, cy + 12), (1200, skill[1] - 12), color="#8A9297", width=5)
 
-    conflict = (1825, 440, 2304, 1075)
-    rounded_box(draw, conflict, WHITE, outline=ACCENT, radius=24, width=4)
-    draw.text((1860, 478), "FAIL-CLOSED CHECK", font=font(22, bold=True, mono=True), fill=ACCENT_DARK)
-    draw.text((1860, 540), "critical", font=font(42, bold=True), fill=INK)
-    draw.text((1860, 590), "disagreement", font=font(42, bold=True), fill=INK)
+    safety = (1825, 440, 2304, 1075)
+    rounded_box(draw, safety, WHITE, outline=GREEN, radius=24, width=4)
+    draw.text((1860, 478), "SAFETY GUARANTEE", font=font(22, bold=True, mono=True), fill=GREEN)
+    draw.text((1860, 540), "risky actions", font=font(42, bold=True), fill=INK)
+    draw.text((1860, 590), "need proof", font=font(42, bold=True), fill=INK)
     draw.line((1860, 665, 2265, 665), fill=LINE, width=3)
-    draw.text((1860, 706), "ASR + Agent path", font=font(22, bold=True), fill=MUTED)
-    draw.text((1860, 744), "mail.send = allow", font=font(24, bold=True, mono=True), fill=ACCENT_DARK)
-    draw.text((1860, 808), "Raw-audio critic", font=font(22, bold=True), fill=MUTED)
-    draw.text((1860, 846), "mail.send = deny", font=font(24, bold=True, mono=True), fill=GREEN)
-    draw.rounded_rectangle((1860, 928, 2265, 1016), radius=16, fill="#FBEAE8", outline=ACCENT, width=3)
-    draw.text((1900, 950), "QUARANTINE", font=font(38, bold=True, mono=True), fill=ACCENT)
-    draw.text((1860, 1040), "conflicts never grant permission", font=font(19, bold=True), fill=MUTED)
-    arrow(draw, (1765, 960), (1825, 960), color=ACCENT, width=5)
+    permissions = [
+        ("mail.draft", "ALLOW", GREEN),
+        ("mail.send", "DENY", ACCENT_DARK),
+        ("owner missing", "CONFIRM", AMBER),
+    ]
+    py = 706
+    for name, decision, color in permissions:
+        draw.text((1860, py), name, font=font(20, bold=True, mono=True), fill=MUTED)
+        draw.text((2080, py - 2), decision, font=font(22, bold=True, mono=True), fill=color)
+        py += 62
+    draw.rounded_rectangle((1860, 928, 2265, 1016), radius=16, fill=GREEN_BG, outline=GREEN, width=3)
+    draw.text((1936, 950), "7/7 VERIFIED", font=font(34, bold=True, mono=True), fill=GREEN)
+    draw.text((1860, 1040), "no risky action before proof", font=font(19, bold=True), fill=MUTED)
+    arrow(draw, (1765, 960), (1825, 960), color=GREEN, width=5)
 
     # Bottom result rail.
     rail = (96, 1144, 2304, 1296)

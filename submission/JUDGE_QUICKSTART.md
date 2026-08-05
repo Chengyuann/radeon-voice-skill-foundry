@@ -28,7 +28,7 @@ external SRT. Its measured duration is 288.58 seconds.
 
 | Track 2 area | Fast evidence |
 |---|---|
-| Judge-facing result summary | `JUDGE_RESULT_CARD.png`: three evidence channels -> verified Agent Skill; critical disagreement -> quarantine; four headline metrics |
+| Judge-facing result summary | `JUDGE_RESULT_CARD.png`: three evidence channels -> verified Agent Skill; least-privilege decisions; 7/7 verification; four headline metrics |
 | Local RAG | Product Demo `00:29-04:15`; proof `rag_evidence.json` |
 | Cross-modal policy induction | `CROSS_MODAL_POLICY_INDUCTION.png`: Heard + Observed + Retrieved -> typed policy; critical disagreement -> quarantine |
 | Tool invocation | Six server-authoritative actions in `action_contract.json` |
