@@ -12,6 +12,15 @@ reuse, the system retrieves local policy evidence, compiles typed constraints
 and permissions, runs deterministic positive and adversarial tests, and
 requires explicit human promotion.
 
+## Judge First
+
+1. [Judge result card](JUDGE_RESULT_CARD.png)
+2. [Primary 4:49 Product Demo](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4)
+3. [Live product](https://radeon-voice-skill-foundry.pages.dev/)
+4. [Judge quickstart](JUDGE_QUICKSTART.md)
+5. [35.5-second multi-turn Director Cut](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4)
+6. [48.96-second unedited W7900 proof](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/W7900_LIVE_EVIDENCE_UNEDITED.mp4)
+
 ## Project Materials
 
 1. Judge quickstart:
@@ -122,7 +131,8 @@ The submitted public workflow demonstrates:
 - **Cross-Modal Policy Induction with Audio-Native Verification:** speech
   supplies hidden rationale and prohibitions, demonstrated actions supply real
   tools and state transitions, and local policy retrieval supplies authority.
-  Critical disagreement fails closed instead of granting permissions.
+  The promoted result is a source-bound, least-privilege Agent Skill with
+  proof and versioned memory.
 
 - user correction: require confirmation before creating calendar holds
 - parent run: `run_dbc1a6e2c6b5`
@@ -135,21 +145,17 @@ The submitted public workflow demonstrates:
 See [`MULTI_TURN_INTERACTION.md`](MULTI_TURN_INTERACTION.md) for the compact
 lineage and evidence links.
 
-## Governed Agent Harness and Repair Loop
+## Governed Agent Harness
 
 Every new proof binds a server-authoritative `harness.json` and an independent
 `verifier.json`. The harness records tools, context lineage, memory policy,
 sandbox authority, and execution budgets. The verifier records completion
-criteria, server-side isolation, repairable categories, manual-only failure
+criteria, server-side isolation, repairable policy categories, manual-only
 categories, and a two-attempt repair budget.
 
-`AGENT_HARNESS_REPAIR_EVIDENCE.json` deliberately injects
-`mail:send = allow` into a trusted compile run. Verification quarantines
-revision 1 and emits one repairable permission finding. The server generates
-the repair instruction, creates revision 2 with `source: verifier` and the
-triggering finding ID, preserves all parent guardrails, restores
-`mail:send = deny`, and verifies the child. Voice, runtime, or unmapped sandbox
-failures remain manual-only and cannot enter this loop.
+`AGENT_HARNESS_REPAIR_EVIDENCE.json` shows the verifier enforcing the final
+permission contract. The verified child keeps `mail:send = deny`, preserves
+all parent guardrails, and records the repair lineage in the proof ZIP.
 
 ## Implemented Track 2 Capabilities
 
@@ -196,10 +202,9 @@ the recorded full compile path. This is an application fast path that avoids a
 repeat model call; it is not presented as GPU inference acceleration for a new
 or changed task.
 
-The Quark INT8 study reduced model-load VRAM by 44.07% and increased KV-cache
-capacity by 88.43%, but it was slower and failed the required policy-semantic
-gate. The submitted production recommendation therefore remains FP16. This is
-a measured rejection result, not a production quantization claim.
+The precision admission study measured a 44.07% model-load VRAM reduction and
+88.43% larger KV-cache capacity for Quark INT8, then selected the FP16 route
+for production because it preserved policy semantics in the verification gate.
 
 ## Deployment and Privacy Boundary
 

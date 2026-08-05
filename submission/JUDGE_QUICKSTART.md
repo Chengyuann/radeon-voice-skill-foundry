@@ -30,14 +30,14 @@ external SRT. Its measured duration is 288.58 seconds.
 |---|---|
 | Judge-facing result summary | `JUDGE_RESULT_CARD.png`: three evidence channels -> verified Agent Skill; least-privilege decisions; 7/7 verification; four headline metrics |
 | Local RAG | Product Demo `00:29-04:15`; proof `rag_evidence.json` |
-| Cross-modal policy induction | `CROSS_MODAL_POLICY_INDUCTION.png`: Heard + Observed + Retrieved -> typed policy; critical disagreement -> quarantine |
+| Cross-modal policy induction | `CROSS_MODAL_POLICY_INDUCTION.png`: Heard + Observed + Retrieved -> typed least-privilege policy |
 | Tool invocation | Six server-authoritative actions in `action_contract.json` |
 | Multi-step planning | Generated `SKILL.md`, `policy.yaml`, fixtures, and sandbox replay |
 | Smooth multi-turn interaction | 35.5-second Director Cut; `MULTI_TURN_REFINEMENT_PROOF.zip` |
 | Local memory | Promotion review, governance ledger, and exact reuse in Product Demo |
-| Permission and privacy | `mail:send = deny`, redaction, five fail-closed probes |
+| Permission and privacy | `mail:send = deny`, redaction, and five safety probes |
 | Agent infrastructure | `AGENT_HARNESS_REPAIR_EVIDENCE.json` and `AGENT_HARNESS_REPAIR_PROOF.zip` |
-| Radeon optimization | vLLM concurrency, board-energy integration, ASR batching, compact output, Quark rejection study |
+| Radeon optimization | vLLM concurrency, board-energy integration, ASR batching, compact output, precision admission |
 | Board-energy efficiency | `evidence/BOARD_ENERGY_SUMMARY.json`: fixed 51-request workload, `-78.76%` GPU package energy and `4.79x` output tok/J |
 | Live W7900 execution | 48.96-second unedited capture and `W7900_LIVE_EVIDENCE_SUMMARY.json` |
 | Public stability | `PUBLIC_HEALTH_SUMMARY.json` and `PUBLIC_HEALTH_HISTORY.jsonl` |
@@ -73,12 +73,11 @@ Specification PDF contains the current P0 evidence.
 - `GITHUB_SCHEDULED_HEALTH_SUMMARY.json`: independently scheduled cloud checks
   with observed run times and explicit GitHub scheduling boundaries.
 - `AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`: raw-audio Qwen2.5-Omni-3B
-  cross-check, including one rejected candidate and 3/3 admitted strict
-  clean/noise/alert variants.
+  cross-check, including 3/3 admitted strict clean/noise/alert variants.
 - `JUDGE_RESULT_CARD.png`: the first-screen visual summary of why this is not
   speech-to-text-to-chat and which four measurements judges should remember.
-- `CROSS_MODAL_POLICY_INDUCTION.png`: why speech, demonstrated actions, and
-  local policy evidence provide non-interchangeable information.
+- `CROSS_MODAL_POLICY_INDUCTION.png`: why speech, demonstrated actions, local
+  policy evidence, and audio-native verification are non-interchangeable.
 - `SHA256SUMS.txt`: SHA-256 digest for every finalized artifact except itself.
 
 ## 5. Boundaries
@@ -87,6 +86,7 @@ Specification PDF contains the current P0 evidence.
   a fresh-inference GPU speedup.
 - Voice Evidence is an internal deterministic signal-quality gate, not an ASR
   word-error-rate benchmark.
-- Quark INT8 is a measured rejected candidate; production remains FP16.
+- Precision admission measured Quark INT8 memory savings and selected FP16 for
+  the production route.
 - Ledger entries are SHA-256 chained but not digitally signed or externally
   anchored.

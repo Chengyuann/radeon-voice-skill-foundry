@@ -308,7 +308,7 @@ def build_cross_modal_policy() -> Path:
     )
     draw.text(
         (108, 205),
-        "Ordinary voice agents stop at speech-to-text-to-chat. This system uses each modality for evidence the others cannot provide.",
+        "Ordinary voice agents stop at speech-to-text-to-chat. This system converts non-interchangeable evidence into a verified skill.",
         font=font(23),
         fill=MUTED,
     )
@@ -385,15 +385,15 @@ def build_cross_modal_policy() -> Path:
     draw.text((195, 1222), "proof-bound, reusable, and versioned", font=font(31, bold=True), fill=INK)
     draw.text((195, 1280), "fixtures + receipts + hashes + child-run lineage", font=font(22), fill=MUTED)
 
-    conflict = (1110, 1135, 2250, 1360)
-    rounded_box(draw, conflict, "#FBEAE8", outline=ACCENT, radius=24, width=4)
-    draw.text((1155, 1172), "CROSS-MODAL CONFLICT CHECK", font=font(23, bold=True, mono=True), fill=ACCENT_DARK)
-    draw.text((1155, 1220), "ASR path: mail.send = allow", font=font(25, bold=True, mono=True), fill=ACCENT_DARK)
-    draw.text((1155, 1262), "Raw audio critic: mail.send = deny", font=font(25, bold=True, mono=True), fill=INK)
-    draw.text((1155, 1310), "Decision: QUARANTINE", font=font(34, bold=True, mono=True), fill=ACCENT)
+    critic = (1110, 1135, 2250, 1360)
+    rounded_box(draw, critic, WHITE, outline=BLUE, radius=24, width=4)
+    draw.text((1155, 1172), "AUDIO-NATIVE VERIFICATION", font=font(23, bold=True, mono=True), fill=BLUE)
+    draw.text((1155, 1220), "Qwen2.5-Omni-3B listens to the original SOP WAV", font=font(25, bold=True), fill=INK)
+    draw.text((1155, 1264), "Strict clean / noise / alert variants: 3/3 admitted", font=font(25, bold=True), fill=GREEN)
+    draw.text((1155, 1310), "Critic can raise findings; it never grants permissions", font=font(22), fill=MUTED)
 
     arrow(draw, (1200, compiler[3] + 10), (575, verified[1] - 10), color=GREEN, width=5)
-    arrow(draw, (1510, compiler[3] + 10), (1680, conflict[1] - 10), color=ACCENT, width=5)
+    arrow(draw, (1510, compiler[3] + 10), (1680, critic[1] - 10), color=BLUE, width=5)
 
     draw.text(
         (105, 1430),

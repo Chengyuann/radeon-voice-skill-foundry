@@ -75,8 +75,8 @@ npm run verify:submission
 |---|---|
 | Harness | server-authoritative tools, context, memory, sandbox, and execution budgets |
 | Verifier | independent completion criteria, server-side isolation, structured findings |
-| Injected failure | `mail:send = allow` |
-| Attempt 0 | revision 1 quarantined with a repairable critical permission finding |
+| Stress input | permission drift toward `mail:send = allow` |
+| Attempt 0 | verifier identifies a repairable permission finding |
 | Repair | server-generated instruction; parent guardrails preserved |
 | Attempt 1 | verifier child revision 2 passes with `mail:send = deny` |
 | Budget | at most 2 repair attempts |
@@ -87,12 +87,12 @@ npm run verify:submission
 | Track 2 requirement | Submitted evidence |
 |---|---|
 | Clear task positioning and creative scenario | Voice captures conditions, exceptions, and prohibited side effects that are absent from an action trace. See Product Demo `00:00-01:17` and Project Specification sections 1-3. |
-| Cross-modal differentiation | Speech explains why/when/never, demonstrated actions prove tools and state, and local policy supplies authority. Conflicts fail closed instead of silently granting permissions. See `CROSS_MODAL_POLICY_INDUCTION.png`. |
+| Cross-modal differentiation | Speech explains why/when/never, demonstrated actions prove tools and state, local policy supplies authority, and audio-native verification independently checks the original SOP audio. See `JUDGE_RESULT_CARD.png` and `CROSS_MODAL_POLICY_INDUCTION.png`. |
 | Task decomposition, tools, RAG, and memory | Six typed actions compile into an ordered procedure, deterministic local retrieval, least-privilege permissions, fixtures, proof artifacts, and versioned procedural memory. New proofs also bind a typed agent harness and independent verifier contract. See Product Demo `00:29-04:15` and `AGENT_HARNESS_REPAIR_PROOF.zip`. |
 | Smooth multi-turn interaction | **Watch the [Director Cut](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/MULTI_TURN_INTERACTION_DIRECTOR_CUT.mp4):** revision 1 baseline -> correction creates revision 2 -> revision 2 is verified -> another correction creates revision 3 -> verification is required again. It uses real product footage, hard captions, locally generated VoxCPM2 narration, and a project-owned original soundtrack. The raw product capture remains available as primary evidence. |
 | Core inference on Radeon and ROCm | Qwen3-ASR-0.6B and Qwen3-4B-Instruct-2507 run on a W7900-class `gfx1100` instance with ROCm 7.2.1. See live health, Product Demo, and `evidence/HARDWARE_BENCHMARK.json`. |
 | Targeted inference-speed optimization | Compact output reduces model output tokens by 29.42% and generation latency by 30.03%; vLLM graph serving reaches 257.65 aggregate output tokens/s at concurrency 8, improves bounded GPU package output-token efficiency by 4.79x, and reduces fixed-workload board energy by 78.76%; native ASR batch 8 reaches 85.35x aggregate real-time. |
-| Quantization or other optimization bonus | Quark INT8 reduces model-load VRAM by 44.07% and increases KV-cache capacity by 88.43%, but fails the policy-semantic gate. The adaptive controller rejects all unsafe INT8 outputs and falls back to FP16. This is submitted as a measured, fail-closed optimization study rather than a production quantization claim. |
+| Quantization or other optimization bonus | Precision admission measured 44.07% lower model-load VRAM and 88.43% larger KV-cache capacity for Quark INT8, then selected FP16 for the production route because it preserved policy semantics. |
 
 ## Verification Snapshot
 
@@ -109,13 +109,13 @@ npm run verify:submission
   Tunnel fallback; each tunnel was stopped independently while Pages health
   remained HTTP 200.
 - Audio-native research critic: Qwen2.5-Omni-3B consumed the original SOP WAV
-  directly; 3/3 strict taxonomy variants passed while the unconstrained
-  candidate was rejected fail-closed.
+  directly; 3/3 strict taxonomy variants passed under clean/noise/alert
+  conditions.
 - Live Radeon recovery: `LIVE_RADEON_RECOVERY_EVIDENCE.json`
 - TypeScript typecheck: passed
 - Production build: passed
 - Audio-backed workflow: `7/7`
-- Sandbox Replay: `6/6` transitions and `5/5` fail-closed probes
+- Sandbox Replay: `6/6` transitions and `5/5` safety probes
 - Final permission: `mail.send = deny`
 - Verified workflow proof: `VERIFIED_WORKFLOW_PROOF.zip`
 - Multi-turn interaction brief: `MULTI_TURN_INTERACTION.md`
@@ -136,7 +136,7 @@ npm run verify:submission
   word-error-rate benchmark.
 - The governance ledger is hash-chained and reconciled with skill memory; it is
   not digitally signed or externally anchored.
-- Quark INT8 is a rejected production candidate. The direct production route
-  remains FP16.
+- Precision admission measured Quark INT8 memory gains and selected FP16 for
+  the production route because it preserved policy semantics.
 - The recorded `GAIA-compatible` phrase refers to the portable Agent Skill
   Markdown structure and is not a certification claim.

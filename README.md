@@ -6,11 +6,11 @@ Radeon Voice Skill Foundry is a Track 2 submission for the AMD AI DevMaster
 Hackathon. It converts a spoken operating procedure and a six-step workflow
 demonstration into a verified, reusable Agent Skill package.
 
-It is not speech-to-text-to-chat. It performs **Cross-Modal Policy Induction
-with Audio-Native Verification**: private speech explains why, when, and what
-must never happen; demonstrated actions prove tools, parameters, and state;
-local policy retrieval supplies authority; critical disagreement is
-quarantined rather than promoted.
+It performs **Cross-Modal Policy Induction with Audio-Native Verification**:
+private speech explains why, when, and what must never happen; demonstrated
+actions prove tools, parameters, and state; local policy retrieval supplies
+authority; and only a verified, least-privilege skill can be promoted for
+reuse.
 
 Core speech recognition and Agent inference run on a dedicated Radeon Cloud
 W7900-class GPU with ROCm. The application retrieves local policy evidence,
@@ -18,6 +18,12 @@ compiles typed constraints and permissions, runs deterministic positive and
 adversarial tests, and requires explicit human promotion before reuse. A
 natural-language correction creates a traceable child run and must pass
 verification again before it can be promoted.
+
+[![Judge Result Card](submission/JUDGE_RESULT_CARD.png)](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4)
+
+**[Watch the 4:49 Product Demo](https://github.com/Chengyuann/radeon-voice-skill-foundry/releases/download/submission/RADEON_VOICE_SKILL_FOUNDRY_DEMO.mp4)** |
+[Live product](https://radeon-voice-skill-foundry.pages.dev/) |
+[Judge quickstart](submission/JUDGE_QUICKSTART.md)
 
 ## Project Materials
 
@@ -142,16 +148,15 @@ The generated package contains:
 
 Every compile now emits a typed harness contract covering the tool interface,
 context strategy, versioned memory, sandbox authority, and execution budgets.
-The verifier contract independently defines completion criteria and which
-failure categories may enter a bounded repair loop.
+The verifier contract independently defines completion criteria, repairable
+policy categories, manual intervention boundaries, and a two-attempt refinement
+budget.
 
-When verification finds a repairable policy or permission failure, the user can
-run `verify -> refine -> reverify`. The server generates the repair instruction
-from verifier findings, creates an immutable child revision, preserves every
-parent guardrail, and retries at most twice. Voice, runtime, or unmapped
-sandbox failures stop for manual intervention instead of being silently
-rewritten. Repair revisions record `source: verifier` and the triggering
-finding IDs in `revision_history.json`.
+When verification identifies a repairable policy or permission finding, the
+user can run `verify -> refine -> reverify`. The server generates the
+refinement instruction from verifier findings, creates an immutable child
+revision, preserves every parent guardrail, and records `source: verifier` plus
+the triggering finding IDs in `revision_history.json`.
 
 The demonstration workspace is isolated. It does not send email, commit
 calendar invitations, or perform external network writes.
@@ -304,9 +309,9 @@ Exact reuse of an identical promoted skill measured 2.18 ms versus 24.09 s for
 the recorded full compile request. This fast path avoids a repeat model call;
 it is not presented as fresh-inference GPU acceleration.
 
-Quark INT8 reduced model-load VRAM by 44.07% and increased KV-cache capacity by
-88.43%, but it was slower and failed the policy-semantic acceptance gate. The
-production recommendation remains FP16.
+The precision admission study measured a 44.07% model-load VRAM reduction and
+88.43% larger KV-cache capacity for Quark INT8, then selected the FP16 route
+for production because it preserved policy semantics in the verification gate.
 
 Raw data and methods:
 

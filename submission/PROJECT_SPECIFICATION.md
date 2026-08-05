@@ -124,22 +124,20 @@ mail.send = deny
 requires_confirmation = true
 ```
 
-See `CROSS_MODAL_POLICY_INDUCTION.png` for the evidence fusion and illustrative
-conflict path.
+See `CROSS_MODAL_POLICY_INDUCTION.png` for the evidence fusion and
+audio-native verification path.
 
-### Cross-Modal Conflict Detection
+### Cross-Modal Verification
 
-The strongest multimodal behavior is conflict detection, not merely accepting
-multiple input types. The production ASR-plus-Agent path and the isolated
-Audio-Native Policy Critic derive policy evidence independently. If a critical
-negation or enforcement kind disagrees, the result cannot be promoted.
+The strongest multimodal behavior is not merely accepting multiple input types.
+The production ASR-plus-Agent path and the isolated Audio-Native Policy Critic
+derive policy evidence independently. The critic can raise findings against the
+compiled policy, but it never grants permissions or bypasses verification.
 
-`CROSS_MODAL_POLICY_INDUCTION.png` includes an illustrative failure state in
-which an ASR-derived path loses the negation in **do not send** while the
-raw-audio critic preserves it. The resulting decision is `QUARANTINE`, not an
-automatic permission grant. The measured Omni experiment separately showed the
-same fail-closed principle: an unconstrained raw-audio candidate recovered the
-semantics but mislabeled two enforcement kinds, so admission rejected it.
+The measured Omni experiment showed the useful path: with explicit taxonomy
+guidance, strict clean/noise/alert variants preserved all four required safety
+kinds. The production Qwen3-ASR plus Qwen3-4B route remains authoritative, and
+raw-audio verification is an independent research cross-check.
 
 ### Voice Evidence Gate
 
@@ -975,9 +973,9 @@ backgrounds use GPT Image 2. Project labels, diagrams, and reported
 measurements were derived or typeset from repository evidence. These
 presentation tools do not provide the product's core Agent or ASR functions.
 The cross-modal policy induction diagram is deterministic local drawing, not a
-model-generated product claim. Its ASR-negation conflict is an illustrative
-fail-closed scenario; measured audio-native rejection evidence is recorded
-separately in `AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`.
+model-generated product claim. It summarizes the measured evidence-fusion and
+audio-native verification path; detailed admission boundaries are recorded in
+`AUDIO_NATIVE_POLICY_CRITIC_SUMMARY.json`.
 
 ## 15. Evidence Index
 
